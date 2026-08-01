@@ -169,6 +169,8 @@
       travel: `【高岛总示】${tk.hex.advice}｜【小六壬·出行】${liuRenCast.aspects.travel}`,
       social: `【高岛】${tk.hex.judgment}｜【小六壬·人际】${liuRenCast.aspects.social}`,
       study: `【高岛】${tk.hex.advice}｜【小六壬·学业】${liuRenCast.aspects.study}`,
+      lost: `【小六壬·寻失物】${liuRenCast.aspects.lost || ''}${oracleAdj(tk, 'lost')}`,
+      truth: `【小六壬·测谎话】${liuRenCast.aspects.truth || ''}${oracleAdj(tk, 'truth')}`,
       suit: refineYiJi(liuRenCast.aspects.suit, tk, true),
       avoid: refineYiJi(liuRenCast.aspects.avoid, tk, false)
     };
@@ -190,6 +192,19 @@
     }
     if (tk.hex.luck === '凶' || tk.hex.luck === '忧') return `${base}；尤忌违背高岛断「${tk.hex.advice}」`;
     return base;
+  }
+
+  /** 高岛吉凶对寻物/测谎可信度的微调提示 */
+  function oracleAdj(tk, kind) {
+    const luck = tk.hex.luck;
+    if (kind === 'lost') {
+      if (luck === '大吉' || luck === '吉') return `｜高岛「${tk.hex.name}」偏吉，寻访行动宜抓紧落实。`;
+      if (luck === '凶' || luck === '忧') return `｜高岛「${tk.hex.name}」偏忧，寻物宜缩小范围、防白跑。`;
+      return `｜合参高岛「${tk.hex.name}」，按动爻「${tk.lineText}」把握节奏。`;
+    }
+    if (luck === '大吉' || luck === '吉') return `｜高岛偏吉，言辞主干可多一分采信，细节仍须核验。`;
+    if (luck === '凶' || luck === '忧') return `｜高岛偏忧，更须防空话与口舌，证据优先于辩解。`;
+    return `｜合参高岛「${tk.hex.name}」，动爻提醒：${tk.lineText}。`;
   }
 
   global.Takashima = {

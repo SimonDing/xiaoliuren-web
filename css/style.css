@@ -572,6 +572,117 @@ body.native-app select {
   transition: width 1.2s ease;
 }
 
+/* 问事专题：寻失物 / 测谎话 */
+.oracle-intro {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--paper-dim);
+  letter-spacing: 0.04em;
+}
+
+.oracle-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+@media (min-width: 720px) {
+  .oracle-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.oracle-card {
+  padding: 1rem 1rem 1.1rem;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(201, 164, 92, 0.22);
+}
+
+.oracle-card.lost { border-top: 2px solid #c9a45c; }
+.oracle-card.truth { border-top: 2px solid #d4513d; }
+
+.oracle-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+}
+
+.oracle-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+
+.oracle-badge {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: var(--paper);
+  padding: 0.15rem 0.45rem;
+  border: 1px solid rgba(201, 164, 92, 0.4);
+}
+
+.oracle-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.2rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.8rem;
+  color: var(--paper-dim);
+  letter-spacing: 0.06em;
+}
+
+.oracle-meta strong {
+  color: var(--gold);
+  font-weight: 400;
+  margin-left: 0.25rem;
+}
+
+.oracle-place,
+.oracle-person {
+  margin: 0.35rem 0;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--paper-dim);
+}
+
+.oracle-place .k,
+.oracle-person .k {
+  display: inline-block;
+  min-width: 4.5em;
+  margin-right: 0.4rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+}
+
+.oracle-path {
+  margin: 0.55rem 0 0.35rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: rgba(180, 160, 130, 0.85);
+  letter-spacing: 0.04em;
+}
+
+.oracle-actions {
+  margin: 0.6rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--paper-dim);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.oracle-actions li { margin: 0.15rem 0; }
+
+.aspect-oracle {
+  border-color: rgba(201, 164, 92, 0.28);
+}
+
+.aspect-oracle h3 { color: var(--gold); }
+
 .aspects {
   display: grid;
   grid-template-columns: 1fr;

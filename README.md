@@ -11,7 +11,7 @@
 2. 在手机中允许「安装未知应用」
 3. 安装 `xiaoliuren-*-android.apk` 后直接打开使用，**无需浏览器、无需联网即可起课**（字体 CDN 可选）
 
-当前分发包：`release/xiaoliuren-1.2.2-android.apk`（含三合电子罗盘与白话对照），见 [Releases](https://github.com/SimonDing/xiaoliuren-web/releases/tag/v1.2.2)。
+当前分发包：`release/xiaoliuren-1.2.3-android.apk`（含寻失物/测谎话），见 [Releases](https://github.com/SimonDing/xiaoliuren-web/releases/tag/v1.2.3)。
 
 详细说明见 [docs/ANDROID.md](./docs/ANDROID.md)。
 
@@ -26,7 +26,8 @@
 
 | 模块 | 说明 |
 |------|------|
-| **小六壬** | 按农历月、日、时辰起课，输出事业/财运/感情/健康等全方面断语 |
+| **小六壬** | 按农历月、日、时辰起课；全方面断语，并含**寻失物**、**测谎话**专题 |
+| **问事专题** | 寻失物（方位/远近/人事）与测谎话（真伪/可信度），专业+白话对照 |
 | **高岛断易** | 以打开/刷新的即刻时间为种子三钱起卦（一爻动），与小六壬合参 |
 | **八字细盘** | 可选输入阳历生辰，排出四柱、十神、喜用、大运 |
 | **梅花易数** | 时间起卦，定体用、动爻、变卦 |

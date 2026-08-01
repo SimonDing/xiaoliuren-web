@@ -134,6 +134,155 @@
     }
   };
 
+  /**
+   * 寻失物专断（本于古诀口诀与方位）
+   * verdict / place / distance 供 UI 摘要；pro / plain 双轨解释
+   */
+  const LOST_ORACLE = {
+    大安: {
+      verdict: '较易找回',
+      chance: '高',
+      place: '正东 · 宅舍附近或常到之处',
+      distance: '去之不远',
+      person: '可问家人、旧识',
+      pro: '得大安，失物未远。宜向东方与宅舍熟悉处寻，静候亦可得。勿远途奔波。',
+      plain: '东西多半还在附近，先在家里、单位东边和你常去的地方找。别急着跑很远。',
+      actions: ['先搜卧室/桌面/常放口袋处', '向正东走动一圈留意', '问家人是否挪过']
+    },
+    留连: {
+      verdict: '周折难定',
+      chance: '中低',
+      place: '正北 · 拖沓辗转之所',
+      distance: '或已挪移、尚在途中',
+      person: '需多次打听，对方未必立刻说清',
+      pro: '得留连，寻物多费周折。物或被挪、暂存、遗忘于反复出入处。宜缓寻、多问，不宜一日内强求结果。',
+      plain: '找起来会比较磨人，可能被人挪过或落在「来来回回」的地方。多问几个人，别指望一次就找到。',
+      actions: ['查通勤路上、储物间、待洗脏衣', '向北方与潮湿角落留意', '列清单分几天找，别急躁']
+    },
+    速喜: {
+      verdict: '可望寻得',
+      chance: '高',
+      place: '正南 · 申未午方位，路上逢人',
+      distance: '不远，或在途中',
+      person: '逢人问路、他人提点最有用',
+      pro: '得速喜，失物申未午可寻，路上逢人有指引。宜主动询问南方相关处所与今日接触过的人。',
+      plain: '有希望找到。多往南边、午后常去的地方找，路上遇到人就问问，别人一句话可能就点醒你。',
+      actions: ['问今天见过面的同事/店员', '查南方座位、南向房间', '回想最后出现的时段快速复盘']
+    },
+    赤口: {
+      verdict: '宜急寻防损',
+      chance: '中',
+      place: '正西 · 争竞、硬物、金属相关处',
+      distance: '尚可追，拖则易损',
+      person: '防口舌争执；或与冲突相关',
+      pro: '得赤口，失物宜急寻，迟则易损或生口舌。方位偏西，涉及金铁、车马、争竞场合须当心。',
+      plain: '要抓紧找，拖久了可能坏掉或更难找。多往西边、车里、五金/锁具附近找，找的时候别跟人吵起来。',
+      actions: ['立刻查车内、锁具旁、办公西侧', '核对监控或转账记录', '冷静寻访，避免争执升级']
+    },
+    小吉: {
+      verdict: '有人可助',
+      chance: '较高',
+      place: '东南 · 坤方（西南）亦须兼顾',
+      distance: '可寻，常因人报信而得',
+      person: '阴人、女性、晚辈报喜指点',
+      pro: '得小吉，失物在坤方，阴人来报喜。宜托女性长辈/同事协助，路上商量亦有转机。',
+      plain: '挺有机会，而且多半会有人帮你——尤其女同事、阿姨、晚辈。也往东南、西南方向找找。',
+      actions: ['请女性亲友一起回忆', '查东南/西南房间与包袋', '在社交群轻声求助线索']
+    },
+    空亡: {
+      verdict: '难寻或落空',
+      chance: '低',
+      place: '方位不定 · 信息多虚',
+      distance: '或已离、或记错',
+      person: '线索不可轻信',
+      pro: '得空亡，寻物常无果，或物已离、或本无此物之实。宜先核实「是否真的遗失」，再小范围搜寻，勿远途空耗。',
+      plain: '这次不好找，也可能记错了以为丢了。先确认是不是放错、借出、或根本没带出门，别跑大老远白忙。',
+      actions: ['先核对购物记录/借还清单', '缩小到最近活动范围细搜', '暂缓悬赏远寻，防被话术骗']
+    }
+  };
+
+  /**
+   * 测谎话 / 言辞真伪专断
+   */
+  const TRUTH_ORACLE = {
+    大安: {
+      verdict: '所言较实',
+      confidence: '高',
+      tone: '安稳可信',
+      pro: '得大安，言辞多由衷，事可安稳采信。仍宜留关键证据，但不必过度猜疑。',
+      plain: '对方这话大体靠谱，可以信个七八分。重要约定还是留个字据更安心，但不用处处怀疑。',
+      actions: ['可按对方说法推进', '重要条款仍书面确认', '观察后续是否言行一致']
+    },
+    留连: {
+      verdict: '含糊两可',
+      confidence: '中',
+      tone: '拖延遮掩',
+      pro: '得留连，言语粘滞，或真假参半、避重就轻。不宜全信口头承诺，宜追问细节与时间节点。',
+      plain: '话里有水分，或在拖时间。别只听「差不多、很快、应该」——让对方说清楚时间、地点、具体数字。',
+      actions: ['追问可核验细节', '约定书面期限', '看行动是否跟上嘴上说的']
+    },
+    速喜: {
+      verdict: '话快易夸',
+      confidence: '中高',
+      tone: '热情有余',
+      pro: '得速喜，言语爽利喜人，动机未必恶意，但易夸张、报喜不报忧。宜区分「诚意」与「水分」。',
+      plain: '对方可能不是存心骗你，但容易把事情说得太好、太满。开心归开心，关键数字和承诺要再核实。',
+      actions: ['对承诺打八折听', '核实喜讯来源', '别因一时高兴立刻大额付出']
+    },
+    赤口: {
+      verdict: '多伪宜防',
+      confidence: '低',
+      tone: '口舌狡辩',
+      pro: '得赤口，主口舌虚妄、恶语或强词夺理。言不可轻信，防争讼与栽赃。凡事留痕，少与之硬辩。',
+      plain: '这次要当心：对方可能在狡辩、甩锅，甚至故意说假话。别只靠嘴仗，聊天记录、合同、转账都留好。',
+      actions: ['暂停轻信与口头成交', '保存聊天/通话证据', '必要时请第三方见证']
+    },
+    小吉: {
+      verdict: '大体可信',
+      confidence: '较高',
+      tone: '和气圆融',
+      pro: '得小吉，所言多近实，或经人从中说合后更可靠。可采信主干，细节仍可再问清楚。',
+      plain: '整体可以信，尤其有中间人、朋友帮忙说的话更靠谱。大方向OK，细节再问清楚就行。',
+      actions: ['可采信主要陈述', '细节当面再确认一次', '借共同朋友侧面了解']
+    },
+    空亡: {
+      verdict: '空话难核',
+      confidence: '很低',
+      tone: '虚多实少',
+      pro: '得空亡，言语多虚、承诺易落空，或难以核实。切勿据此做重大决定，先验证再信任。',
+      plain: '这更像「空头支票」——听着热闹，很难落实。大事千万别只凭这句话就出手，先看证据和行动。',
+      actions: ['要求可核验凭证', '重大事项一律暂缓', '警惕「稳赚/绝对/马上」话术']
+    }
+  };
+
+  function interpretLost(path) {
+    const main = LOST_ORACLE[path.finalPalace.name];
+    const monthHint = path.monthPalace.name;
+    const dayHint = path.dayPalace.name;
+    return Object.assign({}, main, {
+      palace: path.finalPalace.name,
+      pathNote: `月落${monthHint}、日落${dayHint}、时落${path.finalPalace.name}`,
+      plainPath: `白话课程：从「${monthHint}」起，经过「${dayHint}」，最终落在「${path.finalPalace.name}」——寻物以最后这一宫为主。`
+    });
+  }
+
+  function interpretTruth(path) {
+    const main = TRUTH_ORACLE[path.finalPalace.name];
+    return Object.assign({}, main, {
+      palace: path.finalPalace.name,
+      pathNote: `时课得${path.finalPalace.name}（${path.finalPalace.nature}）`,
+      plainPath: `白话：用现在这个时辰起的课，落在「${path.finalPalace.name}」，主要看对方这话靠不靠谱。`
+    });
+  }
+
+  function formatLostText(lost) {
+    return `【${lost.verdict}·把握${lost.chance}】${lost.pro} 方位：${lost.place}。${lost.plain}`;
+  }
+
+  function formatTruthText(truth) {
+    return `【${truth.verdict}·可信度${truth.confidence}】${truth.pro} ${truth.plain}`;
+  }
+
   function calcPalace(lunarMonth, lunarDay, zhiIndex) {
     // 从大安起月，月上起日，日上起时（时辰以子=1…亥=12）
     const monthIdx = (lunarMonth - 1) % 6;
@@ -159,7 +308,13 @@
     const zhi = global.Lunar.ZHI[zhiIndex];
     const cast = calcPalace(lunar.month, lunar.day, zhiIndex);
     const palace = cast.finalPalace;
-    const aspects = ASPECTS[palace.name];
+    const baseAspects = ASPECTS[palace.name];
+    const lost = interpretLost(cast);
+    const truth = interpretTruth(cast);
+    const aspects = Object.assign({}, baseAspects, {
+      lost: formatLostText(lost),
+      truth: formatTruthText(truth)
+    });
 
     return {
       solar: global.Lunar.formatSolar(date),
@@ -174,6 +329,7 @@
       path: cast,
       palace,
       aspects,
+      oracles: { lost, truth },
       score: natureToScore(palace.nature),
       tip: buildTip(palace, aspects)
     };
@@ -266,8 +422,12 @@
   global.XiaoLiuRen = {
     PALACES,
     ASPECTS,
+    LOST_ORACLE,
+    TRUTH_ORACLE,
     calcPalace,
     castFromDate,
+    interpretLost,
+    interpretTruth,
     refineWithBazi
   };
 })(typeof window !== 'undefined' ? window : globalThis);

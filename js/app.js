@@ -495,9 +495,48 @@
     $('#asp-travel').textContent = aspects.travel;
     $('#asp-social').textContent = aspects.social;
     $('#asp-study').textContent = aspects.study;
+    if ($('#asp-lost')) $('#asp-lost').textContent = aspects.lost || '';
+    if ($('#asp-truth')) $('#asp-truth').textContent = aspects.truth || '';
     $('#yi').textContent = aspects.suit;
     $('#ji').textContent = aspects.avoid;
     $('#tip').textContent = tip;
+    renderOracles(cast);
+  }
+
+  function renderOracles(cast) {
+    const lost = cast.oracles && cast.oracles.lost;
+    const truth = cast.oracles && cast.oracles.truth;
+    if (!lost || !truth) return;
+
+    $('#lost-verdict').textContent = lost.verdict;
+    $('#lost-chance').textContent = lost.chance;
+    $('#lost-distance').textContent = lost.distance;
+    $('#lost-place').textContent = lost.place;
+    $('#lost-person').textContent = lost.person;
+    $('#lost-pro').innerHTML = `<span class="lp-badge pro">专业</span>${escapeHtml(lost.pro)}`;
+    $('#lost-plain').innerHTML = `<span class="lp-badge plain">白话</span>${escapeHtml(lost.plain)}`;
+    $('#lost-path').textContent = lost.plainPath || lost.pathNote || '';
+    const lostUl = $('#lost-actions');
+    lostUl.innerHTML = '';
+    (lost.actions || []).forEach((t) => {
+      const li = document.createElement('li');
+      li.textContent = t;
+      lostUl.appendChild(li);
+    });
+
+    $('#truth-verdict').textContent = truth.verdict;
+    $('#truth-confidence').textContent = truth.confidence;
+    $('#truth-tone').textContent = truth.tone;
+    $('#truth-pro').innerHTML = `<span class="lp-badge pro">专业</span>${escapeHtml(truth.pro)}`;
+    $('#truth-plain').innerHTML = `<span class="lp-badge plain">白话</span>${escapeHtml(truth.plain)}`;
+    $('#truth-path').textContent = truth.plainPath || truth.pathNote || '';
+    const truthUl = $('#truth-actions');
+    truthUl.innerHTML = '';
+    (truth.actions || []).forEach((t) => {
+      const li = document.createElement('li');
+      li.textContent = t;
+      truthUl.appendChild(li);
+    });
   }
 
   function renderTakashima(tk, combo) {
