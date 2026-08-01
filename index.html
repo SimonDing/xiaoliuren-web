@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>小六壬 · 时运占测</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <h1 class="brand">小六壬</h1>
+      <div class="brand-seal">时运占测</div>
+      <p class="hero-sub">打开即按当下月、日、时辰起课；遇风险时自动合参梅花易数与奇门遁甲，指示改运方位。亦可输入生辰八字进一步细化。</p>
+      <div class="clock-line pulse">起课时刻 <span id="live-clock">—</span></div>
+    </header>
+
+    <section class="wheel-section" aria-label="六神盘">
+      <div class="wheel" id="wheel">
+        <div class="pointer" id="pointer"></div>
+        <div class="wheel-center">
+          <div>
+            <p class="palace-name" id="palace-name">—</p>
+            <p class="palace-meta" id="palace-meta">正在起课…</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="cast-panel">
+      <h2>课象总览 <small>月上起日 · 日上起时</small></h2>
+      <div class="meta-grid">
+        <div class="meta-item"><span class="k">公历</span><span class="v" id="meta-solar">—</span></div>
+        <div class="meta-item"><span class="k">农历</span><span class="v" id="meta-lunar">—</span></div>
+        <div class="meta-item"><span class="k">时辰</span><span class="v" id="meta-shichen">—</span></div>
+        <div class="meta-item"><span class="k">起课路径</span><span class="v" id="meta-path">—</span></div>
+        <div class="meta-item"><span class="k">吉凶</span><span class="v" id="meta-nature">—</span></div>
+        <div class="meta-item"><span class="k">五行方位</span><span class="v" id="meta-wx">—</span></div>
+      </div>
+      <p class="poem" id="poem"></p>
+      <div id="score-label" style="font-size:0.8rem;letter-spacing:0.12em;color:var(--gold-dim)">时运指数</div>
+      <div class="score-bar"><i id="score-fill"></i></div>
+      <p id="tip" style="color:var(--paper-dim);line-height:1.75;font-size:0.92rem;margin:0 0 1rem"></p>
+      <div class="btn-row">
+        <button type="button" id="btn-refresh">重新起课</button>
+        <button type="button" class="ghost" onclick="document.getElementById('fate-panel').scrollIntoView({behavior:'smooth'})">改运方位</button>
+        <button type="button" class="ghost" onclick="document.getElementById('bazi-panel').scrollIntoView({behavior:'smooth'})">八字细盘</button>
+      </div>
+    </section>
+
+    <section class="panel" id="fate-panel">
+      <h2>
+        改运指引
+        <small>梅花易数 · 奇门遁甲</small>
+        <span class="risk-badge low" id="risk-badge">风险</span>
+      </h2>
+      <p id="risk-title" style="color:var(--paper-dim);margin:0 0 0.8rem;letter-spacing:0.06em"></p>
+      <ul class="risk-list" id="risk-list"></ul>
+
+      <div class="compass" id="compass" aria-label="改运方位罗盘">
+        <div class="compass-dir" data-d="N">北</div>
+        <div class="compass-dir" data-d="NE">东北</div>
+        <div class="compass-dir" data-d="E">东</div>
+        <div class="compass-dir" data-d="SE">东南</div>
+        <div class="compass-dir" data-d="S">南</div>
+        <div class="compass-dir" data-d="SW">西南</div>
+        <div class="compass-dir" data-d="W">西</div>
+        <div class="compass-dir" data-d="NW">西北</div>
+        <div class="compass-core">
+          <div>
+            <strong id="compass-main">—</strong>
+            <span id="compass-sub">主方位</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="one-liner" id="fate-oneliner"></p>
+      <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.18em;color:var(--gold);margin:1.2rem 0 0.7rem">行动步骤</h3>
+      <ol class="plan-steps" id="plan-steps"></ol>
+
+      <div class="dual-grid">
+        <div class="mini-card">
+          <h3>梅花易数</h3>
+          <p id="mh-summary"></p>
+          <p id="mh-tiyong"></p>
+          <p id="mh-bian"></p>
+          <p id="mh-advice"></p>
+        </div>
+        <div class="mini-card">
+          <h3>奇门遁甲</h3>
+          <p id="qm-summary"></p>
+          <div class="door-chips" id="qm-doors"></div>
+          <p id="qm-zhifu"></p>
+          <p id="qm-advice"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>全方面断语 <small>事业 · 财运 · 感情 · 健康</small></h2>
+      <div class="aspects">
+        <article class="aspect"><h3>总体</h3><p id="asp-overall"></p></article>
+        <article class="aspect"><h3>事业</h3><p id="asp-career"></p></article>
+        <article class="aspect"><h3>财运</h3><p id="asp-wealth"></p></article>
+        <article class="aspect"><h3>感情</h3><p id="asp-love"></p></article>
+        <article class="aspect"><h3>健康</h3><p id="asp-health"></p></article>
+        <article class="aspect"><h3>出行</h3><p id="asp-travel"></p></article>
+        <article class="aspect"><h3>人际</h3><p id="asp-social"></p></article>
+        <article class="aspect"><h3>学业</h3><p id="asp-study"></p></article>
+      </div>
+      <div class="yi-ji">
+        <div class="yi"><strong>宜</strong><div id="yi" style="margin-top:0.35rem"></div></div>
+        <div class="ji"><strong>忌</strong><div id="ji" style="margin-top:0.35rem"></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="bazi-panel">
+      <h2>八字细盘 <small>可选 · 与小六壬合参</small></h2>
+      <p style="color:var(--paper-dim);font-size:0.9rem;line-height:1.7;margin-top:0">输入阳历生辰，排出四柱，并结合今日课象五行与命局喜用，给出更贴身的行动建议。</p>
+      <div class="form-grid" style="margin-top:1rem">
+        <label>年<input id="birth-year" type="number" min="1900" max="2100" placeholder="1990" /></label>
+        <label>月<input id="birth-month" type="number" min="1" max="12" placeholder="5" /></label>
+        <label>日<input id="birth-day" type="number" min="1" max="31" placeholder="15" /></label>
+        <label>时（0-23）<input id="birth-hour" type="number" min="0" max="23" placeholder="10" /></label>
+        <label>分<input id="birth-minute" type="number" min="0" max="59" placeholder="0" /></label>
+        <label>性别
+          <select id="birth-gender">
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </label>
+      </div>
+      <div class="btn-row">
+        <button type="button" id="btn-bazi">排盘合参</button>
+        <button type="button" class="ghost" id="btn-clear-bazi">清除八字</button>
+      </div>
+
+      <div id="bazi-result" class="hidden" style="margin-top:1.4rem">
+        <table class="bazi-table">
+          <thead>
+            <tr><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="bz-year"></td>
+              <td id="bz-month"></td>
+              <td id="bz-day"></td>
+              <td id="bz-hour"></td>
+            </tr>
+          </tbody>
+        </table>
+        <p id="bz-summary" style="line-height:1.75;color:var(--paper-dim);font-size:0.92rem"></p>
+        <p id="bz-yong" style="color:var(--gold);letter-spacing:0.06em;font-size:0.9rem"></p>
+        <p id="bz-wuxing" style="color:var(--paper-dim);font-size:0.85rem"></p>
+        <p id="bz-dayun" style="color:var(--paper-dim);font-size:0.85rem"></p>
+        <p id="bz-suggest" style="line-height:1.75;color:var(--paper-dim);font-size:0.9rem"></p>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="refine-panel">
+      <h2>合参细化 <small>课象 × 命局</small></h2>
+      <div class="refine-box">
+        <h3 id="rf-harmony">合参气场</h3>
+        <p id="rf-note" style="margin:0;line-height:1.75;color:var(--paper-dim)"></p>
+      </div>
+      <div class="aspects" style="margin-top:1rem">
+        <article class="aspect"><h3>事业细断</h3><p id="rf-career"></p></article>
+        <article class="aspect"><h3>财运细断</h3><p id="rf-wealth"></p></article>
+        <article class="aspect"><h3>感情细断</h3><p id="rf-love"></p></article>
+        <article class="aspect"><h3>健康细断</h3><p id="rf-health"></p></article>
+      </div>
+      <p id="rf-focus" style="margin-top:1rem;line-height:1.75;color:var(--paper-dim);font-size:0.9rem"></p>
+    </section>
+
+    <footer class="footer">
+      本页为本地传统文化推演工具，结果仅供娱乐与研究参考，不构成决策建议。<br />
+      人生抉择终归自身努力与选择。直接用浏览器打开本文件即可使用。
+    </footer>
+  </div>
+
+  <script src="js/lunar.js"></script>
+  <script src="js/xiaoliuren.js"></script>
+  <script src="js/bazi.js"></script>
+  <script src="js/meihua.js"></script>
+  <script src="js/qimen.js"></script>
+  <script src="js/fatechange.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

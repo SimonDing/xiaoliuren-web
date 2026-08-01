@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs & temp
+*.log
+.tmp/
+.temp/
+dist/
+node_modules/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Local overrides
+*.local.html
+.cache/
