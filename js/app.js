@@ -246,9 +246,9 @@
     try {
       const raw = localStorage.getItem('xiaoliuren_fengshui');
       if (!raw) {
-        // 默认北京示意坐标，便于试用
-        $('#fs-lat').value = 39.9042;
-        $('#fs-lng').value = 116.4074;
+        // 默认初始经纬度
+        $('#fs-lat').value = 78.33;
+        $('#fs-lng').value = 146.72;
         return;
       }
       const data = JSON.parse(raw);
@@ -258,8 +258,8 @@
       if (data.bedZone) $('#fs-bed-zone').value = data.bedZone;
       if (data.bedHead) $('#fs-bed-head').value = data.bedHead;
     } catch (e) {
-      $('#fs-lat').value = 39.9042;
-      $('#fs-lng').value = 116.4074;
+      $('#fs-lat').value = 78.33;
+      $('#fs-lng').value = 146.72;
     }
   }
 
