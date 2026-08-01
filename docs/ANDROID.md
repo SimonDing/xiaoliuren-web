@@ -39,4 +39,10 @@ cd android
 
 ## GitHub Actions
 
-推送 tag（如 `v1.1.0`）或手动触发工作流 `Build Android APK`，即可自动构建并上传 APK 产物。
+推送 tag（如 `v1.2.0`）或手动触发工作流 `Build Android APK`，即可自动构建并上传 APK 产物。
+
+## 电子罗盘与 AI
+
+- **罗盘**：使用系统地磁/方向传感器（WebView `deviceorientation`），无需额外权限声明；首次请允许「运动与方向」。手机远离磁吸壳与金属桌，持平后按「8」字旋转校准。
+- **定位**：仍需定位权限以填入经纬度。
+- **AI 细化**：用户自备 API Key，请求发往用户填写的 Base URL；未填写时离线罗盘与本地杨公建议仍可用。

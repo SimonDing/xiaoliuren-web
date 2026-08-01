@@ -7,10 +7,19 @@
   let currentTakashima = null;
   let currentCombo = null;
   let lastDate = new Date();
+  let luopan = null;
+  let lastCompass = null;
+  let lastFengshuiResult = null;
+  let luopanRunning = false;
 
   const DIR_CODE = {
     正东: 'E', 东南: 'SE', 正南: 'S', 西南: 'SW',
     正西: 'W', 西北: 'NW', 正北: 'N', 东北: 'NE'
+  };
+
+  const DIR8_TO_KEY = {
+    正北: 'N', 东北: 'NE', 正东: 'E', 东南: 'SE',
+    正南: 'S', 西南: 'SW', 正西: 'W', 西北: 'NW'
   };
 
   function init() {
@@ -25,6 +34,13 @@
     $('#btn-geo').addEventListener('click', onGeoLocate);
     $('#btn-fengshui').addEventListener('click', onFengshuiSubmit);
     $('#btn-fs-clear').addEventListener('click', clearFengshui);
+    $('#btn-luopan').addEventListener('click', toggleLuopan);
+    $('#btn-luopan-cal').addEventListener('click', showLuopanHelp);
+    $('#btn-use-facing').addEventListener('click', useFacingForBed);
+    $('#btn-ai-save').addEventListener('click', saveAiConfig);
+    $('#btn-ai-analyze').addEventListener('click', runAiAnalyze);
+    $('#fs-lat').addEventListener('change', syncLuopanGeo);
+    $('#fs-lng').addEventListener('change', syncLuopanGeo);
 
     $('#birth-year').value = 1990;
     $('#birth-month').value = 5;
@@ -33,6 +49,197 @@
     $('#birth-minute').value = 0;
 
     loadFengshuiForm();
+    loadAiForm();
+    initLuopan();
+  }
+
+  function initLuopan() {
+    const canvas = $('#luopan-canvas');
+    if (!canvas || !window.Luopan) return;
+    luopan = Luopan.createLuopan({
+      canvas,
+      size: 440,
+      lat: Number($('#fs-lat').value) || 0,
+      lng: Number($('#fs-lng').value) || 0,
+      onUpdate: onCompassUpdate
+    });
+    luopan.resize();
+  }
+
+  function syncLuopanGeo() {
+    if (!luopan) return;
+    luopan.setLatLng($('#fs-lat').value, $('#fs-lng').value);
+  }
+
+  function onCompassUpdate(data) {
+    lastCompass = data;
+    const p = data.plates;
+    $('#lp-deg').textContent = `${data.heading.toFixed(1)}°`;
+    if (p) {
+      $('#lp-mount').textContent = `${p.dipan.zuoXiang} · ${data.dir8}`;
+      $('#lp-dipan').textContent =
+        `${p.dipan.label} · ${p.dipan.mountain.bagua}·${p.dipan.mountain.wuxing}\n${p.dipan.zuoXiang}`;
+      $('#lp-renpan').textContent =
+        `${p.renpan.label} · ${p.renpan.mountain.bagua}·${p.renpan.mountain.wuxing}`;
+      $('#lp-tianpan').textContent =
+        `${p.tianpan.label} · ${p.tianpan.mountain.bagua}·${p.tianpan.mountain.wuxing}`;
+    } else {
+      $('#lp-mount').textContent = `${data.mountain.name}山 · ${data.bagua.name}卦 · ${data.dir8}`;
+    }
+    if (data.chuanShan) {
+      const cs = data.chuanShan;
+      $('#lp-chuanshan').textContent = cs.isVoid
+        ? `空亡龙\n${cs.mountain}山第${cs.slot}格 · 宜避开`
+        : `${cs.name}龙\n${cs.mountain}山 · 来龙入首`;
+    }
+    if (data.touDi) {
+      const td = data.touDi;
+      $('#lp-toudi').textContent = `${td.name}龙\n纳音${td.nayin} · 第${td.index}龙`;
+    }
+    let meta = data.hasSensor
+      ? `磁方位 ${data.heading.toFixed(1)}° · 磁偏角约 ${data.declination.toFixed(1)}° · 真方位约 ${data.trueHeading.toFixed(1)}°`
+      : data.warning || '等待传感器…将手机持平并缓慢旋转以校准';
+    $('#lp-meta').textContent = meta;
+    const fj = data.fenjin;
+    const xiu = data.xiu;
+    const cs = data.chuanShan;
+    const td = data.touDi;
+    $('#lp-extra').textContent = fj && xiu
+      ? `${fj.label}（${fj.quality}） · ${xiu.name}宿 · 穿山${cs ? cs.name : '—'} · 透地${td ? td.name : '—'} · 后天${data.bagua.name}/先天${data.xianTian ? data.xianTian.name : '—'}`
+      : '分金 — · 宿度 — · 穿山 — · 透地 —';
+
+    const yong = currentBazi ? currentBazi.yongShen : null;
+    const qimen = currentFate ? currentFate.qimen : null;
+    const tips = Luopan.placementHint(data, yong, qimen);
+    $('#lp-place').textContent = tips.join(' ');
+  }
+
+  async function toggleLuopan() {
+    if (!luopan) initLuopan();
+    if (!luopan) {
+      alert('罗盘初始化失败');
+      return;
+    }
+    if (luopanRunning) {
+      luopan.stop();
+      luopanRunning = false;
+      $('#btn-luopan').textContent = '开启罗盘';
+      $('#lp-meta').textContent = '罗盘已关闭';
+      return;
+    }
+    try {
+      syncLuopanGeo();
+      $('#btn-luopan').textContent = '启动中…';
+      await luopan.start();
+      luopanRunning = true;
+      $('#btn-luopan').textContent = '关闭罗盘';
+      $('#lp-meta').textContent = '罗盘运行中：手机顶部对准目标墙面/书桌朝向';
+    } catch (err) {
+      $('#btn-luopan').textContent = '开启罗盘';
+      alert(err.message || String(err));
+    }
+  }
+
+  function showLuopanHelp() {
+    alert(
+      '【杨公三合罗盘 · 校准与用法】\n\n' +
+        '校准：\n' +
+        '1. 允许方向/运动传感器\n' +
+        '2. 手机持平，远离磁吸壳与金属桌\n' +
+        '3. 按「8」字缓慢旋转校准\n' +
+        '4. 顶部红准星 = 你的朝向（天心十字线）\n\n' +
+        '三针用法（各差半山 7.5°）：\n' +
+        '· 地盘正针：定坐向——门、床、书桌朝向以此为准\n' +
+        '· 人盘中针：消砂——看外局峰峦、靠山、案山\n' +
+        '· 天盘缝针：纳水——看水口、来去水、明堂水气\n\n' +
+        '龙格：\n' +
+        '· 穿山七十二龙：看来龙入首（每山三龙、各5°）；值「空亡」勿强立穴\n' +
+        '· 透地六十龙：看穴场气脉（每龙6°、附纳音）；宜与穿山、分金相合\n\n' +
+        '另有周天度数、一百二十分金、二十八宿、先后天八卦、天池。\n' +
+        '立向宜分金正中并避开穿山空亡；对准后可「用地盘朝向填床头」。'
+    );
+  }
+
+  function useFacingForBed() {
+    if (!lastCompass) {
+      alert('请先开启罗盘并待读数稳定');
+      return;
+    }
+    const key = DIR8_TO_KEY[lastCompass.dir8];
+    if (key) {
+      $('#fs-bed-head').value = key;
+      saveFengshuiForm();
+      alert(`已将床头朝向设为「${lastCompass.dir8}」（当前${lastCompass.mountain.name}山）`);
+    }
+  }
+
+  function loadAiForm() {
+    const cfg = AiFengshui.loadConfig();
+    $('#ai-base').value = cfg.baseUrl || 'https://api.openai.com/v1';
+    $('#ai-key').value = cfg.apiKey || '';
+    $('#ai-model').value = cfg.model || 'gpt-4o-mini';
+  }
+
+  function saveAiConfig() {
+    AiFengshui.saveConfig({
+      baseUrl: $('#ai-base').value.trim(),
+      apiKey: $('#ai-key').value.trim(),
+      model: $('#ai-model').value.trim() || 'gpt-4o-mini'
+    });
+    $('#ai-status').textContent = '已保存到本机（不会写入仓库）';
+  }
+
+  async function runAiAnalyze() {
+    const status = $('#ai-status');
+    const box = $('#ai-result');
+    try {
+      saveAiConfig();
+      if (!currentFate || !currentFate.qimen) {
+        currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
+      }
+      // 确保有本地建议摘要
+      if (!lastFengshuiResult) {
+        try {
+          lastFengshuiResult = YangGong.advise({
+            lat: $('#fs-lat').value,
+            lng: $('#fs-lng').value,
+            sitDir: $('#fs-sit').value,
+            bedZone: $('#fs-bed-zone').value,
+            bedHead: $('#fs-bed-head').value,
+            yongShen: currentBazi ? currentBazi.yongShen : null,
+            qimen: currentFate.qimen,
+            meihua: currentFate.meihua,
+            liuRen: currentCast
+          });
+        } catch (e) {
+          /* 允许仅凭罗盘+坐标分析 */
+        }
+      }
+
+      status.textContent = '正在请求 AI 分析…';
+      box.classList.add('hidden');
+      const sitLabel = $('#fs-sit').selectedOptions[0].textContent;
+      const content = await AiFengshui.analyze({
+        lat: $('#fs-lat').value,
+        lng: $('#fs-lng').value,
+        sit: sitLabel,
+        bedZone: $('#fs-bed-zone').selectedOptions[0].textContent,
+        bedHead: $('#fs-bed-head').selectedOptions[0].textContent,
+        yongShen: currentBazi ? currentBazi.yongShen : null,
+        qimen: currentFate.qimen,
+        compass: lastCompass,
+        localAdvice: lastFengshuiResult
+          ? `${lastFengshuiResult.headline}\n${lastFengshuiResult.actions.join('\n')}`
+          : $('#lp-place').textContent
+      });
+      box.textContent = content;
+      box.classList.remove('hidden');
+      status.textContent = '分析完成（仅供参考）';
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (err) {
+      status.textContent = '';
+      alert(err.message || String(err));
+    }
   }
 
   function loadFengshuiForm() {
@@ -72,6 +279,7 @@
     $('#fs-lng').value = Number(lng).toFixed(4);
     $('#btn-geo').textContent = '定位填入经纬度';
     saveFengshuiForm();
+    syncLuopanGeo();
   }
 
   async function onGeoLocate() {
@@ -124,6 +332,7 @@
         meihua: currentFate.meihua,
         liuRen: currentCast
       });
+      lastFengshuiResult = result;
       renderFengshui(result);
       $('#fs-result').classList.remove('hidden');
       $('#fs-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -134,6 +343,9 @@
 
   function clearFengshui() {
     $('#fs-result').classList.add('hidden');
+    $('#ai-result').classList.add('hidden');
+    $('#ai-result').textContent = '';
+    lastFengshuiResult = null;
   }
 
   function renderFengshui(r) {

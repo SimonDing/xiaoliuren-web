@@ -89,6 +89,178 @@ body.native-app select {
   }
 }
 
+/* 电子风水罗盘 · 三合天盘人盘地盘 */
+.luopan-block {
+  margin-top: 1rem;
+  padding: 1rem 0.75rem 0.75rem;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(201, 164, 92, 0.08), transparent 55%),
+    rgba(0, 0, 0, 0.22);
+}
+
+.luopan-legend {
+  margin: 0 0 0.9rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--paper-dim);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.luopan-legend .tag-tian { color: #8fd0e8; }
+.luopan-legend .tag-ren { color: #e8b86a; }
+.luopan-legend .tag-di { color: #f0d78c; }
+.luopan-legend .tag-chuan { color: #c4a8d8; }
+.luopan-legend .tag-tou { color: #8fc9b0; }
+
+.luopan-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+#luopan-canvas {
+  display: block;
+  max-width: min(460px, 94vw);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px rgba(201, 164, 92, 0.3),
+    0 0 0 4px rgba(40, 28, 18, 0.8),
+    0 24px 56px rgba(0, 0, 0, 0.5);
+}
+
+.luopan-readout {
+  text-align: center;
+}
+
+.luopan-deg {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+}
+
+.luopan-mount {
+  margin-top: 0.25rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.14em;
+  color: var(--paper);
+  font-family: var(--font-display);
+}
+
+.luopan-meta,
+.luopan-extra {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--paper-dim);
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  max-width: 28rem;
+}
+
+.luopan-extra {
+  color: rgba(200, 180, 140, 0.85);
+}
+
+.plate-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+  margin: 1rem 0 0.4rem;
+}
+
+@media (min-width: 560px) {
+  .plate-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.plate-card {
+  padding: 0.7rem 0.75rem 0.8rem;
+  border: 1px solid rgba(201, 164, 92, 0.22);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.plate-card.di { border-top: 2px solid #f0d78c; }
+.plate-card.ren { border-top: 2px solid #e8b86a; }
+.plate-card.tian { border-top: 2px solid #8fd0e8; }
+.plate-card.chuan { border-top: 2px solid #c4a8d8; }
+.plate-card.tou { border-top: 2px solid #8fc9b0; }
+
+.dragon-grid {
+  margin-top: 0.55rem;
+}
+
+@media (min-width: 560px) {
+  .dragon-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.plate-tag {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+  margin-bottom: 0.35rem;
+}
+
+.plate-val {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  color: var(--paper);
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.plate-card small {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--paper-dim);
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+}
+
+.ai-box {
+  margin-top: 1.4rem;
+  padding: 1.1rem 1rem 1.2rem;
+  border: 1px solid rgba(201, 164, 92, 0.35);
+  background: linear-gradient(160deg, rgba(201, 164, 92, 0.07), rgba(0, 0, 0, 0.15));
+}
+
+.ai-status {
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.06em;
+  min-height: 1.2em;
+}
+
+.ai-result {
+  margin-top: 0.9rem;
+  padding: 0.95rem 1rem;
+  background: rgba(0, 0, 0, 0.28);
+  border-left: 2px solid var(--gold);
+  color: var(--paper-dim);
+  font-size: 0.92rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+@media (min-width: 860px) {
+  .luopan-stage {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .luopan-readout { text-align: left; }
+}
+
 /* Hero */
 .hero {
   text-align: center;

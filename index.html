@@ -146,11 +146,70 @@
     </section>
 
     <section class="panel" id="fengshui-panel">
-      <h2>杨公风水 <small>经纬度 · 坐向床位 · 奇门时方</small></h2>
+      <h2>杨公风水 <small>电子罗盘 · 经纬度 · AI 细化</small></h2>
       <p style="color:var(--paper-dim);font-size:0.9rem;line-height:1.7;margin-top:0">
-        填写所在地经纬度与房间格局，结合当日奇门生门/开门与命局喜用（若已排盘），给出坐向、床位与室内开运摆放建议。
+        填写经纬度与房间格局，开启杨公三合电子罗盘（天盘缝针·人盘中针·地盘正针）对准墙面与书桌；可选自备 AI API Key 按三合针法细化分析。
       </p>
-      <div class="form-grid" style="margin-top:1rem">
+
+      <div class="luopan-block">
+        <p class="luopan-legend">
+          杨公详盘：周天度数 · 二十八宿 ·
+          <span class="tag-chuan">穿山七十二龙</span> ·
+          <span class="tag-tou">透地六十龙</span> ·
+          <span class="tag-tian">天盘缝针</span> ·
+          <span class="tag-ren">人盘中针</span> ·
+          <span class="tag-di">地盘正针</span> · 先后天八卦 · 天池
+        </p>
+        <div class="luopan-stage">
+          <canvas id="luopan-canvas" width="440" height="440" aria-label="杨公三合风水罗盘"></canvas>
+          <div class="luopan-readout">
+            <div class="luopan-deg" id="lp-deg">—°</div>
+            <div class="luopan-mount" id="lp-mount">三盘二十四山 —</div>
+            <div class="luopan-meta" id="lp-meta">点击下方按钮开启传感器</div>
+            <div class="luopan-extra" id="lp-extra">分金 — · 宿度 —</div>
+          </div>
+        </div>
+        <div class="plate-grid">
+          <article class="plate-card di">
+            <span class="plate-tag">地盘 · 正针</span>
+            <div class="plate-val" id="lp-dipan">—</div>
+            <small>定坐向 · 门向床向书桌</small>
+          </article>
+          <article class="plate-card ren">
+            <span class="plate-tag">人盘 · 中针</span>
+            <div class="plate-val" id="lp-renpan">—</div>
+            <small>消砂 · 外局峰峦案山</small>
+          </article>
+          <article class="plate-card tian">
+            <span class="plate-tag">天盘 · 缝针</span>
+            <div class="plate-val" id="lp-tianpan">—</div>
+            <small>纳水 · 水口来去水</small>
+          </article>
+        </div>
+        <div class="plate-grid dragon-grid">
+          <article class="plate-card chuan">
+            <span class="plate-tag">穿山 · 七十二龙</span>
+            <div class="plate-val" id="lp-chuanshan">—</div>
+            <small>来龙入首 · 空亡勿立穴</small>
+          </article>
+          <article class="plate-card tou">
+            <span class="plate-tag">透地 · 六十龙</span>
+            <div class="plate-val" id="lp-toudi">—</div>
+            <small>穴场气脉 · 纳音分金</small>
+          </article>
+        </div>
+        <div class="btn-row" style="justify-content:center">
+          <button type="button" id="btn-luopan">开启罗盘</button>
+          <button type="button" class="ghost" id="btn-luopan-cal">校准与用法</button>
+          <button type="button" class="ghost" id="btn-use-facing">用地盘朝向填床头</button>
+        </div>
+        <div class="refine-box" style="margin-top:1rem">
+          <h3>三盘合参 · 摆放提示</h3>
+          <p id="lp-place" style="margin:0;line-height:1.75;color:var(--paper-dim)">开启罗盘后，将手机顶部对准拟摆放方向。立向看地盘，消砂看人盘，纳水看天盘（各差半山 7.5°）。</p>
+        </div>
+      </div>
+
+      <div class="form-grid" style="margin-top:1.2rem">
         <label>纬度（北纬为正）
           <input id="fs-lat" type="number" step="0.0001" placeholder="39.9042" />
         </label>
@@ -199,6 +258,31 @@
         <button type="button" id="btn-fengshui">生成风水建议</button>
         <button type="button" class="ghost" id="btn-fs-clear">清除结果</button>
       </div>
+
+      <div class="ai-box">
+        <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.15em;color:var(--gold);margin:0 0 0.7rem">AI 细化分析 <small style="color:var(--paper-dim)">自备 Key · OpenAI 兼容</small></h3>
+        <p style="color:var(--paper-dim);font-size:0.85rem;line-height:1.65;margin:0 0 0.8rem">
+          Key 仅保存在本机浏览器/App 本地。请求只会发往你填写的 API 地址；未填写则不影响离线罗盘与本地建议。
+        </p>
+        <div class="form-grid">
+          <label style="grid-column:1/-1">API Base URL
+            <input id="ai-base" type="url" placeholder="https://api.openai.com/v1" autocomplete="off" />
+          </label>
+          <label style="grid-column:1/-1">API Key
+            <input id="ai-key" type="password" placeholder="sk-..." autocomplete="off" />
+          </label>
+          <label>模型
+            <input id="ai-model" type="text" placeholder="gpt-4o-mini" autocomplete="off" />
+          </label>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="btn-ai-save" class="ghost">保存 Key 设置</button>
+          <button type="button" id="btn-ai-analyze">AI 杨公细化</button>
+        </div>
+        <div id="ai-status" class="ai-status"></div>
+        <div id="ai-result" class="ai-result hidden"></div>
+      </div>
+
       <div id="fs-result" class="hidden" style="margin-top:1.4rem">
         <div class="meta-grid">
           <div class="meta-item"><span class="k">地理位置</span><span class="v" id="fs-geo">—</span></div>
@@ -291,6 +375,8 @@
   <script src="js/takashima-data.js"></script>
   <script src="js/takashima.js"></script>
   <script src="js/yanggong.js"></script>
+  <script src="js/luopan.js"></script>
+  <script src="js/ai-fengshui.js"></script>
   <script src="js/fatechange.js"></script>
   <script src="js/app.js"></script>
 </body>
