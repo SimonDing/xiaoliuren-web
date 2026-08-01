@@ -22,13 +22,15 @@
 2. 用浏览器直接打开 `index.html`
 
 ```bash
-git clone https://github.com/<your-username>/xiaoliuren-web.git
+git clone https://github.com/SimonDing/xiaoliuren-web.git
 cd xiaoliuren-web
 # Windows
 start index.html
 # macOS
 open index.html
 ```
+
+在线仓库：https://github.com/SimonDing/xiaoliuren-web
 
 首次打开若需加载字体，需可访问 Google Fonts；无网络时会回退到系统楷体/宋体。
 
