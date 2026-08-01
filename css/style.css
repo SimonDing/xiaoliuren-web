@@ -108,11 +108,91 @@ body.native-app select {
   text-align: center;
 }
 
-.luopan-legend .tag-tian { color: #8fd0e8; }
-.luopan-legend .tag-ren { color: #e8b86a; }
-.luopan-legend .tag-di { color: #f0d78c; }
-.luopan-legend .tag-chuan { color: #c4a8d8; }
-.luopan-legend .tag-tou { color: #8fc9b0; }
+.luopan-legend .tag-tian,
+.luopan-glossary .tag-tian { color: #8fd0e8; }
+.luopan-legend .tag-ren,
+.luopan-glossary .tag-ren { color: #e8b86a; }
+.luopan-legend .tag-di,
+.luopan-glossary .tag-di { color: #f0d78c; }
+.luopan-legend .tag-chuan,
+.luopan-glossary .tag-chuan { color: #c4a8d8; }
+.luopan-legend .tag-tou,
+.luopan-glossary .tag-tou { color: #8fc9b0; }
+
+.luopan-glossary {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px dashed rgba(201, 164, 92, 0.35);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.luopan-glossary p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.75;
+  color: var(--paper-dim);
+  letter-spacing: 0.04em;
+}
+
+.luopan-glossary strong {
+  color: var(--gold);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  margin-right: 0.35rem;
+}
+
+.lp-place {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lp-tip {
+  padding: 0.7rem 0.8rem 0.8rem;
+  border-left: 2px solid rgba(201, 164, 92, 0.45);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.lp-tip-title {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+}
+
+.lp-tip-pro,
+.lp-tip-plain {
+  margin: 0.35rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.75;
+  color: var(--paper-dim);
+}
+
+.lp-tip-plain {
+  color: rgba(220, 205, 175, 0.92);
+}
+
+.lp-badge {
+  display: inline-block;
+  margin-right: 0.4rem;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  border: 1px solid rgba(201, 164, 92, 0.35);
+  vertical-align: 0.05em;
+}
+
+.lp-badge.pro {
+  color: #c9a45c;
+}
+
+.lp-badge.plain {
+  color: #8fc9b0;
+  border-color: rgba(143, 201, 176, 0.4);
+}
 
 .luopan-stage {
   display: flex;

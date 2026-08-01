@@ -333,8 +333,10 @@
     };
   }
 
+  /** @returns {{ title: string, pro: string, plain: string }[]} */
   function placementHint(compassOrMountain, yongShen, qimen) {
     const tips = [];
+    const tip = (title, pro, plain) => tips.push({ title, pro, plain });
     let plates;
     let face;
     if (compassOrMountain && compassOrMountain.plates) {
@@ -344,64 +346,137 @@
       face = compassOrMountain;
       plates = null;
     }
-    if (!face) return ['开启罗盘后显示三盘与龙格读数。'];
+    if (!face) {
+      return [
+        {
+          title: '使用说明',
+          pro: '开启罗盘后显示三盘与龙格读数。',
+          plain:
+            '先点「开启罗盘」，把手机顶部对准你想摆放的方向（比如书桌朝向），下面会同时给出专业说法和大白话。'
+        }
+      ];
+    }
+
+    const faceDir = dir8Name(face.center);
+    const sit = oppositeMountain(face);
+    const sitDir = dir8Name(sit.center);
 
     if (plates) {
-      tips.push(
-        `【地盘正针】面向${plates.dipan.label}（${face.bagua}·${face.wuxing}），${plates.dipan.zuoXiang}——立向、门向、床头、书桌以此为准。`
+      tip(
+        '地盘 · 正针（定朝向）',
+        `面向${plates.dipan.label}（${face.bagua}卦·${face.wuxing}），${plates.dipan.zuoXiang}。立向、门向、床头、书桌以此盘为准。`,
+        `简单说：你现在脸朝「${faceDir}」（${face.name}山）。门、床头、书桌主要看这一圈——想定朝向，就认地盘。相当于「背靠${sitDir}、脸朝${faceDir}」。`
       );
-      tips.push(
-        `【人盘中针】外局砂峰落在${plates.renpan.label}——宜有靠山/高柜，忌尖角煞射。`
+      tip(
+        '人盘 · 中针（看周围靠山）',
+        `外局砂峰落在${plates.renpan.label}。宜有靠山/高柜，忌尖角煞射。`,
+        `简单说：看你身后、两侧有没有「靠山」——墙、柜子、书架都可以。人盘指${plates.renpan.label}一带，最好有东西撑着，别被尖角、横梁正对着。`
       );
-      tips.push(
-        `【天盘缝针】水气口应在${plates.tianpan.label}——明堂开阔；流水景宜置生气侧。`
+      tip(
+        '天盘 · 缝针（看前面开阔与水气）',
+        `水气口应在${plates.tianpan.label}。明堂宜开阔；流水景宜置生气侧。`,
+        `简单说：看你面前是否开阔、亮堂。天盘落在${plates.tianpan.label}附近——小水景、加湿器可放在面前干净一侧，别冲着脏乱处。`
       );
       if (compassOrMountain.chuanShan) {
         const cs = compassOrMountain.chuanShan;
-        tips.push(
-          cs.isVoid
-            ? `【穿山七十二龙】值「空亡」龙（${cs.mountain}山第${cs.slot}格）——不宜作来龙入首与正穴，宜微调半山内避开空亡。`
-            : `【穿山七十二龙】值${cs.name}龙（${cs.mountain}山）——看来龙入首，宜龙气连续、忌挖断来脉。`
-        );
+        if (cs.isVoid) {
+          tip(
+            '穿山七十二龙（看来气从哪进）',
+            `值「空亡」龙（${cs.mountain}山第${cs.slot}格）。不宜作来龙入首与正穴，宜微调半山内避开空亡。`,
+            '简单说：这一格像「空号」，气不太稳。定床、定桌时稍微转一点角度躲开会更稳妥。'
+          );
+        } else {
+          tip(
+            '穿山七十二龙（看来气从哪进）',
+            `值${cs.name}龙（${cs.mountain}山）。看来龙入首，宜龙气连续、忌挖断来脉。`,
+            `简单说：气脉落在「${cs.name}」这一格，来气还算连贯。别在正对方向把门封死或堆满重物挡死。`
+          );
+        }
       }
       if (compassOrMountain.touDi) {
         const td = compassOrMountain.touDi;
-        tips.push(
-          `【透地六十龙】值${td.name}龙·纳音${td.nayin}——看穴场气脉与精细分金，宜与穿山、分金相合而不相冲。`
+        tip(
+          '透地六十龙（看脚下细格）',
+          `值${td.name}龙·纳音${td.nayin}。看穴场气脉与精细分金，宜与穿山、分金相合。`,
+          `简单说：这是更细的一格（${td.name}，纳音「${td.nayin}」）。摆床、摆桌尽量对准中间，别卡在两条线夹缝上。`
         );
       }
       if (compassOrMountain.fenjin) {
-        tips.push(`【一百二十分金】${compassOrMountain.fenjin.label}（${compassOrMountain.fenjin.quality}）。`);
+        const fj = compassOrMountain.fenjin;
+        const plainQ =
+          fj.slot === 3
+            ? '正对着这一山的中间，比较合适定朝向。'
+            : fj.slot === 2 || fj.slot === 4
+              ? '稍微偏一点，还能用；想更稳可以轻轻再转一点。'
+              : '偏在边上了，建议慢慢转动手机或家具，尽量对准中间。';
+        tip('一百二十分金（精细对准）', `${fj.label}（${fj.quality}）。`, `简单说：${plainQ}`);
       }
       if (compassOrMountain.xiu) {
-        tips.push(`【二十八宿】值${compassOrMountain.xiu.name}宿。`);
+        tip(
+          '二十八宿（天象分度）',
+          `值${compassOrMountain.xiu.name}宿。`,
+          `简单说：古人把天空分成二十八段，现在落在「${compassOrMountain.xiu.name}宿」。日常摆家具可参考，不必过分纠结。`
+        );
       }
     } else {
-      tips.push(`手机朝向「${face.name}山」${face.bagua}卦，五行属${face.wuxing}。`);
+      tip(
+        '当前朝向',
+        `手机朝向「${face.name}山」${face.bagua}卦，五行属${face.wuxing}。`,
+        `简单说：你正对着${faceDir}方向。`
+      );
     }
 
-    tips.push(`办公桌：面向${face.name}方纳气，背靠对宫；左高右稍低；桌前留明堂。`);
+    tip(
+      '办公桌怎么摆',
+      `面向${face.name}方纳气，背靠对宫；左高右稍低；桌前留明堂。`,
+      `简单说：人坐着脸朝${faceDir}；背后最好有墙或柜子；左手边可稍高（书柜），右手边别太满；桌前留空，别正对门冲，也别让镜子正对座位。`
+    );
 
     if (yongShen && yongShen.includes(face.wuxing)) {
-      tips.push(`地盘朝向合喜用「${face.wuxing}」，较利案头久坐。`);
+      tip(
+        '与命局喜用',
+        `地盘朝向合喜用「${face.wuxing}」，较利案头久坐。`,
+        `简单说：这个朝向的五行（${face.wuxing}）刚好是你喜用的，长时间办公、学习会更舒服一些。`
+      );
     } else if (yongShen && yongShen.length) {
-      tips.push(`喜用为${yongShen.join('、')}，当前地盘属${face.wuxing}；可微调至喜用山并避开穿山空亡、取分金正中。`);
+      tip(
+        '与命局喜用',
+        `喜用为${yongShen.join('、')}，当前地盘属${face.wuxing}；可微调至喜用山并避开穿山空亡、取分金正中。`,
+        `简单说：你更适合「${yongShen.join('、')}」这类方位，现在是「${face.wuxing}」。久坐不舒服就慢慢转动桌子，尽量对准中间格、避开空亡。`
+      );
     }
 
     if (qimen && qimen.changeAdvice) {
       const sheng = qimen.changeAdvice.primaryDir;
       const kai = qimen.changeAdvice.secondaryDir;
       const avoid = qimen.changeAdvice.avoidDirs || [];
-      const faceDir = dir8Name(face.center);
-      if (faceDir === sheng) tips.push(`今日奇门生门在「${sheng}」，与地盘大位相合。`);
-      if (faceDir === kai) tips.push(`正对开门方「${kai}」，利见贵与事业。`);
+      if (faceDir === sheng) {
+        tip(
+          '今日奇门 · 生门',
+          `今日奇门生门在「${sheng}」，与地盘大位相合。`,
+          `简单说：今天「生气」方向在${sheng}，和你现在大方向一致，适合做推进事情的小调整。`
+        );
+      }
+      if (faceDir === kai) {
+        tip(
+          '今日奇门 · 开门',
+          `正对开门方「${kai}」，利见贵与事业。`,
+          `简单说：今天「开门」在${kai}，正对这个方向，见人、谈事会顺一些。`
+        );
+      }
       if (avoid.some((d) => d === faceDir)) {
-        tips.push(`接近今日避方（${avoid.join('、')}），大事决策时建议改向或侧坐。`);
+        tip(
+          '今日奇门 · 避方',
+          `接近今日避方（${avoid.join('、')}），大事决策时建议改向或侧坐。`,
+          `简单说：今天不太建议硬顶「${avoid.join('、')}」。有重要决定时，换个朝向或侧身坐更稳。`
+        );
       }
     }
 
-    tips.push(
-      '针法：立向地盘、消砂人盘、纳水天盘；来龙看穿山七十二龙，穴场看透地六十龙——空亡处勿强立向。'
+    tip(
+      '记一句就够',
+      '针法：立向地盘、消砂人盘、纳水天盘；来龙看穿山，穴场看透地——空亡处勿强立向。',
+      '简单说：定朝向看「地盘」；背后靠不靠看「人盘」；前面空不空看「天盘」；更细的格看穿山、透地。遇到「空亡」就稍微转开一点。'
     );
     return tips;
   }

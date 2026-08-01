@@ -78,26 +78,27 @@
     if (p) {
       $('#lp-mount').textContent = `${p.dipan.zuoXiang} · ${data.dir8}`;
       $('#lp-dipan').textContent =
-        `${p.dipan.label} · ${p.dipan.mountain.bagua}·${p.dipan.mountain.wuxing}\n${p.dipan.zuoXiang}`;
+        `${p.dipan.label} · ${p.dipan.mountain.bagua}·${p.dipan.mountain.wuxing}\n${p.dipan.zuoXiang}\n白话：定门/床/桌朝向 · 脸朝${data.dir8}`;
       $('#lp-renpan').textContent =
-        `${p.renpan.label} · ${p.renpan.mountain.bagua}·${p.renpan.mountain.wuxing}`;
+        `${p.renpan.label} · ${p.renpan.mountain.bagua}·${p.renpan.mountain.wuxing}\n白话：看背后靠山与周围高低`;
       $('#lp-tianpan').textContent =
-        `${p.tianpan.label} · ${p.tianpan.mountain.bagua}·${p.tianpan.mountain.wuxing}`;
+        `${p.tianpan.label} · ${p.tianpan.mountain.bagua}·${p.tianpan.mountain.wuxing}\n白话：看面前是否开阔、水景怎么放`;
     } else {
       $('#lp-mount').textContent = `${data.mountain.name}山 · ${data.bagua.name}卦 · ${data.dir8}`;
     }
     if (data.chuanShan) {
       const cs = data.chuanShan;
       $('#lp-chuanshan').textContent = cs.isVoid
-        ? `空亡龙\n${cs.mountain}山第${cs.slot}格 · 宜避开`
-        : `${cs.name}龙\n${cs.mountain}山 · 来龙入首`;
+        ? `空亡龙\n${cs.mountain}山第${cs.slot}格\n白话：像空号，定朝向时稍微转开`
+        : `${cs.name}龙\n${cs.mountain}山\n白话：看来气是否连贯，别正对堵死`;
     }
     if (data.touDi) {
       const td = data.touDi;
-      $('#lp-toudi').textContent = `${td.name}龙\n纳音${td.nayin} · 第${td.index}龙`;
+      $('#lp-toudi').textContent =
+        `${td.name}龙\n纳音${td.nayin} · 第${td.index}龙\n白话：更细的一格，尽量对准中间`;
     }
     let meta = data.hasSensor
-      ? `磁方位 ${data.heading.toFixed(1)}° · 磁偏角约 ${data.declination.toFixed(1)}° · 真方位约 ${data.trueHeading.toFixed(1)}°`
+      ? `磁方位 ${data.heading.toFixed(1)}° · 磁偏角约 ${data.declination.toFixed(1)}° · 真方位约 ${data.trueHeading.toFixed(1)}°（白话：手机顶部对准的方向读数）`
       : data.warning || '等待传感器…将手机持平并缓慢旋转以校准';
     $('#lp-meta').textContent = meta;
     const fj = data.fenjin;
@@ -111,7 +112,38 @@
     const yong = currentBazi ? currentBazi.yongShen : null;
     const qimen = currentFate ? currentFate.qimen : null;
     const tips = Luopan.placementHint(data, yong, qimen);
-    $('#lp-place').textContent = tips.join(' ');
+    renderLuopanTips(tips);
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderLuopanTips(tips) {
+    const box = $('#lp-place');
+    if (!tips || !tips.length) {
+      box.textContent = '';
+      return;
+    }
+    // 兼容旧版字符串数组
+    if (typeof tips[0] === 'string') {
+      box.textContent = tips.join(' ');
+      return;
+    }
+    box.innerHTML = tips
+      .map(
+        (t) =>
+          `<article class="lp-tip">` +
+          `<h4 class="lp-tip-title">${escapeHtml(t.title)}</h4>` +
+          `<p class="lp-tip-pro"><span class="lp-badge pro">专业</span>${escapeHtml(t.pro)}</p>` +
+          `<p class="lp-tip-plain"><span class="lp-badge plain">白话</span>${escapeHtml(t.plain)}</p>` +
+          `</article>`
+      )
+      .join('');
   }
 
   async function toggleLuopan() {
@@ -143,20 +175,24 @@
   function showLuopanHelp() {
     alert(
       '【杨公三合罗盘 · 校准与用法】\n\n' +
-        '校准：\n' +
+        '【怎么校准】\n' +
         '1. 允许方向/运动传感器\n' +
-        '2. 手机持平，远离磁吸壳与金属桌\n' +
-        '3. 按「8」字缓慢旋转校准\n' +
-        '4. 顶部红准星 = 你的朝向（天心十字线）\n\n' +
-        '三针用法（各差半山 7.5°）：\n' +
-        '· 地盘正针：定坐向——门、床、书桌朝向以此为准\n' +
-        '· 人盘中针：消砂——看外局峰峦、靠山、案山\n' +
-        '· 天盘缝针：纳水——看水口、来去水、明堂水气\n\n' +
-        '龙格：\n' +
-        '· 穿山七十二龙：看来龙入首（每山三龙、各5°）；值「空亡」勿强立穴\n' +
-        '· 透地六十龙：看穴场气脉（每龙6°、附纳音）；宜与穿山、分金相合\n\n' +
-        '另有周天度数、一百二十分金、二十八宿、先后天八卦、天池。\n' +
-        '立向宜分金正中并避开穿山空亡；对准后可「用地盘朝向填床头」。'
+        '2. 手机放平，远离磁吸壳、金属桌\n' +
+        '3. 按「8」字慢慢转几圈校准\n' +
+        '4. 顶部红三角 = 你脸朝的方向\n\n' +
+        '【专业说法】三针各差半山（7.5°）\n' +
+        '· 地盘正针：定坐向（门、床、书桌朝向）\n' +
+        '· 人盘中针：消砂（外局峰峦、靠山、案山）\n' +
+        '· 天盘缝针：纳水（水口、来去水、明堂）\n' +
+        '· 穿山七十二龙：看来龙入首；空亡勿强立穴\n' +
+        '· 透地六十龙：看穴场气脉与精细分金\n\n' +
+        '【大白话】记三句就够\n' +
+        '· 想定门/床/桌朝哪边 → 看「地盘」\n' +
+        '· 想背后有没有靠 → 看「人盘」\n' +
+        '· 想面前空不空、水景怎么放 → 看「天盘」\n' +
+        '· 读到「空亡」→ 稍微转开一点再定\n' +
+        '· 分金尽量对准中间格更稳\n\n' +
+        '对准后可点「用地盘朝向填床头」。页面提示都带「专业 + 白话」两行。'
     );
   }
 
@@ -230,7 +266,7 @@
         compass: lastCompass,
         localAdvice: lastFengshuiResult
           ? `${lastFengshuiResult.headline}\n${lastFengshuiResult.actions.join('\n')}`
-          : $('#lp-place').textContent
+          : ($('#lp-place').innerText || $('#lp-place').textContent || '')
       });
       box.textContent = content;
       box.classList.remove('hidden');

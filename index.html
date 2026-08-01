@@ -148,7 +148,7 @@
     <section class="panel" id="fengshui-panel">
       <h2>杨公风水 <small>电子罗盘 · 经纬度 · AI 细化</small></h2>
       <p style="color:var(--paper-dim);font-size:0.9rem;line-height:1.7;margin-top:0">
-        填写经纬度与房间格局，开启杨公三合电子罗盘（天盘缝针·人盘中针·地盘正针）对准墙面与书桌；可选自备 AI API Key 按三合针法细化分析。
+        填写经纬度与房间格局，开启电子罗盘对准墙面与书桌。读数同时给出<strong style="color:var(--gold-dim);font-weight:400">专业术语</strong>与<strong style="color:var(--gold-dim);font-weight:400">大白话</strong>，不懂风水也能看懂怎么摆；可选自备 AI Key 再细化。
       </p>
 
       <div class="luopan-block">
@@ -160,6 +160,9 @@
           <span class="tag-ren">人盘中针</span> ·
           <span class="tag-di">地盘正针</span> · 先后天八卦 · 天池
         </p>
+        <div class="luopan-glossary">
+          <p><strong>大白话速查</strong>：定门/床/桌朝向看<span class="tag-di">地盘</span>；背后靠不靠看<span class="tag-ren">人盘</span>；面前空不空、水景怎么放看<span class="tag-tian">天盘</span>；更细的格看<span class="tag-chuan">穿山</span>/<span class="tag-tou">透地</span>；读到「空亡」就稍微转开一点。</p>
+        </div>
         <div class="luopan-stage">
           <canvas id="luopan-canvas" width="440" height="440" aria-label="杨公三合风水罗盘"></canvas>
           <div class="luopan-readout">
@@ -173,29 +176,29 @@
           <article class="plate-card di">
             <span class="plate-tag">地盘 · 正针</span>
             <div class="plate-val" id="lp-dipan">—</div>
-            <small>定坐向 · 门向床向书桌</small>
+            <small>专业：定坐向 · 白话：门、床、书桌朝哪边</small>
           </article>
           <article class="plate-card ren">
             <span class="plate-tag">人盘 · 中针</span>
             <div class="plate-val" id="lp-renpan">—</div>
-            <small>消砂 · 外局峰峦案山</small>
+            <small>专业：消砂 · 白话：背后靠山、周围高低</small>
           </article>
           <article class="plate-card tian">
             <span class="plate-tag">天盘 · 缝针</span>
             <div class="plate-val" id="lp-tianpan">—</div>
-            <small>纳水 · 水口来去水</small>
+            <small>专业：纳水 · 白话：面前开阔与水景</small>
           </article>
         </div>
         <div class="plate-grid dragon-grid">
           <article class="plate-card chuan">
             <span class="plate-tag">穿山 · 七十二龙</span>
             <div class="plate-val" id="lp-chuanshan">—</div>
-            <small>来龙入首 · 空亡勿立穴</small>
+            <small>专业：来龙入首 · 白话：来气通不通，空亡要躲开</small>
           </article>
           <article class="plate-card tou">
             <span class="plate-tag">透地 · 六十龙</span>
             <div class="plate-val" id="lp-toudi">—</div>
-            <small>穴场气脉 · 纳音分金</small>
+            <small>专业：穴场气脉 · 白话：更细一格，尽量对准中间</small>
           </article>
         </div>
         <div class="btn-row" style="justify-content:center">
@@ -204,8 +207,14 @@
           <button type="button" class="ghost" id="btn-use-facing">用地盘朝向填床头</button>
         </div>
         <div class="refine-box" style="margin-top:1rem">
-          <h3>三盘合参 · 摆放提示</h3>
-          <p id="lp-place" style="margin:0;line-height:1.75;color:var(--paper-dim)">开启罗盘后，将手机顶部对准拟摆放方向。立向看地盘，消砂看人盘，纳水看天盘（各差半山 7.5°）。</p>
+          <h3>摆放提示 <small>专业 + 白话对照</small></h3>
+          <div id="lp-place" class="lp-place">
+            <article class="lp-tip">
+              <h4 class="lp-tip-title">使用说明</h4>
+              <p class="lp-tip-pro"><span class="lp-badge pro">专业</span>立向看地盘，消砂看人盘，纳水看天盘（各差半山 7.5°）。</p>
+              <p class="lp-tip-plain"><span class="lp-badge plain">白话</span>开启罗盘后，把手机顶部对准书桌或墙面想朝的方向。下面每条都会先写术语，再翻译成大白话。</p>
+            </article>
+          </div>
         </div>
       </div>
 
