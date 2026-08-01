@@ -14,7 +14,7 @@
     <header class="hero">
       <h1 class="brand">小六壬</h1>
       <div class="brand-seal">时运占测</div>
-      <p class="hero-sub">打开即按当下月、日、时辰起课；遇风险时自动合参梅花易数与奇门遁甲，指示改运方位。亦可输入生辰八字进一步细化。</p>
+      <p class="hero-sub">打开即按当下起小六壬与高岛卦；可合奇门、杨公风水（经纬度与室内坐向床位）开运布局，亦可输入生辰八字细化。</p>
       <div class="clock-line pulse">起课时刻 <span id="live-clock">—</span></div>
     </header>
 
@@ -46,9 +46,37 @@
       <p id="tip" style="color:var(--paper-dim);line-height:1.75;font-size:0.92rem;margin:0 0 1rem"></p>
       <div class="btn-row">
         <button type="button" id="btn-refresh">重新起课</button>
+        <button type="button" class="ghost" onclick="document.getElementById('takashima-panel').scrollIntoView({behavior:'smooth'})">高岛合参</button>
         <button type="button" class="ghost" onclick="document.getElementById('fate-panel').scrollIntoView({behavior:'smooth'})">改运方位</button>
+        <button type="button" class="ghost" onclick="document.getElementById('fengshui-panel').scrollIntoView({behavior:'smooth'})">杨公风水</button>
         <button type="button" class="ghost" onclick="document.getElementById('bazi-panel').scrollIntoView({behavior:'smooth'})">八字细盘</button>
       </div>
+    </section>
+
+    <section class="panel" id="takashima-panel">
+      <h2>高岛断易 <small>即刻时间种子起卦 · 与小六壬合参</small></h2>
+      <div class="meta-grid">
+        <div class="meta-item"><span class="k">本卦</span><span class="v" id="tk-name">—</span></div>
+        <div class="meta-item"><span class="k">吉凶</span><span class="v" id="tk-luck">—</span></div>
+        <div class="meta-item"><span class="k">上下卦</span><span class="v" id="tk-trigrams">—</span></div>
+        <div class="meta-item"><span class="k">动爻</span><span class="v" id="tk-move">—</span></div>
+        <div class="meta-item"><span class="k">变卦</span><span class="v" id="tk-bian">—</span></div>
+        <div class="meta-item"><span class="k">合参气场</span><span class="v" id="tk-harmony">—</span></div>
+      </div>
+      <div class="hex-stage" aria-hidden="true">
+        <div class="hex-lines" id="tk-lines"></div>
+        <div class="hex-caption">
+          <strong id="tk-hex-title">—</strong>
+          <span id="tk-hex-sub">高岛流重卦爻辞</span>
+        </div>
+      </div>
+      <p class="poem" id="tk-judgment"></p>
+      <p id="tk-line" style="color:var(--gold);letter-spacing:0.06em;line-height:1.75;font-size:0.95rem"></p>
+      <div class="refine-box" style="margin-top:1rem">
+        <h3 id="tk-verdict-title">壬卦合参</h3>
+        <p id="tk-verdict" style="margin:0;line-height:1.75;color:var(--paper-dim)"></p>
+      </div>
+      <p id="tk-advice" style="margin-top:1rem;line-height:1.75;color:var(--paper-dim);font-size:0.9rem"></p>
     </section>
 
     <section class="panel" id="fate-panel">
@@ -100,7 +128,7 @@
     </section>
 
     <section class="panel">
-      <h2>全方面断语 <small>事业 · 财运 · 感情 · 健康</small></h2>
+      <h2>全方面断语 <small>小六壬 × 高岛断易合参</small></h2>
       <div class="aspects">
         <article class="aspect"><h3>总体</h3><p id="asp-overall"></p></article>
         <article class="aspect"><h3>事业</h3><p id="asp-career"></p></article>
@@ -114,6 +142,80 @@
       <div class="yi-ji">
         <div class="yi"><strong>宜</strong><div id="yi" style="margin-top:0.35rem"></div></div>
         <div class="ji"><strong>忌</strong><div id="ji" style="margin-top:0.35rem"></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="fengshui-panel">
+      <h2>杨公风水 <small>经纬度 · 坐向床位 · 奇门时方</small></h2>
+      <p style="color:var(--paper-dim);font-size:0.9rem;line-height:1.7;margin-top:0">
+        填写所在地经纬度与房间格局，结合当日奇门生门/开门与命局喜用（若已排盘），给出坐向、床位与室内开运摆放建议。
+      </p>
+      <div class="form-grid" style="margin-top:1rem">
+        <label>纬度（北纬为正）
+          <input id="fs-lat" type="number" step="0.0001" placeholder="39.9042" />
+        </label>
+        <label>经度（东经为正）
+          <input id="fs-lng" type="number" step="0.0001" placeholder="116.4074" />
+        </label>
+        <label>房间坐向（靠山墙一侧）
+          <select id="fs-sit">
+            <option value="N">坐北朝南</option>
+            <option value="S">坐南朝北</option>
+            <option value="E">坐东朝西</option>
+            <option value="W">坐西朝东</option>
+            <option value="NE">坐东北朝西南</option>
+            <option value="SW">坐西南朝东北</option>
+            <option value="SE">坐东南朝西北</option>
+            <option value="NW">坐西北朝东南</option>
+          </select>
+        </label>
+        <label>床在房间的方位
+          <select id="fs-bed-zone">
+            <option value="N">靠北侧</option>
+            <option value="NE">靠东北</option>
+            <option value="E">靠东侧</option>
+            <option value="SE">靠东南</option>
+            <option value="S">靠南侧</option>
+            <option value="SW">靠西南</option>
+            <option value="W">靠西侧</option>
+            <option value="NW">靠西北</option>
+          </select>
+        </label>
+        <label>床头朝向
+          <select id="fs-bed-head">
+            <option value="N">朝正北</option>
+            <option value="NE">朝东北</option>
+            <option value="E">朝正东</option>
+            <option value="SE">朝东南</option>
+            <option value="S">朝正南</option>
+            <option value="SW">朝西南</option>
+            <option value="W">朝正西</option>
+            <option value="NW" selected>朝西北</option>
+          </select>
+        </label>
+      </div>
+      <div class="btn-row">
+        <button type="button" id="btn-geo">定位填入经纬度</button>
+        <button type="button" id="btn-fengshui">生成风水建议</button>
+        <button type="button" class="ghost" id="btn-fs-clear">清除结果</button>
+      </div>
+      <div id="fs-result" class="hidden" style="margin-top:1.4rem">
+        <div class="meta-grid">
+          <div class="meta-item"><span class="k">地理位置</span><span class="v" id="fs-geo">—</span></div>
+          <div class="meta-item"><span class="k">综合评分</span><span class="v" id="fs-score">—</span></div>
+          <div class="meta-item"><span class="k">坐向</span><span class="v" id="fs-sitting">—</span></div>
+          <div class="meta-item"><span class="k">床位</span><span class="v" id="fs-bed">—</span></div>
+        </div>
+        <p class="one-liner" id="fs-headline"></p>
+        <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.18em;color:var(--gold);margin:1.2rem 0 0.7rem">开运要点</h3>
+        <ol class="plan-steps" id="fs-actions"></ol>
+        <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.18em;color:var(--gold);margin:1.2rem 0 0.7rem">室内方位布置</h3>
+        <div class="aspects" id="fs-zones"></div>
+        <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.18em;color:var(--gold);margin:1.2rem 0 0.7rem">喜用摆件</h3>
+        <div class="door-chips" id="fs-items"></div>
+        <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.18em;color:var(--gold);margin:1.2rem 0 0.7rem">每周清单</h3>
+        <ul class="risk-list" id="fs-check"></ul>
+        <p id="fs-bed-tips" style="margin-top:1rem;line-height:1.75;color:var(--paper-dim);font-size:0.9rem"></p>
       </div>
     </section>
 
@@ -186,6 +288,9 @@
   <script src="js/bazi.js"></script>
   <script src="js/meihua.js"></script>
   <script src="js/qimen.js"></script>
+  <script src="js/takashima-data.js"></script>
+  <script src="js/takashima.js"></script>
+  <script src="js/yanggong.js"></script>
   <script src="js/fatechange.js"></script>
   <script src="js/app.js"></script>
 </body>

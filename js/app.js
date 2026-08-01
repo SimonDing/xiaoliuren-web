@@ -4,6 +4,8 @@
   let currentCast = null;
   let currentBazi = null;
   let currentFate = null;
+  let currentTakashima = null;
+  let currentCombo = null;
   let lastDate = new Date();
 
   const DIR_CODE = {
@@ -20,12 +22,144 @@
     $('#btn-refresh').addEventListener('click', () => runCast(new Date()));
     $('#btn-bazi').addEventListener('click', onBaziSubmit);
     $('#btn-clear-bazi').addEventListener('click', clearBazi);
+    $('#btn-geo').addEventListener('click', onGeoLocate);
+    $('#btn-fengshui').addEventListener('click', onFengshuiSubmit);
+    $('#btn-fs-clear').addEventListener('click', clearFengshui);
 
     $('#birth-year').value = 1990;
     $('#birth-month').value = 5;
     $('#birth-day').value = 15;
     $('#birth-hour').value = 10;
     $('#birth-minute').value = 0;
+
+    loadFengshuiForm();
+  }
+
+  function loadFengshuiForm() {
+    try {
+      const raw = localStorage.getItem('xiaoliuren_fengshui');
+      if (!raw) {
+        // 默认北京示意坐标，便于试用
+        $('#fs-lat').value = 39.9042;
+        $('#fs-lng').value = 116.4074;
+        return;
+      }
+      const data = JSON.parse(raw);
+      if (data.lat != null) $('#fs-lat').value = data.lat;
+      if (data.lng != null) $('#fs-lng').value = data.lng;
+      if (data.sit) $('#fs-sit').value = data.sit;
+      if (data.bedZone) $('#fs-bed-zone').value = data.bedZone;
+      if (data.bedHead) $('#fs-bed-head').value = data.bedHead;
+    } catch (e) {
+      $('#fs-lat').value = 39.9042;
+      $('#fs-lng').value = 116.4074;
+    }
+  }
+
+  function saveFengshuiForm() {
+    const data = {
+      lat: $('#fs-lat').value,
+      lng: $('#fs-lng').value,
+      sit: $('#fs-sit').value,
+      bedZone: $('#fs-bed-zone').value,
+      bedHead: $('#fs-bed-head').value
+    };
+    localStorage.setItem('xiaoliuren_fengshui', JSON.stringify(data));
+  }
+
+  function onGeoLocate() {
+    if (!navigator.geolocation) {
+      alert('当前浏览器不支持定位，请手动填写经纬度。');
+      return;
+    }
+    $('#btn-geo').textContent = '定位中…';
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        $('#fs-lat').value = pos.coords.latitude.toFixed(4);
+        $('#fs-lng').value = pos.coords.longitude.toFixed(4);
+        $('#btn-geo').textContent = '定位填入经纬度';
+        saveFengshuiForm();
+      },
+      (err) => {
+        $('#btn-geo').textContent = '定位填入经纬度';
+        alert('定位失败：' + (err.message || '请检查权限后重试，或手动填写。'));
+      },
+      { enableHighAccuracy: true, timeout: 12000 }
+    );
+  }
+
+  function onFengshuiSubmit() {
+    try {
+      if (!currentFate || !currentFate.qimen) {
+        currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
+      }
+      saveFengshuiForm();
+      const result = YangGong.advise({
+        lat: $('#fs-lat').value,
+        lng: $('#fs-lng').value,
+        sitDir: $('#fs-sit').value,
+        bedZone: $('#fs-bed-zone').value,
+        bedHead: $('#fs-bed-head').value,
+        yongShen: currentBazi ? currentBazi.yongShen : null,
+        qimen: currentFate.qimen,
+        meihua: currentFate.meihua,
+        liuRen: currentCast
+      });
+      renderFengshui(result);
+      $('#fs-result').classList.remove('hidden');
+      $('#fs-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      alert(err.message || String(err));
+    }
+  }
+
+  function clearFengshui() {
+    $('#fs-result').classList.add('hidden');
+  }
+
+  function renderFengshui(r) {
+    $('#fs-geo').textContent = r.geo.label;
+    $('#fs-score').textContent = String(r.overallScore);
+    $('#fs-sitting').textContent = r.sitting.summary;
+    $('#fs-bed').textContent = r.bed.summary;
+    $('#fs-headline').textContent = r.headline;
+
+    const actions = $('#fs-actions');
+    actions.innerHTML = '';
+    r.actions.forEach((t) => {
+      const li = document.createElement('li');
+      li.textContent = t;
+      actions.appendChild(li);
+    });
+
+    const zones = $('#fs-zones');
+    zones.innerHTML = '';
+    r.place.zones.forEach((z) => {
+      const art = document.createElement('article');
+      art.className = 'aspect';
+      art.innerHTML = `<h3>${z.title} · ${z.dir}</h3><p>${z.text}</p>`;
+      zones.appendChild(art);
+    });
+
+    const items = $('#fs-items');
+    items.innerHTML = '';
+    r.place.items.forEach((it) => {
+      const span = document.createElement('span');
+      span.className = 'door-chip good';
+      span.textContent = `${it.wuxing}·${it.item}`;
+      items.appendChild(span);
+    });
+
+    const check = $('#fs-check');
+    check.innerHTML = '';
+    r.place.checklist.forEach((t) => {
+      const li = document.createElement('li');
+      li.textContent = t;
+      check.appendChild(li);
+    });
+
+    $('#fs-bed-tips').textContent =
+      r.bed.tips.join(' ') + ' ' + r.sitting.comments.slice(1).join(' ');
   }
 
   function tickClock() {
@@ -47,17 +181,23 @@
   function runCast(date) {
     lastDate = date;
     currentCast = XiaoLiuRen.castFromDate(date);
-    renderCast(currentCast);
+    currentTakashima = Takashima.castFromDate(date);
+    currentCombo = Takashima.combineWithLiuRen(currentTakashima, currentCast);
+    renderCast(currentCast, currentCombo);
+    renderTakashima(currentTakashima, currentCombo);
     if (currentBazi) {
       renderRefine(XiaoLiuRen.refineWithBazi(currentCast, currentBazi));
     }
-    currentFate = FateChange.synthesize(date, currentCast, currentBazi);
+    currentFate = FateChange.synthesize(date, currentCast, currentBazi, currentTakashima);
     renderFate(currentFate);
   }
 
-  function renderCast(cast) {
+  function renderCast(cast, combo) {
     const p = cast.palace;
     const idx = cast.path.indices.finalIdx;
+    const aspects = (combo && combo.aspects) || cast.aspects;
+    const score = combo ? combo.score : cast.score;
+    const tip = combo ? combo.tip : cast.tip;
 
     $('#palace-name').textContent = p.name;
     $('#palace-name').className = 'palace-name is-' + p.nature;
@@ -76,21 +216,53 @@
     $('#meta-wx').textContent = `${p.wuxing} / ${p.direction} / ${p.color}`;
 
     $('#poem').textContent = p.poem;
-    $('#score-fill').style.width = cast.score + '%';
-    $('#score-label').textContent = `时运指数 ${cast.score}`;
+    $('#score-fill').style.width = score + '%';
+    const delta = combo && combo.scoreDelta ? `（合参${combo.scoreDelta >= 0 ? '+' : ''}${combo.scoreDelta}）` : '';
+    $('#score-label').textContent = `时运指数 ${score}${delta}`;
 
-    const a = cast.aspects;
-    $('#asp-overall').textContent = a.overall;
-    $('#asp-career').textContent = a.career;
-    $('#asp-wealth').textContent = a.wealth;
-    $('#asp-love').textContent = a.love;
-    $('#asp-health').textContent = a.health;
-    $('#asp-travel').textContent = a.travel;
-    $('#asp-social').textContent = a.social;
-    $('#asp-study').textContent = a.study;
-    $('#yi').textContent = a.suit;
-    $('#ji').textContent = a.avoid;
-    $('#tip').textContent = cast.tip;
+    $('#asp-overall').textContent = aspects.overall;
+    $('#asp-career').textContent = aspects.career;
+    $('#asp-wealth').textContent = aspects.wealth;
+    $('#asp-love').textContent = aspects.love;
+    $('#asp-health').textContent = aspects.health;
+    $('#asp-travel').textContent = aspects.travel;
+    $('#asp-social').textContent = aspects.social;
+    $('#asp-study').textContent = aspects.study;
+    $('#yi').textContent = aspects.suit;
+    $('#ji').textContent = aspects.avoid;
+    $('#tip').textContent = tip;
+  }
+
+  function renderTakashima(tk, combo) {
+    $('#tk-name').textContent = `${tk.hex.name}（第${tk.hex.id}卦）`;
+    $('#tk-luck').textContent = tk.hex.luck;
+    $('#tk-trigrams').textContent = `上${tk.upper.name} · 下${tk.lower.name}`;
+    $('#tk-move').textContent = `${tk.moveLabel}动`;
+    $('#tk-bian').textContent = tk.bian.name;
+    $('#tk-harmony').textContent = combo ? combo.harmony : '—';
+    $('#tk-hex-title').textContent = tk.hex.name;
+    $('#tk-hex-sub').textContent = `${tk.method}`;
+    $('#tk-judgment').textContent = tk.hex.judgment;
+    $('#tk-line').textContent = `${tk.moveLabel}：「${tk.lineText}」→ 变卦${tk.bian.name}（${tk.bian.luck}）`;
+    $('#tk-verdict-title').textContent = combo ? `壬卦合参 · ${combo.harmony}` : '壬卦合参';
+    $('#tk-verdict').textContent = combo ? combo.verdict : '';
+    $('#tk-advice').textContent = `高岛建议：${tk.hex.advice}。事业：${tk.hex.career}；财运：${tk.hex.wealth}；感情：${tk.hex.love}。`;
+
+    const box = $('#tk-lines');
+    box.innerHTML = '';
+    // 自上而下显示（上爻在上）
+    for (let i = 5; i >= 0; i--) {
+      const yang = tk.bits[i] === 1;
+      const moving = i === tk.moveIdx;
+      const row = document.createElement('div');
+      row.className = 'hex-line' + (yang ? ' yang' : ' yin') + (moving ? ' moving' : '');
+      if (yang) {
+        row.innerHTML = '<i></i>';
+      } else {
+        row.innerHTML = '<i></i><i></i>';
+      }
+      box.appendChild(row);
+    }
   }
 
   function renderFate(fate) {
@@ -194,7 +366,7 @@
       renderBazi(currentBazi);
       const refined = XiaoLiuRen.refineWithBazi(currentCast, currentBazi);
       renderRefine(refined);
-      currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi);
+      currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
       renderFate(currentFate);
       $('#bazi-result').classList.remove('hidden');
       $('#refine-panel').classList.remove('hidden');
@@ -208,7 +380,7 @@
     currentBazi = null;
     $('#bazi-result').classList.add('hidden');
     $('#refine-panel').classList.add('hidden');
-    currentFate = FateChange.synthesize(lastDate, currentCast, null);
+    currentFate = FateChange.synthesize(lastDate, currentCast, null, currentTakashima);
     renderFate(currentFate);
   }
 

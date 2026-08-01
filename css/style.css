@@ -712,3 +712,78 @@ button.ghost:hover {
   border-color: var(--danger);
   color: #e09a90;
 }
+
+/* 高岛卦象 */
+.hex-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 0.5rem 0 1.2rem;
+  flex-wrap: wrap;
+}
+
+.hex-lines {
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.hex-line {
+  height: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.hex-line.yang i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  border-radius: 1px;
+}
+
+.hex-line.yin i {
+  display: block;
+  width: 42%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--paper-dim), var(--paper));
+  border-radius: 1px;
+  opacity: 0.75;
+}
+
+.hex-line.moving {
+  filter: drop-shadow(0 0 6px rgba(212, 81, 61, 0.75));
+}
+
+.hex-line.moving.yang i {
+  background: linear-gradient(90deg, var(--cinnabar), var(--cinnabar-bright));
+}
+
+.hex-line.moving.yin i {
+  background: linear-gradient(90deg, var(--cinnabar), #e08a7a);
+  opacity: 1;
+}
+
+.hex-caption {
+  text-align: left;
+  min-width: 10rem;
+}
+
+.hex-caption strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.2em;
+  font-weight: 400;
+  color: var(--paper);
+  margin: 0 0 0.35rem 0.2em;
+}
+
+.hex-caption span {
+  font-size: 0.78rem;
+  color: var(--paper-dim);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}

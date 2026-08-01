@@ -13,7 +13,7 @@
     W: '正西', NW: '西北', N: '正北', NE: '东北', C: '中央'
   };
 
-  function detectRisk(cast, baziRefine) {
+  function detectRisk(cast, baziRefine, takashima) {
     const risks = [];
     const palace = cast.palace.name;
     const nature = cast.palace.nature;
@@ -38,6 +38,22 @@
     if (baziRefine && baziRefine.harmony === '共振' && nature === '凶') {
       risks.push({ level: '高', source: '八字合参', text: '凶象与日主同气放大，情绪化决策风险更高。' });
     }
+    if (takashima) {
+      const luck = takashima.hex.luck;
+      if (luck === '凶') {
+        risks.push({
+          level: '高',
+          source: '高岛断易',
+          text: `得${takashima.hex.name}偏凶。${takashima.hex.judgment} 动爻：${takashima.lineText}`
+        });
+      } else if (luck === '忧') {
+        risks.push({
+          level: '中',
+          source: '高岛断易',
+          text: `得${takashima.hex.name}偏忧。${takashima.moveLabel}示：${takashima.lineText}`
+        });
+      }
+    }
 
     const high = risks.filter((r) => r.level === '高').length;
     const mid = risks.filter((r) => r.level === '中').length;
@@ -53,11 +69,12 @@
     };
   }
 
-  function synthesize(date, cast, bazi) {
+  function synthesize(date, cast, bazi, takashima) {
     const meihua = global.Meihua.castFromDate(date);
     const qimen = global.Qimen.castFromDate(date);
     const baziRefine = bazi ? global.XiaoLiuRen.refineWithBazi(cast, bazi) : null;
-    const risk = detectRisk(cast, baziRefine);
+    const tk = takashima || (global.Takashima ? global.Takashima.castFromDate(date) : null);
+    const risk = detectRisk(cast, baziRefine, tk);
 
     // 若梅花体用亦险，加重
     if (meihua.riskLevel === '险') {
@@ -119,12 +136,13 @@
       meihua.changeAdvice.avoidDir !== '无强制避向' ? meihua.changeAdvice.avoidDir : null
     ].filter(Boolean);
 
-    const plan = buildPlan(risk, best, second, avoid, meihua, qimen, cast, bazi);
+    const plan = buildPlan(risk, best, second, avoid, meihua, qimen, cast, bazi, tk);
 
     return {
       risk,
       meihua,
       qimen,
+      takashima: tk,
       ranked,
       consensus: {
         primaryDir: best.dir,
@@ -136,7 +154,7 @@
     };
   }
 
-  function buildPlan(risk, best, second, avoid, meihua, qimen, cast, bazi) {
+  function buildPlan(risk, best, second, avoid, meihua, qimen, cast, bazi, tk) {
     const steps = [];
     if (risk.overall === '高') {
       steps.push(`停：先暂停高风险动作（争执、借贷、远行赌一把、冲动签约）。今日小六壬得「${cast.palace.name}」，宜改道不硬刚。`);
@@ -150,6 +168,10 @@
 
     if (second) {
       steps.push(`辅：备选「${second.dir}」（${second.sources.join('、')}），若主方位不便，改走此方亦可。`);
+    }
+
+    if (tk) {
+      steps.push(`高岛：本卦${tk.hex.name}（${tk.hex.luck}），${tk.moveLabel}「${tk.lineText}」。${tk.hex.advice} 变卦看${tk.bian.name}。`);
     }
 
     steps.push(`梅花：${meihua.changeAdvice.strategy}`);
