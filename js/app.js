@@ -67,25 +67,44 @@
     localStorage.setItem('xiaoliuren_fengshui', JSON.stringify(data));
   }
 
-  function onGeoLocate() {
-    if (!navigator.geolocation) {
-      alert('当前浏览器不支持定位，请手动填写经纬度。');
-      return;
-    }
+  function applyGeo(lat, lng) {
+    $('#fs-lat').value = Number(lat).toFixed(4);
+    $('#fs-lng').value = Number(lng).toFixed(4);
+    $('#btn-geo').textContent = '定位填入经纬度';
+    saveFengshuiForm();
+  }
+
+  async function onGeoLocate() {
     $('#btn-geo').textContent = '定位中…';
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        $('#fs-lat').value = pos.coords.latitude.toFixed(4);
-        $('#fs-lng').value = pos.coords.longitude.toFixed(4);
-        $('#btn-geo').textContent = '定位填入经纬度';
-        saveFengshuiForm();
-      },
-      (err) => {
-        $('#btn-geo').textContent = '定位填入经纬度';
-        alert('定位失败：' + (err.message || '请检查权限后重试，或手动填写。'));
-      },
-      { enableHighAccuracy: true, timeout: 12000 }
-    );
+    try {
+      // Android App：优先 Capacitor Geolocation
+      if (
+        window.Capacitor &&
+        window.Capacitor.Plugins &&
+        window.Capacitor.Plugins.Geolocation
+      ) {
+        const pos = await window.Capacitor.Plugins.Geolocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 12000
+        });
+        applyGeo(pos.coords.latitude, pos.coords.longitude);
+        return;
+      }
+      if (!navigator.geolocation) {
+        throw new Error('当前环境不支持定位，请手动填写经纬度。');
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => applyGeo(pos.coords.latitude, pos.coords.longitude),
+        (err) => {
+          $('#btn-geo').textContent = '定位填入经纬度';
+          alert('定位失败：' + (err.message || '请检查权限后重试，或手动填写。'));
+        },
+        { enableHighAccuracy: true, timeout: 12000 }
+      );
+    } catch (err) {
+      $('#btn-geo').textContent = '定位填入经纬度';
+      alert('定位失败：' + (err.message || String(err)));
+    }
   }
 
   function onFengshuiSubmit() {

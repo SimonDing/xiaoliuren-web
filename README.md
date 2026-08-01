@@ -1,79 +1,72 @@
 # 小六壬 · 时运占测
 
-本地网页版传统文化推演工具：打开即按当前时间起课，并可合参八字、梅花易数与奇门遁甲，在风险时给出改运方位建议。
+本地传统文化推演工具：支持 **网页版** 与 **Android App**。打开即按当前时间起课，并可合参八字、梅花易数、奇门遁甲、高岛断易与杨公风水。
 
 > 仅供文化研究与娱乐参考，不构成任何决策建议。
+
+## Android 手机 / 平板（下载即用）
+
+1. 打开 Releases 页面下载 APK：  
+   **https://github.com/SimonDing/xiaoliuren-web/releases**
+2. 在手机中允许「安装未知应用」
+3. 安装 `xiaoliuren-*-android.apk` 后直接打开使用，**无需浏览器、无需联网即可起课**（字体 CDN 可选）
+
+当前分发包：`release/xiaoliuren-1.1.0-android.apk`（约 4.8MB，适配手机与平板）
+
+详细说明见 [docs/ANDROID.md](./docs/ANDROID.md)。
 
 ## 功能
 
 | 模块 | 说明 |
 |------|------|
 | **小六壬** | 按农历月、日、时辰起课，输出事业/财运/感情/健康等全方面断语 |
-| **高岛断易** | 以打开/刷新的即刻时间为种子三钱起卦（一爻动），按高岛流卦爻辞与小六壬合参 |
-| **八字细盘** | 可选输入阳历生辰，排出四柱、十神、喜用、大运，并与课象合参 |
-| **梅花易数** | 时间起卦，定体用、动爻、变卦，提示变局与补体方位 |
-| **奇门遁甲** | 简化时盘，标出生门/开门/休门吉方与死门/惊门避向 |
-| **改运指引** | 自动识别风险，多系统投票得出主方位、辅方位与行动步骤 |
-| **杨公风水** | 输入经纬度、房间坐向与床位，合参奇门时方与喜用，给出室内开运摆放建议 |
+| **高岛断易** | 以打开/刷新的即刻时间为种子三钱起卦（一爻动），与小六壬合参 |
+| **八字细盘** | 可选输入阳历生辰，排出四柱、十神、喜用、大运 |
+| **梅花易数** | 时间起卦，定体用、动爻、变卦 |
+| **奇门遁甲** | 简化时盘，标出生门/开门等吉方 |
+| **改运指引** | 风险识别 + 多系统方位投票 |
+| **杨公风水** | 经纬度、坐向、床位与室内开运摆放（App 支持定位） |
 
-## 快速开始
-
-无需安装依赖，也无需服务器：
-
-1. 克隆仓库
-2. 用浏览器直接打开 `index.html`
+## 网页版快速开始
 
 ```bash
 git clone https://github.com/SimonDing/xiaoliuren-web.git
 cd xiaoliuren-web
 # Windows
 start index.html
-# macOS
-open index.html
 ```
 
 在线仓库：https://github.com/SimonDing/xiaoliuren-web
-
-首次打开若需加载字体，需可访问 Google Fonts；无网络时会回退到系统楷体/宋体。
 
 ## 项目结构
 
 ```
 xiaoliuren-web/
-├── index.html          # 页面入口
-├── css/
-│   └── style.css       # 样式
-├── js/
-│   ├── lunar.js        # 公历↔农历（1900–2100）
-│   ├── xiaoliuren.js      # 小六壬起课与断语
-│   ├── takashima-data.js  # 高岛断易六十四卦断语
-│   ├── takashima.js       # 即刻起卦与壬卦合参
-│   ├── bazi.js            # 四柱八字排盘
-│   ├── meihua.js          # 梅花易数时间起卦
-│   ├── qimen.js           # 奇门遁甲简化时盘
-│   ├── fatechange.js      # 风险识别与合参改运
-│   ├── yanggong.js        # 杨公风水室内布局建议
-│   └── app.js             # 页面交互
-├── LICENSE
-└── README.md
+├── index.html / css / js   # 网页核心
+├── android/                # Capacitor Android 工程
+├── release/                # 可分发 APK
+├── scripts/prepare-www.js  # 打包前同步静态资源
+├── docs/ANDROID.md         # Android 安装与自建说明
+└── package.json            # Capacitor 依赖
 ```
 
-## 使用说明
+## 自行编译 Android
 
-1. **打开页面**：自动按当前时刻起小六壬课，并生成梅花、奇门与改运罗盘。
-2. **八字细盘**（可选）：填写阳历年月日时与性别，点击「排盘合参」，命局喜用会参与方位投票。
-3. **改运指引**：若出现赤口、空亡等风险，按「停 → 转主方位 → 借生门/变卦 → 避凶方」步骤行动。
+需要 Node.js、JDK 21、Android SDK：
 
-## 技术说明
+```bash
+npm install
+npm run build:web
+npx cap sync android
+cd android
+./gradlew assembleDebug   # Windows: gradlew.bat assembleDebug
+```
 
-- 纯静态 HTML / CSS / JavaScript，无构建步骤
-- 农历数据表覆盖 1900–2100
-- 八字：立春换年、节令换月、五鼠遁时
-- 奇门为便于本地使用的简化时盘，非完整九星八神专业排盘
+APK 输出：`android/app/build/outputs/apk/debug/app-debug.apk`
 
 ## 免责声明
 
-本项目展示的传统术数推演结果仅供学习与娱乐，人生选择取决于自身判断与努力。涉及健康、财务、法律等事项，请咨询专业人士。
+本项目展示的传统术数推演结果仅供学习与娱乐，人生选择取决于自身判断与努力。
 
 ## License
 

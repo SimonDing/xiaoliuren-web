@@ -26,3 +26,22 @@ node_modules/
 *.local.html
 .cache/
 .tools/
+
+# Capacitor / Android build
+node_modules/
+www/
+android/.gradle/
+android/app/build/
+android/build/
+android/captures/
+android/local.properties
+*.aab
+*.keystore
+# 保留 release 目录下的分发 APK
+*.apk
+!release/
+!release/**/*.apk
+.idea/
+android/local.properties
+android/.gradle/
+android/**/build/

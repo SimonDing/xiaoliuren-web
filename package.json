@@ -1,0 +1,22 @@
+{
+  "name": "xiaoliuren-web",
+  "version": "1.1.0",
+  "description": "小六壬时运占测 · Android / Web",
+  "private": true,
+  "scripts": {
+    "build:web": "node scripts/prepare-www.js",
+    "cap:sync": "npm run build:web && npx cap sync android",
+    "cap:open": "npx cap open android",
+    "android:debug": "npm run cap:sync && cd android && .\\gradlew.bat assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.2",
+    "@capacitor/app": "^7.0.2",
+    "@capacitor/core": "^7.4.2",
+    "@capacitor/geolocation": "^7.1.4",
+    "@capacitor/status-bar": "^7.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.2"
+  }
+}

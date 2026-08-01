@@ -1,0 +1,19 @@
+{
+  "appId": "com.simonding.xiaoliuren",
+  "appName": "小六壬时运",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#0c0b09"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "backgroundColor": "#0c0b09"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0c0b09"
+    }
+  }
+}

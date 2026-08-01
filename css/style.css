@@ -55,6 +55,40 @@ body::before {
   padding: 2.5rem 0 4rem;
 }
 
+/* Android / 平板 App 安全区与触控优化 */
+html.is-app body,
+body.native-app {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
+}
+
+body.native-app .wrap {
+  width: min(1080px, 94vw);
+  padding-top: 1.4rem;
+  padding-bottom: calc(3rem + env(safe-area-inset-bottom));
+}
+
+body.native-app button {
+  min-height: 44px;
+}
+
+body.native-app input,
+body.native-app select {
+  min-height: 42px;
+  font-size: 16px; /* 避免 iOS/部分 WebView 聚焦缩放 */
+}
+
+@media (min-width: 768px) {
+  body.native-app .brand {
+    font-size: clamp(3.6rem, 8vw, 5.2rem);
+  }
+  body.native-app .aspects {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 /* Hero */
 .hero {
   text-align: center;
