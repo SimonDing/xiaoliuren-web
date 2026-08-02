@@ -6,12 +6,15 @@
   <title>小六壬 · 时运占测</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <div class="aura-sky" aria-hidden="true"></div>
   <div class="wrap">
     <header class="hero">
+      <div class="hero-ring" aria-hidden="true"></div>
+      <p class="hero-eyebrow">天机 · 时课 · 藏风</p>
       <h1 class="brand">小六壬</h1>
       <div class="brand-seal">时运占测</div>
       <p class="hero-sub">打开即按当下起小六壬与高岛卦；可再以六神笔法测字合参，亦可合奇门、杨公风水与生辰八字细化。</p>
@@ -250,10 +253,15 @@
     </section>
 
     <section class="panel" id="fengshui-panel">
-      <h2>杨公风水 <small>电子罗盘 · 经纬度 · AI 细化</small></h2>
-      <p style="color:var(--paper-dim);font-size:0.9rem;line-height:1.7;margin-top:0">
-        填写经纬度与房间格局，开启电子罗盘对准墙面与书桌。读数同时给出<strong style="color:var(--gold-dim);font-weight:400">专业术语</strong>与<strong style="color:var(--gold-dim);font-weight:400">大白话</strong>，不懂风水也能看懂怎么摆；可选自备 AI Key 再细化。
+      <h2>杨公风水 <small>知识库 · 电子罗盘 · 经纬度 · AI 细化</small></h2>
+      <p class="yg-lead">
+        杨公风水（杨筠松）：<em>峦头为体、理气为用</em>，室内以家具墙壁为「山」、门窗过道为「水」。先阅下方知识库，再开罗盘合参；读数带专业与白话详析，亦可填格局生成建议或自备 AI Key 细化。
       </p>
+
+      <div class="yg-kb" id="yg-kb">
+        <div class="yg-kb-tabs" id="yg-kb-tabs" role="tablist" aria-label="杨公知识库"></div>
+        <div class="yg-kb-body" id="yg-kb-body"></div>
+      </div>
 
       <div class="luopan-block">
         <p class="luopan-legend">
@@ -412,6 +420,8 @@
         <div class="door-chips" id="fs-items"></div>
         <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.18em;color:var(--gold);margin:1.2rem 0 0.7rem">每周清单</h3>
         <ul class="risk-list" id="fs-check"></ul>
+        <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.18em;color:var(--gold);margin:1.2rem 0 0.7rem">知识库合参详析</h3>
+        <div id="fs-knowledge" class="yg-kb-report"></div>
         <p id="fs-bed-tips" style="margin-top:1rem;line-height:1.75;color:var(--paper-dim);font-size:0.9rem"></p>
       </div>
     </section>
@@ -487,6 +497,7 @@
   <script src="js/qimen.js"></script>
   <script src="js/takashima-data.js"></script>
   <script src="js/takashima.js"></script>
+  <script src="js/yanggong-data.js"></script>
   <script src="js/yanggong.js"></script>
   <script src="js/luopan.js"></script>
   <script src="js/ai-fengshui.js"></script>

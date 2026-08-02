@@ -53,6 +53,43 @@
     loadAiForm();
     initLuopan();
     initBifa();
+    initYangGongKb();
+  }
+
+  function initYangGongKb() {
+    const tabs = $('#yg-kb-tabs');
+    const body = $('#yg-kb-body');
+    if (!tabs || !body || !window.YangGongData) return;
+    const sections = YangGongData.knowledgeSections();
+    let active = 0;
+
+    const render = () => {
+      tabs.innerHTML = '';
+      sections.forEach((sec, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'yg-kb-tab' + (i === active ? ' active' : '');
+        btn.textContent = sec.title.replace(/^杨公/, '').replace(/·.*/, '') || sec.title;
+        btn.title = sec.title;
+        btn.addEventListener('click', () => {
+          active = i;
+          render();
+        });
+        tabs.appendChild(btn);
+      });
+      const sec = sections[active];
+      body.innerHTML = '';
+      (sec.blocks || []).forEach((b) => {
+        const art = document.createElement('article');
+        art.className = 'yg-kb-block';
+        art.innerHTML =
+          `<h4>${escapeHtml(b.title)}</h4>` +
+          `<p class="lp-tip-pro"><span class="lp-badge pro">专业</span>${escapeHtml(b.pro)}</p>` +
+          `<p class="lp-tip-plain"><span class="lp-badge plain">白话</span>${escapeHtml(b.plain)}</p>`;
+        body.appendChild(art);
+      });
+    };
+    render();
   }
 
   function initBifa() {
@@ -275,27 +312,11 @@
   }
 
   function showLuopanHelp() {
-    alert(
-      '【杨公三合罗盘 · 校准与用法】\n\n' +
-        '【怎么校准】\n' +
-        '1. 允许方向/运动传感器\n' +
-        '2. 手机放平，远离磁吸壳、金属桌\n' +
-        '3. 按「8」字慢慢转几圈校准\n' +
-        '4. 顶部红三角 = 你脸朝的方向\n\n' +
-        '【专业说法】三针各差半山（7.5°）\n' +
-        '· 地盘正针：定坐向（门、床、书桌朝向）\n' +
-        '· 人盘中针：消砂（外局峰峦、靠山、案山）\n' +
-        '· 天盘缝针：纳水（水口、来去水、明堂）\n' +
-        '· 穿山七十二龙：看来龙入首；空亡勿强立穴\n' +
-        '· 透地六十龙：看穴场气脉与精细分金\n\n' +
-        '【大白话】记三句就够\n' +
-        '· 想定门/床/桌朝哪边 → 看「地盘」\n' +
-        '· 想背后有没有靠 → 看「人盘」\n' +
-        '· 想面前空不空、水景怎么放 → 看「天盘」\n' +
-        '· 读到「空亡」→ 稍微转开一点再定\n' +
-        '· 分金尽量对准中间格更稳\n\n' +
-        '对准后可点「用地盘朝向填床头」。页面提示都带「专业 + 白话」两行。'
-    );
+    if (window.YangGongData && YangGongData.helpAlertText) {
+      alert(YangGongData.helpAlertText());
+      return;
+    }
+    alert('请先加载杨公知识库后再查看罗盘用法。');
   }
 
   function useFacingForBed() {
@@ -347,7 +368,8 @@
             yongShen: currentBazi ? currentBazi.yongShen : null,
             qimen: currentFate.qimen,
             meihua: currentFate.meihua,
-            liuRen: currentCast
+            liuRen: currentCast,
+            compass: lastCompass
           });
         } catch (e) {
           /* 允许仅凭罗盘+坐标分析 */
@@ -366,9 +388,14 @@
         yongShen: currentBazi ? currentBazi.yongShen : null,
         qimen: currentFate.qimen,
         compass: lastCompass,
-        localAdvice: lastFengshuiResult
-          ? `${lastFengshuiResult.headline}\n${lastFengshuiResult.actions.join('\n')}`
-          : ($('#lp-place').innerText || $('#lp-place').textContent || '')
+        localAdvice: [
+          lastFengshuiResult
+            ? `${lastFengshuiResult.headline}\n${lastFengshuiResult.actions.join('\n')}`
+            : ($('#lp-place').innerText || $('#lp-place').textContent || ''),
+          window.YangGongData
+            ? YangGongData.summarizeForAi(lastCompass, lastFengshuiResult)
+            : ''
+        ].filter(Boolean).join('\n\n')
       });
       box.textContent = content;
       box.classList.remove('hidden');
@@ -468,7 +495,8 @@
         yongShen: currentBazi ? currentBazi.yongShen : null,
         qimen: currentFate.qimen,
         meihua: currentFate.meihua,
-        liuRen: currentCast
+        liuRen: currentCast,
+        compass: lastCompass
       });
       lastFengshuiResult = result;
       renderFengshui(result);
@@ -529,6 +557,34 @@
 
     $('#fs-bed-tips').textContent =
       r.bed.tips.join(' ') + ' ' + r.sitting.comments.slice(1).join(' ');
+
+    const kbBox = $('#fs-knowledge');
+    if (kbBox) {
+      kbBox.innerHTML = '';
+      const extras = r.knowledge || (window.YangGongData
+        ? YangGongData.buildReportExtras(lastCompass, r)
+        : null);
+      if (extras && extras.sections) {
+        extras.sections.forEach((s) => {
+          const art = document.createElement('article');
+          art.className = 'yg-kb-block';
+          art.innerHTML =
+            `<h4>${escapeHtml(s.title)}</h4>` +
+            `<p class="lp-tip-pro"><span class="lp-badge pro">专业</span>${escapeHtml(s.pro)}</p>` +
+            `<p class="lp-tip-plain"><span class="lp-badge plain">白话</span>${escapeHtml(s.plain)}</p>`;
+          kbBox.appendChild(art);
+        });
+        if (extras.luopanMnemonic) {
+          const art = document.createElement('article');
+          art.className = 'yg-kb-block';
+          art.innerHTML =
+            `<h4>罗盘口诀</h4>` +
+            `<p class="lp-tip-pro"><span class="lp-badge pro">专业</span>${escapeHtml(extras.luopanMnemonic.pro)}</p>` +
+            `<p class="lp-tip-plain"><span class="lp-badge plain">白话</span>${escapeHtml(extras.luopanMnemonic.plain)}</p>`;
+          kbBox.appendChild(art);
+        }
+      }
+    }
   }
 
   function tickClock() {

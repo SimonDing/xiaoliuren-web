@@ -304,18 +304,28 @@
       `床位：${bed.summary}`,
       `今日先做：在「${place.sheng}」摆一盆喜用绿植或亮灯 15 分钟，并清理「${(input.qimen && input.qimen.changeAdvice.avoidDirs[0]) || '杂物角'}」避方。`,
       `睡眠：床头朝「${bedHead.name}」，靠实墙；睡前关闭直射卧室的镜子与强蓝光。`,
-      `办公：面向或借用「${place.kai}」气口，背有靠、前有明堂（桌前开阔）。`
+      `办公：面向或借用「${place.kai}」气口，背有靠、前有明堂（桌前开阔）。`,
+      `形法：沙发/床头靠实墙，明堂开阔，避横梁压顶、尖角冲射、门冲直穿。`,
+      `三要：门通气有遮挡；主卧藏风不对镜；灶与水槽隔开，宜坐煞向吉思维微调。`
     ];
 
-    return {
+    const result = {
       geo,
       sitting,
       bed,
       place,
       actions,
       overallScore: Math.round((sitting.score * 0.4 + bed.score * 0.4 + 70 * 0.2)),
-      headline: `杨公布局建议：坐${sit.name}向${sitting.face.name} · 床头宜${bedHead.name} · 今日开运偏「${place.sheng}」`
+      headline: `杨公布局建议：坐${sit.name}向${sitting.face.name} · 床头宜${bedHead.name} · 今日开运偏「${place.sheng}」`,
+      compass: input.compass || null
     };
+
+    if (global.YangGongData && typeof global.YangGongData.buildReportExtras === 'function') {
+      result.knowledge = global.YangGongData.buildReportExtras(input.compass || null, result);
+    } else {
+      result.knowledge = null;
+    }
+    return result;
   }
 
   global.YangGong = {

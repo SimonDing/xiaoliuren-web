@@ -478,6 +478,13 @@
       '针法：立向地盘、消砂人盘、纳水天盘；来龙看穿山，穴场看透地——空亡处勿强立向。',
       '简单说：定朝向看「地盘」；背后靠不靠看「人盘」；前面空不空看「天盘」；更细的格看穿山、透地。遇到「空亡」就稍微转开一点。'
     );
+
+    if (global.YangGongData && typeof global.YangGongData.enrichCompassTips === 'function' && plates) {
+      return global.YangGongData.enrichCompassTips(compassOrMountain, tips, {
+        yongShen: yongShen,
+        qimen: qimen
+      });
+    }
     return tips;
   }
 
