@@ -548,10 +548,10 @@
       ctx.clearRect(0, 0, w, w);
 
       const g = ctx.createRadialGradient(cx, cy, R * 0.06, cx, cy, R);
-      g.addColorStop(0, '#2A1F45');
-      g.addColorStop(0.35, '#1A2240');
-      g.addColorStop(0.7, '#12182A');
-      g.addColorStop(1, '#0D1117');
+      g.addColorStop(0, '#3D8BC4');
+      g.addColorStop(0.35, '#2B6EA8');
+      g.addColorStop(0.7, '#1E4D7B');
+      g.addColorStop(1, '#173A5C');
       ctx.beginPath();
       ctx.arc(cx, cy, R, 0, Math.PI * 2);
       ctx.fillStyle = g;
@@ -600,7 +600,7 @@
         ctx.beginPath();
         ctx.moveTo(Math.cos(a0) * R * 0.845, Math.sin(a0) * R * 0.845);
         ctx.lineTo(Math.cos(a0) * R * 0.78, Math.sin(a0) * R * 0.78);
-        ctx.strokeStyle = d.isVoid ? 'rgba(180,70,60,0.45)' : 'rgba(180,150,200,0.35)';
+        ctx.strokeStyle = d.isVoid ? 'rgba(180,70,60,0.45)' : 'rgba(140,190,230,0.4)';
         ctx.lineWidth = 0.6;
         ctx.stroke();
         if (w >= 300) {
@@ -617,7 +617,7 @@
       });
       ctx.beginPath();
       ctx.arc(0, 0, R * 0.78, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(180,150,200,0.35)';
+      ctx.strokeStyle = 'rgba(140,190,230,0.4)';
       ctx.lineWidth = 0.8;
       ctx.stroke();
 
@@ -674,7 +674,7 @@
       // 天池
       ctx.beginPath();
       ctx.arc(0, 0, R * 0.16, 0, Math.PI * 2);
-      ctx.fillStyle = '#0D1117';
+      ctx.fillStyle = '#173A5C';
       ctx.fill();
       ctx.strokeStyle = '#D4AF37';
       ctx.lineWidth = 1.4;

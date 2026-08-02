@@ -1,36 +1,39 @@
 :root {
-  /* 玄学深色主导：夜观星象 · 星云灵性 · 鎏金启示 */
-  --bg: #0D1117;
-  --bg-deep: #120E1F;
-  --ink: #0D1117;
-  --ink-soft: #161B27;
-  --ink-deep: #F0F0F0;
-  --paper: #F0F0F0;
-  --paper-dim: #A0A5B5;
-  --primary: #3B286D;
-  --primary-soft: #2A5268;
+  /* 道士蓝主导：天宫澄明 · 略提亮 · 鎏金点缀 */
+  --bg: #173A5C;
+  --bg-deep: #1E4D7B;
+  --ink: #173A5C;
+  --ink-soft: #245A8C;
+  --ink-deep: #F5F8FC;
+  --paper: #F5F8FC;
+  --paper-dim: #C2D0E0;
+  --primary: #2B6EA8;
+  --primary-soft: #3D8BC4;
+  --daoist-blue: #2B6EA8;
+  --daoist-blue-deep: #1E4D7B;
+  --daoist-blue-soft: #5AA0D4;
   --cinnabar: #8B3A4A;
   --cinnabar-bright: #C45C6A;
   --gold: #D4AF37;
   --gold-bright: #F0C05A;
   --gold-dim: #A8892A;
-  --jade: #2A5268;
-  --azure: #2A5268;
-  --mist: rgba(255, 255, 255, 0.04);
-  --line: rgba(212, 175, 55, 0.28);
+  --jade: #3D8B7A;
+  --azure: #3D8BC4;
+  --mist: rgba(255, 255, 255, 0.07);
+  --line: rgba(212, 175, 55, 0.32);
   --danger: #C45C6A;
   --ok: #3D8B7A;
-  --surface: rgba(22, 27, 39, 0.55);
-  --surface-soft: rgba(59, 40, 109, 0.18);
-  --glass: rgba(22, 27, 39, 0.42);
-  --glass-border: rgba(240, 240, 240, 0.08);
+  --surface: rgba(36, 90, 140, 0.42);
+  --surface-soft: rgba(61, 139, 196, 0.22);
+  --glass: rgba(30, 77, 123, 0.38);
+  --glass-border: rgba(245, 248, 252, 0.14);
   --font-display: "ZCOOL XiaoWei", "STKaiti", "KaiTi", serif;
   --font-seal: "Ma Shan Zheng", "ZCOOL XiaoWei", cursive;
   --font-body: "Noto Serif SC", "Songti SC", "SimSun", serif;
-  --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-  --glow-gold: 0 0 28px rgba(212, 175, 55, 0.22);
+  --shadow: 0 18px 42px rgba(12, 40, 70, 0.35);
+  --glow-gold: 0 0 28px rgba(212, 175, 55, 0.26);
   --glow-cinnabar: 0 0 24px rgba(196, 92, 106, 0.18);
-  --glow-primary: 0 0 40px rgba(59, 40, 109, 0.35);
+  --glow-primary: 0 0 42px rgba(61, 139, 196, 0.35);
 }
 
 * { box-sizing: border-box; }
@@ -46,11 +49,11 @@ html, body {
 
 body {
   background:
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(59, 40, 109, 0.45), transparent 58%),
-    radial-gradient(ellipse 55% 45% at 92% 78%, rgba(42, 82, 104, 0.35), transparent 52%),
-    radial-gradient(ellipse 45% 35% at 8% 60%, rgba(59, 40, 109, 0.28), transparent 48%),
-    radial-gradient(ellipse 40% 30% at 70% 30%, rgba(42, 82, 104, 0.2), transparent 50%),
-    linear-gradient(165deg, #120E1F 0%, #0D1117 45%, #0A0E16 100%);
+    radial-gradient(ellipse 95% 58% at 50% -8%, rgba(90, 160, 212, 0.45), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 90% 75%, rgba(61, 139, 196, 0.35), transparent 52%),
+    radial-gradient(ellipse 48% 38% at 8% 55%, rgba(43, 110, 168, 0.32), transparent 48%),
+    radial-gradient(ellipse 40% 30% at 72% 28%, rgba(212, 175, 55, 0.12), transparent 50%),
+    linear-gradient(165deg, #245A8C 0%, #1E4D7B 42%, #173A5C 100%);
   overflow-x: hidden;
 }
 
@@ -90,10 +93,10 @@ body::after {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 42% 28% at 50% 16%, rgba(59, 40, 109, 0.4), transparent 70%),
-    radial-gradient(ellipse 34% 26% at 78% 55%, rgba(42, 82, 104, 0.32), transparent 70%),
-    radial-gradient(ellipse 30% 24% at 18% 70%, rgba(59, 40, 109, 0.25), transparent 70%);
-  filter: blur(8px);
+    radial-gradient(ellipse 46% 30% at 50% 14%, rgba(140, 196, 232, 0.35), transparent 70%),
+    radial-gradient(ellipse 36% 28% at 78% 52%, rgba(61, 139, 196, 0.3), transparent 70%),
+    radial-gradient(ellipse 32% 26% at 16% 68%, rgba(43, 110, 168, 0.28), transparent 70%);
+  filter: blur(10px);
   animation: auraBreathe 10s ease-in-out infinite;
 }
 
@@ -166,8 +169,8 @@ body.native-app select {
   border-radius: 14px;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.1), transparent 55%),
-    radial-gradient(ellipse at 80% 100%, rgba(42, 82, 104, 0.18), transparent 50%),
-    rgba(22, 27, 39, 0.42);
+    radial-gradient(ellipse at 80% 100%, rgba(90, 160, 212, 0.18), transparent 50%),
+    rgba(30, 77, 123, 0.42);
   box-shadow: var(--shadow), var(--glow-gold);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -220,7 +223,7 @@ body.native-app select {
   margin: 0 0 1rem;
   padding: 0.75rem 0.9rem;
   border: 1px dashed rgba(201, 164, 92, 0.35);
-  background: rgba(22, 27, 39, 0.45);
+  background: rgba(30, 77, 123, 0.45);
 }
 
 .luopan-glossary p {
@@ -248,7 +251,7 @@ body.native-app select {
 .lp-tip {
   padding: 0.7rem 0.8rem 0.8rem;
   border-left: 2px solid rgba(201, 164, 92, 0.45);
-  background: rgba(22, 27, 39, 0.45);
+  background: rgba(30, 77, 123, 0.45);
 }
 
 .lp-tip-title {
@@ -304,9 +307,9 @@ body.native-app select {
   border-radius: 50%;
   box-shadow:
     0 0 0 1px rgba(212, 175, 55, 0.45),
-    0 0 0 5px rgba(13, 17, 23, 0.9),
+    0 0 0 5px rgba(23, 58, 92, 0.92),
     0 0 28px rgba(212, 175, 55, 0.2),
-    0 0 60px rgba(59, 40, 109, 0.35),
+    0 0 60px rgba(43, 110, 168, 0.35),
     0 24px 56px rgba(0, 0, 0, 0.4);
   animation: wheelAura 8s ease-in-out infinite;
 }
@@ -361,7 +364,7 @@ body.native-app select {
 .plate-card {
   padding: 0.7rem 0.75rem 0.8rem;
   border: 1px solid rgba(201, 164, 92, 0.22);
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
 }
 
 .plate-card.di { border-top: 2px solid #f0d78c; }
@@ -410,7 +413,7 @@ body.native-app select {
   margin-top: 1.4rem;
   padding: 1.1rem 1rem 1.2rem;
   border: 1px solid rgba(201, 164, 92, 0.35);
-  background: linear-gradient(160deg, rgba(201, 164, 92, 0.07), rgba(59, 40, 109, 0.12));
+  background: linear-gradient(160deg, rgba(201, 164, 92, 0.07), rgba(43, 110, 168, 0.12));
 }
 
 .ai-status {
@@ -424,7 +427,7 @@ body.native-app select {
 .ai-result {
   margin-top: 0.9rem;
   padding: 0.95rem 1rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border-left: 2px solid var(--gold);
   color: var(--paper-dim);
   font-size: 0.92rem;
@@ -501,7 +504,7 @@ body.native-app select {
   color: #F0F0F0;
   text-shadow:
     0 0 24px rgba(212, 175, 55, 0.35),
-    0 0 48px rgba(59, 40, 109, 0.45);
+    0 0 48px rgba(43, 110, 168, 0.45);
   line-height: 1.1;
   animation: brandGlow 5.5s ease-in-out infinite;
 }
@@ -559,18 +562,18 @@ body.native-app select {
   background:
     conic-gradient(
       from -90deg,
-      rgba(59, 40, 109, 0.65) 0deg 60deg,
-      rgba(42, 82, 104, 0.55) 60deg 120deg,
-      rgba(59, 40, 109, 0.5) 120deg 180deg,
-      rgba(212, 175, 55, 0.35) 180deg 240deg,
-      rgba(42, 82, 104, 0.5) 240deg 300deg,
-      rgba(59, 40, 109, 0.55) 300deg 360deg
+      rgba(43, 110, 168, 0.7) 0deg 60deg,
+      rgba(90, 160, 212, 0.6) 60deg 120deg,
+      rgba(61, 139, 196, 0.55) 120deg 180deg,
+      rgba(212, 175, 55, 0.38) 180deg 240deg,
+      rgba(90, 160, 212, 0.55) 240deg 300deg,
+      rgba(30, 77, 123, 0.65) 300deg 360deg
     );
   box-shadow:
     var(--shadow),
     inset 0 0 0 1px var(--line),
-    0 0 36px rgba(212, 175, 55, 0.16),
-    0 0 60px rgba(59, 40, 109, 0.35);
+    0 0 36px rgba(212, 175, 55, 0.18),
+    0 0 60px rgba(90, 160, 212, 0.35);
   animation: wheelAura 7s ease-in-out infinite;
 }
 
@@ -651,12 +654,12 @@ body.native-app select {
 /* Panels · 毛玻璃星云卡片 */
 .panel {
   position: relative;
-  background: linear-gradient(155deg, rgba(59, 40, 109, 0.28), rgba(22, 27, 39, 0.52) 48%, rgba(42, 82, 104, 0.2));
+  background: linear-gradient(155deg, rgba(90, 160, 212, 0.28), rgba(36, 90, 140, 0.48) 48%, rgba(61, 139, 196, 0.24));
   border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 1.5rem 1.55rem 1.7rem;
   margin-bottom: 1.35rem;
-  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--glow-primary);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1), var(--glow-primary);
   animation: fadeUp 0.8s ease both;
   backdrop-filter: blur(18px) saturate(1.2);
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
@@ -781,7 +784,7 @@ body.native-app select {
 
 .oracle-card {
   padding: 1rem 1rem 1.1rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border: 1px solid rgba(201, 164, 92, 0.22);
 }
 
@@ -890,7 +893,7 @@ body.native-app select {
   width: 100%;
   box-sizing: border-box;
   padding: 0.75rem 0.9rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border: 1px solid var(--line);
   color: var(--paper);
   font-size: 1.15rem;
@@ -911,7 +914,7 @@ body.native-app select {
 
 .bifa-topic {
   padding: 0.4rem 0.75rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border: 1px solid var(--line);
   color: var(--paper-dim);
   letter-spacing: 0.12em;
@@ -935,7 +938,7 @@ body.native-app select {
 .bifa-chip {
   padding: 0.35rem 0.65rem;
   border: 1px solid rgba(201, 164, 92, 0.35);
-  background: rgba(22, 27, 39, 0.45);
+  background: rgba(30, 77, 123, 0.45);
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   color: var(--paper-dim);
@@ -982,9 +985,9 @@ body.native-app select {
   margin: 0 0 1.35rem;
   padding: 1.05rem 1.05rem 1.1rem;
   background:
-    radial-gradient(ellipse at 0% 0%, rgba(59, 40, 109, 0.35), transparent 45%),
-    radial-gradient(ellipse at 100% 100%, rgba(42, 82, 104, 0.28), transparent 50%),
-    rgba(22, 27, 39, 0.4);
+    radial-gradient(ellipse at 0% 0%, rgba(43, 110, 168, 0.35), transparent 45%),
+    radial-gradient(ellipse at 100% 100%, rgba(90, 160, 212, 0.28), transparent 50%),
+    rgba(30, 77, 123, 0.4);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -1013,7 +1016,7 @@ body.native-app select {
 
 .yg-kb-tab {
   padding: 0.4rem 0.8rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border: 1px solid rgba(212, 176, 106, 0.28);
   color: var(--paper-dim);
   font-family: var(--font-display);
@@ -1030,7 +1033,7 @@ body.native-app select {
 }
 
 .yg-kb-tab.active {
-  color: #0D1117;
+  color: #173A5C;
   background: linear-gradient(135deg, #F0C05A, #D4AF37);
   border-color: transparent;
   box-shadow: 0 0 22px rgba(212, 175, 55, 0.35);
@@ -1047,7 +1050,7 @@ body.native-app select {
   margin: 0 0 0.9rem;
   padding: 0.65rem 0.7rem 0.8rem;
   border: 1px solid rgba(212, 176, 106, 0.12);
-  background: rgba(22, 27, 39, 0.45);
+  background: rgba(30, 77, 123, 0.45);
   animation: mistIn 0.45s ease both;
 }
 
@@ -1065,7 +1068,7 @@ body.native-app select {
 }
 
 .yg-kb-report .yg-kb-block {
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border-color: rgba(212, 176, 106, 0.18);
   padding: 0.8rem 0.9rem;
   margin-bottom: 0.7rem;
@@ -1083,7 +1086,7 @@ body.native-app select {
 
 .aspect {
   padding: 0.9rem 1rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border: 1px solid transparent;
   transition: border-color 0.3s ease, transform 0.3s ease;
 }
@@ -1191,14 +1194,14 @@ button:hover {
 button.ghost {
   border-color: rgba(160, 165, 181, 0.35);
   color: var(--paper-dim);
-  background: rgba(22, 27, 39, 0.45);
+  background: rgba(30, 77, 123, 0.45);
   box-shadow: none;
 }
 
 button.ghost:hover {
   border-color: var(--gold-dim);
   color: var(--gold-bright);
-  background: rgba(59, 40, 109, 0.35);
+  background: rgba(43, 110, 168, 0.35);
   box-shadow: 0 0 22px rgba(212, 175, 55, 0.18);
 }
 
@@ -1271,8 +1274,8 @@ button.ghost:hover {
 }
 
 @keyframes brandGlow {
-  0%, 100% { text-shadow: 0 0 24px rgba(212, 175, 55, 0.3), 0 0 48px rgba(59, 40, 109, 0.4); }
-  50% { text-shadow: 0 0 34px rgba(240, 192, 90, 0.42), 0 0 70px rgba(59, 40, 109, 0.55); }
+  0%, 100% { text-shadow: 0 0 24px rgba(212, 175, 55, 0.3), 0 0 48px rgba(43, 110, 168, 0.4); }
+  50% { text-shadow: 0 0 34px rgba(240, 192, 90, 0.42), 0 0 70px rgba(43, 110, 168, 0.55); }
 }
 
 @keyframes ringPulse {
@@ -1296,8 +1299,8 @@ button.ghost:hover {
 }
 
 @keyframes wheelAura {
-  0%, 100% { box-shadow: var(--shadow), inset 0 0 0 1px var(--line), 0 0 36px rgba(212, 175, 55, 0.14), 0 0 70px rgba(59, 40, 109, 0.28); }
-  50% { box-shadow: var(--shadow), inset 0 0 0 1px var(--line), 0 0 52px rgba(240, 192, 90, 0.22), 0 0 90px rgba(42, 82, 104, 0.32); }
+  0%, 100% { box-shadow: var(--shadow), inset 0 0 0 1px var(--line), 0 0 36px rgba(212, 175, 55, 0.14), 0 0 70px rgba(43, 110, 168, 0.28); }
+  50% { box-shadow: var(--shadow), inset 0 0 0 1px var(--line), 0 0 52px rgba(240, 192, 90, 0.22), 0 0 90px rgba(90, 160, 212, 0.32); }
 }
 
 .pulse {
@@ -1360,7 +1363,7 @@ button.ghost:hover {
 .risk-list li {
   padding: 0.65rem 0.85rem;
   margin-bottom: 0.45rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border-left: 2px solid var(--gold-dim);
   font-size: 0.9rem;
   line-height: 1.65;
@@ -1466,7 +1469,7 @@ button.ghost:hover {
   position: relative;
   padding: 0.85rem 0.9rem 0.85rem 2.6rem;
   margin-bottom: 0.55rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border: 1px solid transparent;
   font-size: 0.9rem;
   line-height: 1.75;
@@ -1501,7 +1504,7 @@ button.ghost:hover {
 
 .mini-card {
   padding: 1rem;
-  background: rgba(22, 27, 39, 0.5);
+  background: rgba(30, 77, 123, 0.5);
   border-top: 2px solid var(--gold-dim);
 }
 
