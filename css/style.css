@@ -683,6 +683,112 @@ body.native-app select {
 
 .aspect-oracle h3 { color: var(--gold); }
 
+.bifa-ask-q {
+  margin: 0 0 0.85rem;
+  color: var(--paper);
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+}
+
+.bifa-label {
+  display: block;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  color: var(--gold-dim);
+  margin-bottom: 0.4rem;
+}
+
+.bifa-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 0.9rem;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  font-family: var(--font-display), serif;
+}
+
+.bifa-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.bifa-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.bifa-topic {
+  padding: 0.4rem 0.75rem;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--line);
+  color: var(--paper-dim);
+  letter-spacing: 0.12em;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.bifa-topic.active {
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--gold), #a8843a);
+  border-color: transparent;
+}
+
+.bifa-spirit-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+
+.bifa-chip {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid rgba(201, 164, 92, 0.35);
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--paper-dim);
+}
+
+.bifa-chip strong {
+  color: var(--gold);
+  font-weight: 400;
+  margin-right: 0.25rem;
+}
+
+.bifa-block {
+  margin: 1rem 0;
+}
+
+.bifa-block h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+}
+
+.bifa-reasons {
+  margin: 0.8rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--paper-dim);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.bifa-disclaimer,
+.bifa-skip-note {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--paper-dim);
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+}
+
 .aspects {
   display: grid;
   grid-template-columns: 1fr;

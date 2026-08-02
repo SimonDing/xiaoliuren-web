@@ -11,7 +11,7 @@
 2. 在手机中允许「安装未知应用」
 3. 安装 `xiaoliuren-*-android.apk` 后直接打开使用，**无需浏览器、无需联网即可起课**（字体 CDN 可选）
 
-当前分发包：`release/xiaoliuren-1.2.3-android.apk`（含寻失物/测谎话），见 [Releases](https://github.com/SimonDing/xiaoliuren-web/releases/tag/v1.2.3)。
+当前分发包：`release/xiaoliuren-1.2.4-android.apk`（含六神笔法测字合参），见 [Releases](https://github.com/SimonDing/xiaoliuren-web/releases/tag/v1.2.4)。
 
 详细说明见 [docs/ANDROID.md](./docs/ANDROID.md)。
 

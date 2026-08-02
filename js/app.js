@@ -11,6 +11,7 @@
   let lastCompass = null;
   let lastFengshuiResult = null;
   let luopanRunning = false;
+  let bifaTopic = '推断';
 
   const DIR_CODE = {
     正东: 'E', 东南: 'SE', 正南: 'S', 西南: 'SW',
@@ -51,6 +52,107 @@
     loadFengshuiForm();
     loadAiForm();
     initLuopan();
+    initBifa();
+  }
+
+  function initBifa() {
+    const goto = $('#btn-goto-bifa');
+    if (goto) {
+      goto.addEventListener('click', () => {
+        $('#bifa-panel').scrollIntoView({ behavior: 'smooth' });
+        showBifaForm();
+      });
+    }
+    $('#btn-bifa-yes').addEventListener('click', showBifaForm);
+    $('#btn-bifa-no').addEventListener('click', skipBifa);
+    $('#btn-bifa-run').addEventListener('click', runBifa);
+    $('#btn-bifa-reset').addEventListener('click', resetBifaPanel);
+    document.querySelectorAll('.bifa-topic').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        bifaTopic = btn.dataset.topic;
+        document.querySelectorAll('.bifa-topic').forEach((b) => b.classList.toggle('active', b === btn));
+      });
+    });
+    $('#bifa-chars').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        runBifa();
+      }
+    });
+  }
+
+  function showBifaForm() {
+    $('#bifa-ask').classList.add('hidden');
+    $('#bifa-form').classList.remove('hidden');
+    $('#bifa-skip-note').classList.add('hidden');
+    $('#bifa-chars').focus();
+  }
+
+  function skipBifa() {
+    $('#bifa-ask').classList.add('hidden');
+    $('#bifa-form').classList.add('hidden');
+    $('#bifa-result').classList.add('hidden');
+    $('#bifa-skip-note').classList.remove('hidden');
+  }
+
+  function resetBifaPanel() {
+    $('#bifa-form').classList.add('hidden');
+    $('#bifa-result').classList.add('hidden');
+    $('#bifa-skip-note').classList.add('hidden');
+    $('#bifa-ask').classList.remove('hidden');
+  }
+
+  function runBifa() {
+    if (!window.LiuShenBiFa) {
+      alert('测字引擎未加载');
+      return;
+    }
+    const text = ($('#bifa-chars').value || '').trim();
+    if (!text) {
+      alert('请先写下所测汉字（心诚所问）');
+      $('#bifa-chars').focus();
+      return;
+    }
+    try {
+      const result = LiuShenBiFa.divine(text, bifaTopic, currentCast);
+      renderBifa(result);
+    } catch (err) {
+      alert(err.message || String(err));
+    }
+  }
+
+  function renderBifa(r) {
+    $('#bifa-result').classList.remove('hidden');
+    $('#bifa-headline-pro').textContent = r.headline.pro;
+    $('#bifa-headline-plain').textContent = r.headline.plain;
+
+    const bar = $('#bifa-spirit-bar');
+    bar.innerHTML = '';
+    (r.spiritTable || []).forEach((s) => {
+      const el = document.createElement('span');
+      el.className = 'bifa-chip';
+      el.innerHTML = `<strong>${escapeHtml(s.name)}</strong>${s.score} · ${escapeHtml(s.nature)}`;
+      bar.appendChild(el);
+    });
+
+    const setPair = (proId, plainId, pro, plain) => {
+      $(proId).innerHTML = `<span class="lp-badge pro">专业</span>${escapeHtml(pro || '')}`;
+      $(plainId).innerHTML = `<span class="lp-badge plain">白话</span>${escapeHtml(plain || '')}`;
+    };
+    setPair('#bifa-judge-pro', '#bifa-judge-plain', r.judgment.pro, r.judgment.plain);
+    setPair('#bifa-dev-pro', '#bifa-dev-plain', r.develop.pro, r.develop.plain);
+    setPair('#bifa-dir-pro', '#bifa-dir-plain', r.direction.pro, r.direction.plain);
+    setPair('#bifa-adv-pro', '#bifa-adv-plain', r.advice.pro, r.advice.plain);
+
+    const ul = $('#bifa-reasons');
+    ul.innerHTML = '';
+    (r.analysis.reasons || []).forEach((item) => {
+      const li = document.createElement('li');
+      li.textContent = `「${item.char}」· ${item.spirit}：${item.text}`;
+      ul.appendChild(li);
+    });
+    $('#bifa-disclaimer').textContent = r.disclaimer;
+    $('#bifa-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function initLuopan() {
