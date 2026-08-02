@@ -1,6 +1,6 @@
 # Android App 安装说明
 
-「小六壬时运」Android 版：把本仓库网页用 Capacitor 封装为可离线安装的 APK。
+「术数应用」Android 版：把本仓库网页用 Capacitor 封装为可离线安装的 APK。
 
 ## 直接安装（用户）
 

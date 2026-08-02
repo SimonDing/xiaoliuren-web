@@ -12,6 +12,17 @@
   let lastFengshuiResult = null;
   let luopanRunning = false;
   let bifaTopic = '推断';
+  let currentPalm = null;
+  const palmState = {
+    hand: 'left',
+    shape: 'wood',
+    life: 'deepLong',
+    head: 'straight',
+    heart: 'toMiddle',
+    fate: 'clear',
+    marriage: 'oneClear',
+    special: 'none'
+  };
 
   const DIR_CODE = {
     正东: 'E', 东南: 'SE', 正南: 'S', 西南: 'SW',
@@ -49,10 +60,21 @@
     $('#birth-hour').value = 10;
     $('#birth-minute').value = 0;
 
+    const now = new Date();
+    if ($('#qm-year')) {
+      $('#qm-year').value = now.getFullYear();
+      $('#qm-month').value = now.getMonth() + 1;
+      $('#qm-day').value = now.getDate();
+      $('#qm-hour').value = 10;
+      $('#qm-minute').value = 0;
+    }
+
     loadFengshuiForm();
     loadAiForm();
     initLuopan();
     initBifa();
+    initPalm();
+    initQiMing();
     initYangGongKb();
     initStarParticles();
   }
@@ -207,6 +229,242 @@
     });
     $('#bifa-disclaimer').textContent = r.disclaimer;
     $('#bifa-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function bindPalmGroup(groupId, stateKey) {
+    const root = document.getElementById(groupId);
+    if (!root) return;
+    root.querySelectorAll('.bifa-topic').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        palmState[stateKey] = btn.dataset.val;
+        root.querySelectorAll('.bifa-topic').forEach((b) => b.classList.toggle('active', b === btn));
+      });
+    });
+  }
+
+  function initPalm() {
+    const panel = $('#palm-panel');
+    if (!panel) {
+      console.warn('palm-panel missing');
+      return;
+    }
+    const go = (showForm) => {
+      panel.scrollIntoView({ behavior: 'smooth' });
+      if (showForm) showPalmForm();
+    };
+    const goto = $('#btn-goto-palm');
+    if (goto) goto.addEventListener('click', () => go(true));
+    const fromAsp = $('#btn-aspects-palm');
+    if (fromAsp) fromAsp.addEventListener('click', () => go(true));
+    const yes = $('#btn-palm-yes');
+    const no = $('#btn-palm-no');
+    const run = $('#btn-palm-run');
+    const reset = $('#btn-palm-reset');
+    if (yes) yes.addEventListener('click', showPalmForm);
+    if (no) no.addEventListener('click', skipPalm);
+    if (run) run.addEventListener('click', runPalm);
+    if (reset) reset.addEventListener('click', resetPalmPanel);
+    bindPalmGroup('palm-hand', 'hand');
+    bindPalmGroup('palm-shape', 'shape');
+    bindPalmGroup('palm-life', 'life');
+    bindPalmGroup('palm-head', 'head');
+    bindPalmGroup('palm-heart', 'heart');
+    bindPalmGroup('palm-fate', 'fate');
+    bindPalmGroup('palm-marriage', 'marriage');
+    bindPalmGroup('palm-special', 'special');
+    renderPalmIntoAspects(null);
+  }
+
+  function showPalmForm() {
+    $('#palm-ask').classList.add('hidden');
+    $('#palm-form').classList.remove('hidden');
+    $('#palm-skip-note').classList.add('hidden');
+  }
+
+  function skipPalm() {
+    $('#palm-ask').classList.add('hidden');
+    $('#palm-form').classList.add('hidden');
+    $('#palm-result').classList.add('hidden');
+    $('#palm-skip-note').classList.remove('hidden');
+  }
+
+  function resetPalmPanel() {
+    $('#palm-form').classList.add('hidden');
+    $('#palm-result').classList.add('hidden');
+    $('#palm-skip-note').classList.add('hidden');
+    $('#palm-ask').classList.remove('hidden');
+  }
+
+  function runPalm() {
+    if (!window.ShouXiang) {
+      alert('手相引擎未加载');
+      return;
+    }
+    try {
+      const input = {
+        hand: palmState.hand,
+        shape: palmState.shape,
+        life: palmState.life,
+        head: palmState.head,
+        heart: palmState.heart,
+        fate: palmState.fate,
+        marriage: palmState.marriage,
+        special: palmState.special
+      };
+      const result = ShouXiang.analyze(input, currentCast);
+      currentPalm = result;
+      renderPalm(result);
+      renderPalmIntoAspects(result);
+    } catch (err) {
+      alert(err.message || String(err));
+    }
+  }
+
+  function initQiMing() {
+    const goto = $('#btn-goto-qiming');
+    if (goto) {
+      goto.addEventListener('click', () => {
+        $('#qiming-panel').scrollIntoView({ behavior: 'smooth' });
+        const sn = $('#qm-surname');
+        if (sn) sn.focus();
+      });
+    }
+    const run = $('#btn-qiming-run');
+    if (run) run.addEventListener('click', runQiMing);
+    const sync = $('#btn-qiming-from-bazi');
+    if (sync) sync.addEventListener('click', syncQiMingFromBazi);
+  }
+
+  function syncQiMingFromBazi() {
+    const map = [
+      ['birth-year', 'qm-year'],
+      ['birth-month', 'qm-month'],
+      ['birth-day', 'qm-day'],
+      ['birth-hour', 'qm-hour'],
+      ['birth-minute', 'qm-minute']
+    ];
+    map.forEach(([from, to]) => {
+      const a = $('#' + from);
+      const b = $('#' + to);
+      if (a && b && a.value !== '') b.value = a.value;
+    });
+    const g1 = $('#birth-gender');
+    const g2 = $('#qm-gender');
+    if (g1 && g2) g2.value = g1.value;
+    $('#qiming-panel').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function runQiMing() {
+    if (!window.QiMing) {
+      alert('起名引擎未加载');
+      return;
+    }
+    try {
+      const result = QiMing.generateNames({
+        surname: ($('#qm-surname').value || '').trim(),
+        gender: $('#qm-gender').value,
+        year: Number($('#qm-year').value),
+        month: Number($('#qm-month').value),
+        day: Number($('#qm-day').value),
+        hour: Number($('#qm-hour').value),
+        minute: Number($('#qm-minute').value || 0),
+        len: Number($('#qm-len').value),
+        style: $('#qm-style').value,
+        count: 10,
+        palace: currentCast && currentCast.palace
+      });
+      renderQiMing(result);
+    } catch (err) {
+      alert(err.message || String(err));
+    }
+  }
+
+  function renderQiMing(r) {
+    const box = $('#qiming-result');
+    if (!box) return;
+    box.classList.remove('hidden');
+    $('#qm-headline-pro').textContent = '起名总断';
+    $('#qm-headline-plain').innerHTML =
+      `<span class="lp-badge pro">专业</span>${escapeHtml(r.summary.pro)}<br /><br />` +
+      `<span class="lp-badge plain">白话</span>${escapeHtml(r.summary.plain)}`;
+    $('#qm-yong').textContent =
+      `喜用五行：${r.yongShen.join('、')}｜命局最弱：${r.weakWx}｜年支生肖地支：${r.zodiacZhi}`;
+
+    const host = $('#qm-names');
+    host.innerHTML = '';
+    (r.names || []).forEach((n, idx) => {
+      const art = document.createElement('article');
+      art.className = 'qm-card';
+      art.innerHTML =
+        `<div class="qm-card-head">` +
+        `<h3 class="qm-card-name">${escapeHtml(n.fullName)}</h3>` +
+        `<span class="qm-card-meta">第${idx + 1}选 · 匹配 ${n.score} · 五行 ${escapeHtml(n.wuxing)}</span>` +
+        `</div>` +
+        `<p class="lp-tip-pro"><span class="lp-badge pro">专业</span>${escapeHtml(n.pro)}</p>` +
+        `<p class="lp-tip-plain"><span class="lp-badge plain">白话</span>${escapeHtml(n.plain)}</p>` +
+        `<p class="qm-card-meta" style="margin-top:0.45rem">字义：${escapeHtml(n.meanings.join('；'))}</p>`;
+      host.appendChild(art);
+    });
+    $('#qm-disclaimer').textContent = r.disclaimer;
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function renderPalmIntoAspects(r) {
+    const el = $('#asp-palm');
+    if (!el) return;
+    if (!r) {
+      el.textContent = '尚未填写手相。若对以上断语没把握，请点「手相辅助」勾选掌纹；完成后此处并入《手相全篇》+ 盲派白话总断。';
+      return;
+    }
+    const mang = (r.aspects && r.aspects.mangpai && r.aspects.mangpai.plain) || '';
+    const love = (r.aspects && r.aspects.love && r.aspects.love.plain) || '';
+    const career = (r.aspects && r.aspects.career && r.aspects.career.plain) || '';
+    const wealth = (r.aspects && r.aspects.wealth && r.aspects.wealth.plain) || '';
+    el.textContent = [
+      '【手相合参·' + r.headline.pro + '】',
+      r.headline.plain,
+      '事业：' + career,
+      '财运：' + wealth,
+      '感情：' + love,
+      mang
+    ].filter(Boolean).join('\n');
+  }
+
+  function renderPalm(r) {
+    const resultBox = $('#palm-result');
+    if (!resultBox) return;
+    resultBox.classList.remove('hidden');
+    $('#palm-ask').classList.add('hidden');
+    $('#palm-form').classList.remove('hidden');
+    $('#palm-skip-note').classList.add('hidden');
+    $('#palm-headline-pro').textContent = r.headline.pro;
+    $('#palm-headline-plain').textContent = r.headline.plain;
+
+    const feat = $('#palm-features');
+    feat.innerHTML = '';
+    (r.features || []).forEach((f) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${escapeHtml(f.label)}</strong>${escapeHtml(f.value)}`;
+      feat.appendChild(li);
+    });
+
+    const box = $('#palm-aspects');
+    box.innerHTML = '';
+    (r.order || []).forEach((item) => {
+      const a = r.aspects[item.key];
+      if (!a) return;
+      const art = document.createElement('article');
+      art.className = 'bifa-block palm-aspect';
+      const plainHtml = escapeHtml(a.plain || '').replace(/\n/g, '<br />');
+      art.innerHTML =
+        `<h3>${escapeHtml(item.title)}</h3>` +
+        `<p class="lp-tip-pro"><span class="lp-badge pro">专业</span>${escapeHtml(a.pro || '')}</p>` +
+        `<p class="lp-tip-plain"><span class="lp-badge plain">白话</span>${plainHtml}</p>`;
+      box.appendChild(art);
+    });
+
+    $('#palm-disclaimer').textContent = r.disclaimer;
+    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function initLuopan() {
@@ -661,6 +919,8 @@
     $('#score-fill').style.width = score + '%';
     const delta = combo && combo.scoreDelta ? `（合参${combo.scoreDelta >= 0 ? '+' : ''}${combo.scoreDelta}）` : '';
     $('#score-label').textContent = `时运指数 ${score}${delta}`;
+    const palmHint = ' 若仍没把握，可在下方「手相辅助」勾选掌纹做交叉验证。';
+    $('#tip').textContent = (tip || '') + palmHint;
 
     $('#asp-overall').textContent = aspects.overall;
     $('#asp-career').textContent = aspects.career;
@@ -672,9 +932,9 @@
     $('#asp-study').textContent = aspects.study;
     if ($('#asp-lost')) $('#asp-lost').textContent = aspects.lost || '';
     if ($('#asp-truth')) $('#asp-truth').textContent = aspects.truth || '';
+    renderPalmIntoAspects(currentPalm);
     $('#yi').textContent = aspects.suit;
     $('#ji').textContent = aspects.avoid;
-    $('#tip').textContent = tip;
     renderOracles(cast);
   }
 

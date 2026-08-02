@@ -82,12 +82,12 @@ fs.writeFileSync(
   path.join(www, 'manifest.webmanifest'),
   JSON.stringify(
     {
-      name: '小六壬时运',
-      short_name: '小六壬',
+      name: '术数应用',
+      short_name: '术数应用',
       start_url: '.',
       display: 'standalone',
-      background_color: '#0c0b09',
-      theme_color: '#0c0b09',
+      background_color: '#173A5C',
+      theme_color: '#1E4D7B',
       lang: 'zh-CN'
     },
     null,

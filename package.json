@@ -1,7 +1,7 @@
 {
   "name": "xiaoliuren-web",
-  "version": "1.2.7",
-  "description": "小六壬时运占测 · Android / Web",
+  "version": "1.3.0",
+  "description": "术数应用 · 小六壬时运合参 · 起名 · Android / Web",
   "private": true,
   "scripts": {
     "build:web": "node scripts/prepare-www.js",

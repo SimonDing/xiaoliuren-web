@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>小六壬 · 时运占测</title>
+  <title>术数应用</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
@@ -16,9 +16,9 @@
     <header class="hero">
       <div class="hero-ring" aria-hidden="true"></div>
       <p class="hero-eyebrow">道士蓝 · 天宫澄明</p>
-      <h1 class="brand">小六壬</h1>
-      <div class="brand-seal">时运占测</div>
-      <p class="hero-sub">打开即按当下起小六壬与高岛卦；可再以六神笔法测字合参，亦可合奇门、杨公风水与生辰八字细化。</p>
+      <h1 class="brand">术数应用</h1>
+      <div class="brand-seal">时运合参</div>
+      <p class="hero-sub">打开即按当下起小六壬与高岛卦；可再以六神笔法测字、手相辅助、传统起名，亦可合奇门、杨公风水与生辰八字细化。</p>
       <div class="clock-line pulse">起课时刻 <span id="live-clock">—</span></div>
     </header>
 
@@ -51,10 +51,108 @@
       <div class="btn-row">
         <button type="button" id="btn-refresh">重新起课</button>
         <button type="button" class="ghost" id="btn-goto-bifa">六神测字</button>
+        <button type="button" class="ghost" id="btn-goto-palm">手相辅助</button>
         <button type="button" class="ghost" onclick="document.getElementById('takashima-panel').scrollIntoView({behavior:'smooth'})">高岛合参</button>
         <button type="button" class="ghost" onclick="document.getElementById('fate-panel').scrollIntoView({behavior:'smooth'})">改运方位</button>
         <button type="button" class="ghost" onclick="document.getElementById('fengshui-panel').scrollIntoView({behavior:'smooth'})">杨公风水</button>
+        <button type="button" class="ghost" id="btn-goto-qiming">小孩起名</button>
         <button type="button" class="ghost" onclick="document.getElementById('bazi-panel').scrollIntoView({behavior:'smooth'})">八字细盘</button>
+      </div>
+    </section>
+
+    <section class="panel" id="palm-panel">
+      <h2>手相辅助 <small>《手相全篇》脉络 · 盲派白话 · 与时课合参</small></h2>
+      <p class="oracle-intro">
+        若对课象、测字把握不大，可按自身掌纹如实勾选。依据《手相全篇》三才主线与丘纹大意，并掺入盲派「断事」说法，用大白话逐项说明；再与打开时的小六壬时课合参。男多以左手看先天、右手看后天；女反之。以你看得最清楚的那只手为准即可。
+      </p>
+      <div class="bifa-ask" id="palm-ask">
+        <p class="bifa-ask-q">需要用手相来辅助确认当前预测吗？</p>
+        <div class="btn-row">
+          <button type="button" id="btn-palm-yes">需要手相辅助</button>
+          <button type="button" class="ghost" id="btn-palm-no">暂不需要</button>
+        </div>
+      </div>
+      <div class="bifa-form hidden" id="palm-form">
+        <p class="bifa-label">所看之手</p>
+        <div class="bifa-topics" id="palm-hand" role="radiogroup" aria-label="所看之手">
+          <button type="button" class="bifa-topic active" data-val="left">左手</button>
+          <button type="button" class="bifa-topic" data-val="right">右手</button>
+        </div>
+
+        <p class="bifa-label" style="margin-top:0.9rem">手型（五行掌）</p>
+        <div class="bifa-topics" id="palm-shape" role="radiogroup">
+          <button type="button" class="bifa-topic active" data-val="wood">木型长掌</button>
+          <button type="button" class="bifa-topic" data-val="fire">火型精神</button>
+          <button type="button" class="bifa-topic" data-val="earth">土型厚方</button>
+          <button type="button" class="bifa-topic" data-val="metal">金型利落</button>
+          <button type="button" class="bifa-topic" data-val="water">水型柔厚</button>
+        </div>
+
+        <p class="bifa-label" style="margin-top:0.9rem">生命线</p>
+        <div class="bifa-topics" id="palm-life" role="radiogroup">
+          <button type="button" class="bifa-topic active" data-val="deepLong">深长有力</button>
+          <button type="button" class="bifa-topic" data-val="shortShallow">短浅偏弱</button>
+          <button type="button" class="bifa-topic" data-val="broken">中断</button>
+          <button type="button" class="bifa-topic" data-val="island">有岛纹</button>
+          <button type="button" class="bifa-topic" data-val="double">双线护线</button>
+        </div>
+
+        <p class="bifa-label" style="margin-top:0.9rem">智慧线</p>
+        <div class="bifa-topics" id="palm-head" role="radiogroup">
+          <button type="button" class="bifa-topic active" data-val="straight">平直清晰</button>
+          <button type="button" class="bifa-topic" data-val="curved">下弯入月丘</button>
+          <button type="button" class="bifa-topic" data-val="short">偏短</button>
+          <button type="button" class="bifa-topic" data-val="long">过长思虑</button>
+          <button type="button" class="bifa-topic" data-val="separate">与生命线分离</button>
+        </div>
+
+        <p class="bifa-label" style="margin-top:0.9rem">感情线</p>
+        <div class="bifa-topics" id="palm-heart" role="radiogroup">
+          <button type="button" class="bifa-topic active" data-val="toMiddle">入中指缝（中正）</button>
+          <button type="button" class="bifa-topic" data-val="toIndex">上达食指</button>
+          <button type="button" class="bifa-topic" data-val="chained">链状波动</button>
+          <button type="button" class="bifa-topic" data-val="forked">末端分叉</button>
+          <button type="button" class="bifa-topic" data-val="short">偏短直接</button>
+        </div>
+
+        <p class="bifa-label" style="margin-top:0.9rem">事业线（命运线）</p>
+        <div class="bifa-topics" id="palm-fate" role="radiogroup">
+          <button type="button" class="bifa-topic active" data-val="clear">清晰贯通</button>
+          <button type="button" class="bifa-topic" data-val="broken">断续</button>
+          <button type="button" class="bifa-topic" data-val="none">不明显</button>
+          <button type="button" class="bifa-topic" data-val="late">中段始起</button>
+        </div>
+
+        <p class="bifa-label" style="margin-top:0.9rem">婚姻线</p>
+        <div class="bifa-topics" id="palm-marriage" role="radiogroup">
+          <button type="button" class="bifa-topic active" data-val="oneClear">一条清晰</button>
+          <button type="button" class="bifa-topic" data-val="multiple">多条</button>
+          <button type="button" class="bifa-topic" data-val="forked">分叉/下垂</button>
+          <button type="button" class="bifa-topic" data-val="none">模糊难辨</button>
+        </div>
+
+        <p class="bifa-label" style="margin-top:0.9rem">特殊纹（可选）</p>
+        <div class="bifa-topics" id="palm-special" role="radiogroup">
+          <button type="button" class="bifa-topic active" data-val="none">无特别强纹</button>
+          <button type="button" class="bifa-topic" data-val="mPattern">M字纹</button>
+          <button type="button" class="bifa-topic" data-val="brokenPalm">断掌</button>
+          <button type="button" class="bifa-topic" data-val="mysticCross">神秘十字</button>
+        </div>
+
+        <div class="btn-row" style="margin-top:1rem">
+          <button type="button" id="btn-palm-run">逐项手相断</button>
+          <button type="button" class="ghost" id="btn-palm-reset">收起</button>
+        </div>
+      </div>
+      <p class="bifa-skip-note hidden" id="palm-skip-note">已跳过手相。若之后对预测没把握，随时点「手相辅助」。</p>
+      <div class="bifa-result hidden" id="palm-result">
+        <div class="refine-box">
+          <h3 id="palm-headline-pro">手相结论</h3>
+          <p id="palm-headline-plain" style="margin:0;line-height:1.75;color:var(--paper-dim)"></p>
+        </div>
+        <ul class="palm-features" id="palm-features"></ul>
+        <div id="palm-aspects"></div>
+        <p class="bifa-disclaimer" id="palm-disclaimer"></p>
       </div>
     </section>
 
@@ -234,7 +332,7 @@
     </section>
 
     <section class="panel">
-      <h2>全方面断语 <small>小六壬 × 高岛断易合参</small></h2>
+      <h2>全方面断语 <small>小六壬 × 高岛断易 × 手相合参</small></h2>
       <div class="aspects">
         <article class="aspect"><h3>总体</h3><p id="asp-overall"></p></article>
         <article class="aspect"><h3>事业</h3><p id="asp-career"></p></article>
@@ -246,10 +344,18 @@
         <article class="aspect"><h3>学业</h3><p id="asp-study"></p></article>
         <article class="aspect aspect-oracle"><h3>寻失物</h3><p id="asp-lost"></p></article>
         <article class="aspect aspect-oracle"><h3>测谎话</h3><p id="asp-truth"></p></article>
+        <article class="aspect aspect-palm" id="asp-palm-card">
+          <h3>手相合参</h3>
+          <p id="asp-palm">尚未填写手相。若对以上断语没把握，请点上方「手相辅助」勾选掌纹后，此处会并入《手相全篇》+ 盲派白话总断。</p>
+        </article>
       </div>
       <div class="yi-ji">
         <div class="yi"><strong>宜</strong><div id="yi" style="margin-top:0.35rem"></div></div>
         <div class="ji"><strong>忌</strong><div id="ji" style="margin-top:0.35rem"></div></div>
+      </div>
+      <div class="palm-cta">
+        <p class="palm-cta-q">对上面预测不太确信？可用手相交叉验证。</p>
+        <button type="button" class="ghost" id="btn-aspects-palm">打开手相辅助</button>
       </div>
     </section>
 
@@ -427,6 +533,55 @@
       </div>
     </section>
 
+    <section class="panel" id="qiming-panel">
+      <h2>小孩起名 <small>八字喜用 · 五格参考 · 音义性别</small></h2>
+      <p class="oracle-intro">
+        按中国传统命理：先排宝宝生辰八字，看日主强弱与喜用五行，再从字义、音律、五格数理里挑名。可合参当前时课五行。名字重缘分与称呼习惯，下列为文化参考，不必迷信。
+      </p>
+      <div class="form-grid" style="margin-top:0.6rem">
+        <label>姓氏<input id="qm-surname" type="text" maxlength="2" placeholder="如：王" autocomplete="off" /></label>
+        <label>性别
+          <select id="qm-gender">
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </label>
+        <label>出生年<input id="qm-year" type="number" min="1900" max="2100" placeholder="2024" /></label>
+        <label>月<input id="qm-month" type="number" min="1" max="12" placeholder="8" /></label>
+        <label>日<input id="qm-day" type="number" min="1" max="31" placeholder="15" /></label>
+        <label>时（0-23）<input id="qm-hour" type="number" min="0" max="23" placeholder="10" /></label>
+        <label>分<input id="qm-minute" type="number" min="0" max="59" placeholder="0" /></label>
+        <label>名长
+          <select id="qm-len">
+            <option value="2">双字名</option>
+            <option value="1">单字名</option>
+          </select>
+        </label>
+        <label>风格
+          <select id="qm-style">
+            <option value="文雅">文雅书卷</option>
+            <option value="刚健">刚健有力</option>
+            <option value="柔美">柔美秀丽</option>
+            <option value="福泽">福泽吉祥</option>
+            <option value="自然">自然清新</option>
+          </select>
+        </label>
+      </div>
+      <div class="btn-row">
+        <button type="button" id="btn-qiming-run">按命理起名</button>
+        <button type="button" class="ghost" id="btn-qiming-from-bazi">同步八字生辰</button>
+      </div>
+      <div id="qiming-result" class="hidden" style="margin-top:1.2rem">
+        <div class="refine-box">
+          <h3 id="qm-headline-pro">起名总断</h3>
+          <p id="qm-headline-plain" style="margin:0;line-height:1.75;color:var(--paper-dim)"></p>
+          <p id="qm-yong" style="margin:0.7rem 0 0;color:var(--gold);letter-spacing:0.06em;font-size:0.9rem"></p>
+        </div>
+        <div id="qm-names" class="qm-names"></div>
+        <p class="bifa-disclaimer" id="qm-disclaimer"></p>
+      </div>
+    </section>
+
     <section class="panel" id="bazi-panel">
       <h2>八字细盘 <small>可选 · 与小六壬合参</small></h2>
       <p style="color:var(--paper-dim);font-size:0.9rem;line-height:1.7;margin-top:0">输入阳历生辰，排出四柱，并结合今日课象五行与命局喜用，给出更贴身的行动建议。</p>
@@ -504,6 +659,10 @@
   <script src="js/ai-fengshui.js"></script>
   <script src="js/fatechange.js"></script>
   <script src="js/liushen-bifa.js"></script>
+  <script src="js/shouxiang-data.js"></script>
+  <script src="js/shouxiang.js"></script>
+  <script src="js/qiming-data.js"></script>
+  <script src="js/qiming.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
