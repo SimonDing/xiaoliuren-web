@@ -548,16 +548,16 @@
       ctx.clearRect(0, 0, w, w);
 
       const g = ctx.createRadialGradient(cx, cy, R * 0.06, cx, cy, R);
-      g.addColorStop(0, '#3a2e22');
-      g.addColorStop(0.4, '#241c14');
-      g.addColorStop(0.8, '#12100c');
-      g.addColorStop(1, '#070605');
+      g.addColorStop(0, '#2A1F45');
+      g.addColorStop(0.35, '#1A2240');
+      g.addColorStop(0.7, '#12182A');
+      g.addColorStop(1, '#0D1117');
       ctx.beginPath();
       ctx.arc(cx, cy, R, 0, Math.PI * 2);
       ctx.fillStyle = g;
       ctx.fill();
       ctx.lineWidth = Math.max(2, w * 0.01);
-      ctx.strokeStyle = '#c9a45c';
+      ctx.strokeStyle = '#D4AF37';
       ctx.stroke();
 
       ctx.save();
@@ -573,13 +573,13 @@
         ctx.beginPath();
         ctx.moveTo(Math.cos(ang) * R * 0.998, Math.sin(ang) * R * 0.998);
         ctx.lineTo(Math.cos(ang) * R * (0.998 - len), Math.sin(ang) * R * (0.998 - len));
-        ctx.strokeStyle = major ? '#e8c87a' : fen ? 'rgba(201,164,92,0.5)' : 'rgba(201,164,92,0.18)';
+        ctx.strokeStyle = major ? '#F0C05A' : fen ? 'rgba(212,175,55,0.5)' : 'rgba(212,175,55,0.18)';
         ctx.lineWidth = major ? 1.1 : 0.5;
         ctx.stroke();
         if (major && w >= 340) {
           ctx.save();
           ctx.rotate(ang + Math.PI / 2);
-          ringLabel(String(d), R * 0.935, '#c9a45c', Math.max(6, w * 0.018));
+          ringLabel(String(d), R * 0.935, '#D4AF37', Math.max(6, w * 0.018));
           ctx.restore();
         }
       }
@@ -589,7 +589,7 @@
         const ang = ((x.center - 90) * Math.PI) / 180;
         ctx.save();
         ctx.rotate(ang + Math.PI / 2);
-        ringLabel(x.name, R * 0.88, 'rgba(150,185,165,0.85)', Math.max(6, w * 0.016));
+        ringLabel(x.name, R * 0.88, 'rgba(160,165,181,0.85)', Math.max(6, w * 0.016));
         ctx.restore();
       });
 
@@ -651,41 +651,41 @@
         ctx.stroke();
       });
 
-      drawMountainRing(R * 0.7, R * 0.655, -TIAN_OFFSET, 'rgba(140,190,210,0.7)', '#8fd0e8', 0.022, w);
-      drawMountainRing(R * 0.6, R * 0.555, -REN_OFFSET, 'rgba(200,160,100,0.75)', '#e8b86a', 0.024, w);
-      drawMountainRing(R * 0.5, R * 0.445, 0, 'rgba(210,185,120,0.85)', '#f0d78c', 0.03, w);
+      drawMountainRing(R * 0.7, R * 0.655, -TIAN_OFFSET, 'rgba(42,82,104,0.85)', '#7EB6D4', 0.022, w);
+      drawMountainRing(R * 0.6, R * 0.555, -REN_OFFSET, 'rgba(212,175,55,0.55)', '#F0C05A', 0.024, w);
+      drawMountainRing(R * 0.5, R * 0.445, 0, 'rgba(212,175,55,0.75)', '#D4AF37', 0.03, w);
 
       // 后天 / 先天
       HOU_TIAN.forEach((b) => {
         const ang = ((b.center - 90) * Math.PI) / 180;
         ctx.save();
         ctx.rotate(ang + Math.PI / 2);
-        ringLabel(b.name, R * 0.36, '#e8dcc4', Math.max(9, w * 0.03));
+        ringLabel(b.name, R * 0.36, '#F0F0F0', Math.max(9, w * 0.03));
         ctx.restore();
       });
       XIAN_TIAN.forEach((b) => {
         const ang = ((b.center - 90) * Math.PI) / 180;
         ctx.save();
         ctx.rotate(ang + Math.PI / 2);
-        ringLabel(b.name, R * 0.255, 'rgba(150,130,100,0.75)', Math.max(7, w * 0.02));
+        ringLabel(b.name, R * 0.255, 'rgba(160,165,181,0.8)', Math.max(7, w * 0.02));
         ctx.restore();
       });
 
       // 天池
       ctx.beginPath();
       ctx.arc(0, 0, R * 0.16, 0, Math.PI * 2);
-      ctx.fillStyle = '#0e0c09';
+      ctx.fillStyle = '#0D1117';
       ctx.fill();
-      ctx.strokeStyle = '#c9a45c';
+      ctx.strokeStyle = '#D4AF37';
       ctx.lineWidth = 1.4;
       ctx.stroke();
-      ctx.fillStyle = '#c9a45c';
+      ctx.fillStyle = '#F0C05A';
       ctx.font = `${Math.max(8, w * 0.024)}px "ZCOOL XiaoWei", "KaiTi", serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('天池', 0, -2);
       ctx.font = `${Math.max(6, w * 0.016)}px sans-serif`;
-      ctx.fillStyle = 'rgba(201,164,92,0.65)';
+      ctx.fillStyle = 'rgba(212,175,55,0.7)';
       ctx.fillText('磁北', 0, 11);
 
       ctx.beginPath();
@@ -693,7 +693,7 @@
       ctx.lineTo(-4, -R * 0.95);
       ctx.lineTo(4, -R * 0.95);
       ctx.closePath();
-      ctx.fillStyle = '#b33a2b';
+      ctx.fillStyle = '#D4AF37';
       ctx.fill();
 
       ctx.restore();
@@ -704,19 +704,19 @@
       ctx.lineTo(cx - 8, cy - R + 18);
       ctx.lineTo(cx + 8, cy - R + 18);
       ctx.closePath();
-      ctx.fillStyle = '#d4513d';
+      ctx.fillStyle = '#F0C05A';
       ctx.fill();
-      ctx.strokeStyle = '#f0e2b8';
+      ctx.strokeStyle = '#D4AF37';
       ctx.stroke();
 
-      ctx.strokeStyle = 'rgba(232,220,196,0.2)';
+      ctx.strokeStyle = 'rgba(160,165,181,0.25)';
       ctx.beginPath();
       ctx.moveTo(cx, cy - R * 0.72);
       ctx.lineTo(cx, cy + R * 0.72);
       ctx.moveTo(cx - R * 0.72, cy);
       ctx.lineTo(cx + R * 0.72, cy);
       ctx.stroke();
-      ctx.strokeStyle = 'rgba(212,81,61,0.4)';
+      ctx.strokeStyle = 'rgba(212,175,55,0.45)';
       ctx.beginPath();
       ctx.moveTo(cx, cy - R * 0.72);
       ctx.lineTo(cx, cy - R * 0.18);

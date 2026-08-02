@@ -54,6 +54,23 @@
     initLuopan();
     initBifa();
     initYangGongKb();
+    initStarParticles();
+  }
+
+  function initStarParticles() {
+    const host = $('#star-particles');
+    if (!host) return;
+    host.innerHTML = '';
+    const n = 28;
+    for (let i = 0; i < n; i++) {
+      const el = document.createElement('i');
+      el.style.left = Math.random() * 100 + '%';
+      el.style.top = Math.random() * 100 + '%';
+      el.style.animationDuration = 18 + Math.random() * 28 + 's';
+      el.style.animationDelay = -Math.random() * 40 + 's';
+      el.style.opacity = String(0.25 + Math.random() * 0.55);
+      host.appendChild(el);
+    }
   }
 
   function initYangGongKb() {
