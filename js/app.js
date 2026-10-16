@@ -36,11 +36,40 @@
 
   function init() {
     buildWheelLabels();
-    runCast(new Date());
+    showLoading();
+    
+    try {
+      runCast(new Date());
+      hideLoading();
+    } catch (err) {
+      showError(err.message || '起卦失败，请重试');
+    }
+    
     tickClock();
     setInterval(tickClock, 1000);
 
-    $('#btn-refresh').addEventListener('click', () => runCast(new Date()));
+    $('#btn-refresh').addEventListener('click', () => {
+      showLoading();
+      try {
+        runCast(new Date());
+        hideLoading();
+      } catch (err) {
+        showError(err.message || '起卦失败，请重试');
+      }
+    });
+    
+    const retryBtn = $('#btn-retry');
+    if (retryBtn) {
+      retryBtn.addEventListener('click', () => {
+        showLoading();
+        try {
+          runCast(new Date());
+          hideLoading();
+        } catch (err) {
+          showError(err.message || '起卦失败，请重试');
+        }
+      });
+    }
     $('#btn-bazi').addEventListener('click', onBaziSubmit);
     $('#btn-clear-bazi').addEventListener('click', clearBazi);
     $('#btn-geo').addEventListener('click', onGeoLocate);
@@ -866,6 +895,28 @@
     $('#live-clock').textContent = Lunar.formatSolar(new Date());
   }
 
+  function showLoading() {
+    const loading = $('#loading-overlay');
+    const error = $('#error-overlay');
+    if (loading) loading.style.display = 'flex';
+    if (error) error.style.display = 'none';
+  }
+
+  function hideLoading() {
+    const loading = $('#loading-overlay');
+    if (loading) loading.style.display = 'none';
+  }
+
+  function showError(message) {
+    const loading = $('#loading-overlay');
+    const error = $('#error-overlay');
+    const errorMsg = $('#error-message');
+    
+    if (loading) loading.style.display = 'none';
+    if (error) error.style.display = 'flex';
+    if (errorMsg) errorMsg.textContent = message || '起卦失败，请重试';
+  }
+
   function buildWheelLabels() {
     const wheel = $('#wheel');
     XiaoLiuRen.PALACES.forEach((p, i) => {
@@ -879,17 +930,32 @@
   }
 
   function runCast(date) {
-    lastDate = date;
-    currentCast = XiaoLiuRen.castFromDate(date);
-    currentTakashima = Takashima.castFromDate(date);
-    currentCombo = Takashima.combineWithLiuRen(currentTakashima, currentCast);
-    renderCast(currentCast, currentCombo);
-    renderTakashima(currentTakashima, currentCombo);
-    if (currentBazi) {
-      renderRefine(XiaoLiuRen.refineWithBazi(currentCast, currentBazi));
+    try {
+      if (!window.XiaoLiuRen) {
+        throw new Error('小六壬引擎未加载');
+      }
+      if (!window.Takashima) {
+        throw new Error('高岛断易引擎未加载');
+      }
+      if (!window.FateChange) {
+        throw new Error('改运引擎未加载');
+      }
+      
+      lastDate = date;
+      currentCast = XiaoLiuRen.castFromDate(date);
+      currentTakashima = Takashima.castFromDate(date);
+      currentCombo = Takashima.combineWithLiuRen(currentTakashima, currentCast);
+      renderCast(currentCast, currentCombo);
+      renderTakashima(currentTakashima, currentCombo);
+      if (currentBazi) {
+        renderRefine(XiaoLiuRen.refineWithBazi(currentCast, currentBazi));
+      }
+      currentFate = FateChange.synthesize(date, currentCast, currentBazi, currentTakashima);
+      renderFate(currentFate);
+    } catch (err) {
+      console.error('起卦失败:', err);
+      throw err;
     }
-    currentFate = FateChange.synthesize(date, currentCast, currentBazi, currentTakashima);
-    renderFate(currentFate);
   }
 
   function renderCast(cast, combo) {

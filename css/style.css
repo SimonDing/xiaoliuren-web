@@ -1751,3 +1751,55 @@ button.ghost:hover {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.35; }
   50% { transform: translate3d(2%, -1%, 0) scale(1.05); opacity: 0.55; }
 }
+
+.loading-overlay,
+.error-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(23, 58, 92, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  border-radius: 16px;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--gold-dim);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-overlay p,
+.error-overlay p {
+  color: var(--paper);
+  font-size: 1rem;
+  margin: 0;
+  letter-spacing: 0.08em;
+}
+
+.error-overlay {
+  gap: 16px;
+}
+
+.error-message {
+  color: var(--cinnabar-bright);
+  font-size: 1.05rem;
+}
+
+.error-overlay button {
+  margin-top: 8px;
+}
