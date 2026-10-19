@@ -652,7 +652,8 @@
       }
 
       status.textContent = '正在请求 AI 分析…';
-      box.classList.add('hidden');
+      box.textContent = '正在请求 AI 分析，请稍候…';
+      box.classList.remove('hidden');
       const sitLabel = $('#fs-sit').selectedOptions[0].textContent;
       const content = await AiFengshui.analyze({
         lat: $('#fs-lat').value,
@@ -677,8 +678,10 @@
       status.textContent = '分析完成（仅供参考）';
       box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
+      const errorMsg = err.message || String(err) || '加载失败，请重试';
       status.textContent = '';
-      alert(err.message || String(err));
+      box.innerHTML = `<div style="color:var(--gold-dim);margin-bottom:0.8rem">❌ ${errorMsg}</div><button type="button" onclick="document.getElementById('btn-ai-analyze').click()" style="padding:0.4rem 1rem;background:var(--gold-dim);border:none;border-radius:0.25rem;color:var(--bg-dark);cursor:pointer;font-size:0.9rem">重试</button>`;
+      box.classList.remove('hidden');
     }
   }
 
