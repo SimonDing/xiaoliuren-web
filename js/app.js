@@ -183,10 +183,28 @@
       alert('测字引擎未加载');
       return;
     }
-    const text = ($('#bifa-chars').value || '').trim();
+    const input = $('#bifa-chars');
+    const text = (input.value || '').trim();
+    
+    // 清除之前可能存在的错误提示
+    const existingError = input.parentNode.querySelector('.bifa-error');
+    if (existingError) {
+      existingError.remove();
+    }
+    input.classList.remove('has-error');
+    input.removeAttribute('aria-invalid');
+    
     if (!text) {
-      alert('请先写下所测汉字（心诚所问）');
-      $('#bifa-chars').focus();
+      // 显示中文错误提示
+      const errorSpan = document.createElement('span');
+      errorSpan.className = 'bifa-error';
+      errorSpan.textContent = '请至少输入一个要测的汉字';
+      input.parentNode.insertBefore(errorSpan, input.nextSibling);
+      
+      // 添加错误状态
+      input.classList.add('has-error');
+      input.setAttribute('aria-invalid', 'true');
+      input.focus();
       return;
     }
     try {

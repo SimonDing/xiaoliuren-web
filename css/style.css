@@ -906,6 +906,20 @@ body.native-app select {
   border-color: var(--gold);
 }
 
+.bifa-input.has-error {
+  border-color: var(--cinnabar);
+  outline: 2px solid rgba(196, 92, 106, 0.35);
+}
+
+.bifa-error {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--cinnabar-bright);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
 .bifa-topics {
   display: flex;
   flex-wrap: wrap;
