@@ -41,6 +41,7 @@
     setInterval(tickClock, 1000);
 
     $('#btn-refresh').addEventListener('click', () => runCast(new Date()));
+    $('#btn-copy-result').addEventListener('click', copyResultToClipboard);
     $('#btn-bazi').addEventListener('click', onBaziSubmit);
     $('#btn-clear-bazi').addEventListener('click', clearBazi);
     $('#btn-geo').addEventListener('click', onGeoLocate);
@@ -893,6 +894,13 @@
   }
 
   function renderCast(cast, combo) {
+    // 异常和空值检查
+    if (!cast || !cast.palace || !cast.path || !cast.path.indices) {
+      showError('时间数据异常，请点击下方「重新起课」按钮。');
+      return;
+    }
+    hideError();
+
     const p = cast.palace;
     const idx = cast.path.indices.finalIdx;
     const aspects = (combo && combo.aspects) || cast.aspects;
@@ -1152,6 +1160,147 @@
     $('#rf-love').textContent = r.love;
     $('#rf-health').textContent = r.health;
     $('#rf-focus').textContent = `方位：${r.focus.directions}。颜色：${r.focus.colors}。事业参考：${r.focus.careers}。`;
+  }
+
+  // 复制结果到剪贴板
+  function copyResultToClipboard() {
+    if (!currentCast || !currentCast.palace) {
+      alert('当前无有效结果可复制');
+      return;
+    }
+
+    const text = buildResultText(currentCast, currentCombo);
+    
+    // 尝试使用现代 Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          showCopyFeedback();
+        })
+        .catch((err) => {
+          console.error('复制失败:', err);
+          fallbackCopy(text);
+        });
+    } else {
+      // 降级方案：使用 execCommand
+      fallbackCopy(text);
+    }
+  }
+
+  // 构建复制文本内容
+  function buildResultText(cast, combo) {
+    const p = cast.palace;
+    const score = combo ? combo.score : cast.score;
+    const tip = combo ? combo.tip : cast.tip;
+    const aspects = (combo && combo.aspects) || cast.aspects;
+
+    let text = `【术数应用 · 小六壬课象】\n\n`;
+    text += `📅 公历：${cast.solar}\n`;
+    text += `🗓 农历：${cast.lunar.year}年${cast.lunar.monthCn}${cast.lunar.dayCn}${cast.lunar.isLeap ? '（闰）' : ''}\n`;
+    text += `⏰ 时辰：${cast.shichen.label}（${cast.shichen.range}）\n`;
+    text += `🔮 起课路径：${cast.path.monthPalace.name} → ${cast.path.dayPalace.name} → ${p.name}\n`;
+    text += `⚖️ 吉凶：${p.nature}\n`;
+    text += `🧭 五行方位：${p.wuxing} / ${p.direction} / ${p.color}\n\n`;
+    text += `📜 诗曰：\n${p.poem}\n\n`;
+    text += `📊 时运指数：${score}`;
+    if (combo && combo.scoreDelta) {
+      text += `（合参${combo.scoreDelta >= 0 ? '+' : ''}${combo.scoreDelta}）`;
+    }
+    text += `\n\n💡 提示：${tip}\n\n`;
+    
+    // 添加各方面断语（简版）
+    text += `━━━━━━━━━━━━━━━━━━\n`;
+    text += `📋 全方面断语摘要\n`;
+    text += `━━━━━━━━━━━━━━━━━━\n`;
+    text += `• 总体：${aspects.overall}\n`;
+    text += `• 事业：${aspects.career}\n`;
+    text += `• 财运：${aspects.wealth}\n`;
+    text += `• 感情：${aspects.love}\n`;
+    text += `• 健康：${aspects.health}\n`;
+    text += `• 出行：${aspects.travel}\n`;
+    text += `• 人际：${aspects.social}\n`;
+    text += `• 学业：${aspects.study}\n\n`;
+    text += `✅ 宜：${aspects.suit}\n`;
+    text += `⛔ 忌：${aspects.avoid}\n\n`;
+    text += `━━━━━━━━━━━━━━━━━━\n`;
+    text += `⚠️  本结果仅供娱乐与文化参考\n`;
+    
+    return text;
+  }
+
+  // 显示复制成功反馈
+  function showCopyFeedback() {
+    const btn = $('#btn-copy-result');
+    const textSpan = btn.querySelector('.copy-text');
+    const originalText = textSpan.textContent;
+    
+    btn.classList.add('copied');
+    textSpan.textContent = '已复制';
+    
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      textSpan.textContent = originalText;
+    }, 1500);
+  }
+
+  // 降级复制方案（兼容旧浏览器）
+  function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        showCopyFeedback();
+      } else {
+        alert('复制失败，请手动复制结果文本');
+      }
+    } catch (err) {
+      console.error('降级复制失败:', err);
+      alert('复制失败，请手动复制结果文本');
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  }
+
+  // 显示错误提示
+  function showError(message) {
+    const errorHint = $('#error-hint');
+    const copyRow = $('.copy-row');
+    const castPanel = $('#cast-panel');
+    
+    if (errorHint) {
+      errorHint.textContent = message;
+      errorHint.classList.remove('hidden');
+    }
+    
+    if (copyRow) {
+      copyRow.style.display = 'none';
+    }
+    
+    // 隐藏其他结果元素
+    if ($('#palace-name')) $('#palace-name').textContent = '—';
+    if ($('#palace-meta')) $('#palace-meta').textContent = '课象异常';
+    if ($('#poem')) $('#poem').textContent = '';
+    if ($('#tip')) $('#tip').textContent = '';
+  }
+
+  // 隐藏错误提示
+  function hideError() {
+    const errorHint = $('#error-hint');
+    const copyRow = $('.copy-row');
+    
+    if (errorHint) {
+      errorHint.classList.add('hidden');
+    }
+    
+    if (copyRow) {
+      copyRow.style.display = 'block';
+    }
   }
 
   document.addEventListener('DOMContentLoaded', init);

@@ -1751,3 +1751,75 @@ button.ghost:hover {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.35; }
   50% { transform: translate3d(2%, -1%, 0) scale(1.05); opacity: 0.55; }
 }
+
+/* 复制按钮样式 */
+.copy-row {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.btn-copy {
+  background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.08em;
+}
+
+.btn-copy:hover {
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  box-shadow: 0 6px 16px rgba(212, 175, 55, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-copy:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
+}
+
+.btn-copy.copied {
+  background: linear-gradient(135deg, var(--jade), #4AA089);
+  box-shadow: 0 4px 12px rgba(61, 139, 122, 0.35);
+}
+
+.btn-copy.copied .copy-text::before {
+  content: '✓ ';
+}
+
+.copy-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* 错误/空态提示样式 */
+.error-hint {
+  background: linear-gradient(135deg, rgba(139, 58, 74, 0.18), rgba(196, 92, 106, 0.12));
+  border: 1px solid rgba(196, 92, 106, 0.35);
+  color: var(--cinnabar-bright);
+  padding: 1rem 1.2rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  line-height: 1.75;
+  text-align: center;
+  font-size: 0.92rem;
+  letter-spacing: 0.06em;
+}
+
+.error-hint::before {
+  content: '⚠️ ';
+  margin-right: 0.3rem;
+}
+
+.hidden {
+  display: none;
+}
