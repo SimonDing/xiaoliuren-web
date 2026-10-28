@@ -41,6 +41,7 @@
     setInterval(tickClock, 1000);
 
     $('#btn-refresh').addEventListener('click', () => runCast(new Date()));
+    $('#btn-copy-result').addEventListener('click', onCopyResult);
     $('#btn-bazi').addEventListener('click', onBaziSubmit);
     $('#btn-clear-bazi').addEventListener('click', clearBazi);
     $('#btn-geo').addEventListener('click', onGeoLocate);
@@ -860,6 +861,68 @@
         }
       }
     }
+  }
+
+  function onCopyResult() {
+    if (!currentCast) {
+      alert('暂无结果可复制');
+      return;
+    }
+
+    const p = currentCast.palace;
+    const aspects = currentCast.aspects;
+    const score = currentCombo ? currentCombo.score : currentCast.score;
+    
+    let text = '【术数应用 · 课象总览】\n\n';
+    text += `时刻：${currentCast.solar}\n`;
+    text += `农历：${currentCast.lunar.year}年${currentCast.lunar.monthCn}${currentCast.lunar.dayCn}\n`;
+    text += `时辰：${currentCast.shichen.label}（${currentCast.shichen.range}）\n`;
+    text += `起课路径：${currentCast.path.monthPalace.name} → ${currentCast.path.dayPalace.name} → ${p.name}\n\n`;
+    
+    text += `【宫位】${p.name}\n`;
+    text += `吉凶：${p.nature}\n`;
+    text += `五行方位：${p.wuxing} / ${p.direction} / ${p.color}\n\n`;
+    
+    text += `【课诗】\n${p.poem}\n\n`;
+    
+    text += `【时运指数】${score}\n\n`;
+    
+    text += `【方面断语】\n`;
+    text += `总体：${aspects.overall}\n`;
+    text += `事业：${aspects.career}\n`;
+    text += `财运：${aspects.wealth}\n`;
+    text += `感情：${aspects.love}\n`;
+    text += `健康：${aspects.health}\n`;
+    text += `出行：${aspects.travel}\n`;
+    text += `人际：${aspects.social}\n`;
+    text += `学业：${aspects.study}\n\n`;
+    
+    text += `【宜】${aspects.suit}\n`;
+    text += `【忌】${aspects.avoid}\n`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      showCopyToast();
+    }).catch((err) => {
+      console.error('复制失败:', err);
+      alert('复制失败，请检查浏览器权限');
+    });
+  }
+
+  function showCopyToast() {
+    const toast = $('#copy-toast');
+    if (!toast) return;
+    
+    toast.classList.remove('hidden');
+    setTimeout(() => {
+      toast.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 300);
+    }, 2000);
   }
 
   function tickClock() {

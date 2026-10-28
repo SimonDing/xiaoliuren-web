@@ -48,15 +48,19 @@
       <div id="score-label" style="font-size:0.8rem;letter-spacing:0.12em;color:var(--gold-dim)">时运指数</div>
       <div class="score-bar"><i id="score-fill"></i></div>
       <p id="tip" style="color:var(--paper-dim);line-height:1.75;font-size:0.92rem;margin:0 0 1rem"></p>
-      <div class="btn-row">
-        <button type="button" id="btn-refresh">重新起课</button>
-        <button type="button" class="ghost" id="btn-goto-bifa">六神测字</button>
-        <button type="button" class="ghost" id="btn-goto-palm">手相辅助</button>
-        <button type="button" class="ghost" onclick="document.getElementById('takashima-panel').scrollIntoView({behavior:'smooth'})">高岛合参</button>
-        <button type="button" class="ghost" onclick="document.getElementById('fate-panel').scrollIntoView({behavior:'smooth'})">改运方位</button>
-        <button type="button" class="ghost" onclick="document.getElementById('fengshui-panel').scrollIntoView({behavior:'smooth'})">杨公风水</button>
-        <button type="button" class="ghost" id="btn-goto-qiming">小孩起名</button>
-        <button type="button" class="ghost" onclick="document.getElementById('bazi-panel').scrollIntoView({behavior:'smooth'})">八字细盘</button>
+      <div style="position:relative">
+        <div class="btn-row">
+          <button type="button" id="btn-refresh">重新起课</button>
+          <button type="button" id="btn-copy-result">复制结果</button>
+          <button type="button" class="ghost" id="btn-goto-bifa">六神测字</button>
+          <button type="button" class="ghost" id="btn-goto-palm">手相辅助</button>
+          <button type="button" class="ghost" onclick="document.getElementById('takashima-panel').scrollIntoView({behavior:'smooth'})">高岛合参</button>
+          <button type="button" class="ghost" onclick="document.getElementById('fate-panel').scrollIntoView({behavior:'smooth'})">改运方位</button>
+          <button type="button" class="ghost" onclick="document.getElementById('fengshui-panel').scrollIntoView({behavior:'smooth'})">杨公风水</button>
+          <button type="button" class="ghost" id="btn-goto-qiming">小孩起名</button>
+          <button type="button" class="ghost" onclick="document.getElementById('bazi-panel').scrollIntoView({behavior:'smooth'})">八字细盘</button>
+        </div>
+        <div id="copy-toast" class="copy-toast hidden">已复制</div>
       </div>
     </section>
 
