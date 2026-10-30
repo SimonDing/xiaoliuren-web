@@ -50,6 +50,37 @@ start index.html
 
 在线仓库：https://github.com/SimonDing/xiaoliuren-web
 
+## 本地运行
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 可用命令
+
+基于 `package.json` 的 scripts：
+
+```bash
+# 构建 Web 版本（准备静态资源到 www 目录）
+npm run build:web
+
+# 构建并同步到 Capacitor Android
+npm run cap:sync
+
+# 打开 Android Studio（需先执行 cap:sync）
+npm run cap:open
+
+# 构建 Android Debug APK（Windows 环境）
+npm run android:debug
+```
+
+### 说明
+
+- **网页版**：直接用浏览器打开 `index.html` 即可使用，无需运行 npm 命令
+- **Android 开发**：需要先 `npm install` 安装 Capacitor 依赖，然后使用上述命令进行构建和同步
+
 ## 项目结构
 
 ```
