@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>此路不通 · 术数应用</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #173A5C;
+      --bg-deep: #1E4D7B;
+      --ink-soft: #245A8C;
+      --paper: #F5F8FC;
+      --paper-dim: #C2D0E0;
+      --gold: #D4AF37;
+      --gold-bright: #F0C05A;
+      --gold-dim: #A8892A;
+      --font-display: "ZCOOL XiaoWei", "STKaiti", "KaiTi", serif;
+      --font-seal: "Ma Shan Zheng", "ZCOOL XiaoWei", cursive;
+      --font-body: "Noto Serif SC", "Songti SC", "SimSun", serif;
+      --shadow: 0 18px 42px rgba(12, 40, 70, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--paper);
+      font-family: var(--font-body);
+      min-height: 100%;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse 95% 58% at 50% -8%, rgba(90, 160, 212, 0.45), transparent 58%),
+        radial-gradient(ellipse 55% 45% at 90% 75%, rgba(61, 139, 196, 0.35), transparent 52%),
+        radial-gradient(ellipse 48% 38% at 8% 55%, rgba(43, 110, 168, 0.32), transparent 48%),
+        radial-gradient(ellipse 40% 30% at 72% 28%, rgba(212, 175, 55, 0.12), transparent 50%),
+        linear-gradient(165deg, #245A8C 0%, #1E4D7B 42%, #173A5C 100%);
+      overflow-x: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.07;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+      background-image:
+        radial-gradient(1.2px 1.2px at 12% 18%, rgba(240, 192, 90, 0.7) 40%, transparent 55%),
+        radial-gradient(1px 1px at 28% 62%, rgba(240, 240, 240, 0.45) 40%, transparent 55%),
+        radial-gradient(1.4px 1.4px at 55% 22%, rgba(212, 175, 55, 0.55) 40%, transparent 55%),
+        radial-gradient(1px 1px at 72% 48%, rgba(160, 165, 181, 0.4) 35%, transparent 55%),
+        radial-gradient(1px 1px at 88% 15%, rgba(240, 192, 90, 0.5) 40%, transparent 55%),
+        radial-gradient(1.2px 1.2px at 40% 88%, rgba(240, 240, 240, 0.35) 40%, transparent 55%),
+        radial-gradient(1px 1px at 8% 80%, rgba(160, 165, 181, 0.4) 40%, transparent 55%),
+        radial-gradient(1.3px 1.3px at 95% 70%, rgba(212, 175, 55, 0.45) 40%, transparent 55%),
+        radial-gradient(1px 1px at 62% 75%, rgba(240, 240, 240, 0.3) 40%, transparent 55%);
+      animation: starDrift 70s linear infinite;
+    }
+
+    .aura-sky {
+      position: fixed;
+      inset: -20% -10%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 46% 30% at 50% 14%, rgba(140, 196, 232, 0.35), transparent 70%),
+        radial-gradient(ellipse 36% 28% at 78% 52%, rgba(61, 139, 196, 0.3), transparent 70%),
+        radial-gradient(ellipse 32% 26% at 16% 68%, rgba(43, 110, 168, 0.28), transparent 70%);
+      filter: blur(10px);
+      animation: auraBreathe 10s ease-in-out infinite;
+    }
+
+    .star-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .star-particles i {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(240, 192, 90, 0.55);
+      box-shadow: 0 0 6px rgba(212, 175, 55, 0.35);
+      animation: particleFloat linear infinite;
+    }
+
+    .content-404 {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      max-width: 680px;
+    }
+
+    .error-code {
+      font-family: var(--font-seal);
+      font-size: clamp(6rem, 18vw, 12rem);
+      line-height: 1;
+      color: var(--gold);
+      margin: 0;
+      text-shadow: 0 0 42px rgba(212, 175, 55, 0.45);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    .error-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      color: var(--paper);
+      margin: 1.5rem 0 0.8rem;
+    }
+
+    .error-desc {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--paper-dim);
+      letter-spacing: 0.08em;
+      margin: 0 0 2.5rem;
+      padding: 0 1rem;
+    }
+
+    .btn-home {
+      display: inline-block;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      background: linear-gradient(180deg, rgba(212, 175, 55, 0.18), rgba(168, 137, 42, 0.08));
+      color: var(--gold-bright);
+      font-family: var(--font-display);
+      letter-spacing: 0.25em;
+      padding: 0.85rem 2rem;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      box-shadow: 0 0 24px rgba(212, 175, 55, 0.12);
+      transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    }
+
+    .btn-home:hover {
+      background: linear-gradient(180deg, rgba(240, 192, 90, 0.28), rgba(212, 175, 55, 0.16));
+      color: #F0F0F0;
+      transform: translateY(-2px);
+      box-shadow: 0 0 36px rgba(212, 175, 55, 0.32);
+    }
+
+    .seal-decoration {
+      display: inline-block;
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 1.5rem;
+      border: 2px solid var(--gold-dim);
+      border-radius: 50%;
+      position: relative;
+      opacity: 0.75;
+    }
+
+    .seal-decoration::before,
+    .seal-decoration::after {
+      content: "";
+      position: absolute;
+      background: var(--gold-dim);
+    }
+
+    .seal-decoration::before {
+      width: 28px;
+      height: 2px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .seal-decoration::after {
+      width: 2px;
+      height: 28px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes auraBreathe {
+      0%, 100% { opacity: 0.65; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.04); }
+    }
+
+    @keyframes starDrift {
+      from { transform: translateY(0); }
+      to { transform: translateY(-18px); }
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(0) translateX(0); opacity: 0.2; }
+      40% { opacity: 0.75; }
+      100% { transform: translateY(-110vh) translateX(12px); opacity: 0.05; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+
+    @media (max-width: 640px) {
+      .error-title {
+        letter-spacing: 0.18em;
+      }
+      .error-desc {
+        font-size: 0.95rem;
+      }
+      .btn-home {
+        padding: 0.75rem 1.6rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="aura-sky" aria-hidden="true"></div>
+  <div class="star-particles" id="star-particles" aria-hidden="true"></div>
+  
+  <main class="content-404">
+    <div class="seal-decoration" aria-hidden="true"></div>
+    <h1 class="error-code">404</h1>
+    <h2 class="error-title">此路不通</h2>
+    <p class="error-desc">
+      你所寻找的页面已迷失天宫之外，或尚未在此处显现。<br />
+      不如回到首页，重新起课问卦。
+    </p>
+    <a href="/" class="btn-home">返回首页</a>
+  </main>
+
+  <script>
+    // 生成星空粒子
+    (function() {
+      const host = document.getElementById('star-particles');
+      if (!host) return;
+      const n = 28;
+      for (let i = 0; i < n; i++) {
+        const el = document.createElement('i');
+        el.style.left = Math.random() * 100 + '%';
+        el.style.top = Math.random() * 100 + '%';
+        el.style.animationDuration = 18 + Math.random() * 28 + 's';
+        el.style.animationDelay = -Math.random() * 40 + 's';
+        el.style.opacity = String(0.25 + Math.random() * 0.55);
+        host.appendChild(el);
+      }
+    })();
+  </script>
+</body>
+</html>
