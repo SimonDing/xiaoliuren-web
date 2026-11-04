@@ -87,6 +87,15 @@ body::after {
   animation: starDrift 70s linear infinite;
 }
 
+.field-error {
+  display: block;
+  color: var(--cinnabar-bright);
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+}
+
 .aura-sky {
   position: fixed;
   inset: -20% -10%;

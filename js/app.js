@@ -34,6 +34,55 @@
     正南: 'S', 西南: 'SW', 正西: 'W', 西北: 'NW'
   };
 
+  // 表单验证辅助函数
+  function showFieldError(fieldId, message) {
+    const field = $(fieldId);
+    if (!field) return false;
+    
+    // 移除已存在的错误提示
+    clearFieldError(fieldId);
+    
+    // 创建错误提示元素
+    const errorEl = document.createElement('span');
+    errorEl.className = 'field-error';
+    errorEl.textContent = message;
+    errorEl.id = fieldId + '-error';
+    
+    // 在输入框后插入错误提示
+    field.parentNode.insertBefore(errorEl, field.nextSibling);
+    
+    // 添加输入监听，自动清除错误
+    const clearOnInput = () => {
+      clearFieldError(fieldId);
+      field.removeEventListener('input', clearOnInput);
+      field.removeEventListener('change', clearOnInput);
+    };
+    field.addEventListener('input', clearOnInput);
+    field.addEventListener('change', clearOnInput);
+    
+    return false;
+  }
+
+  function clearFieldError(fieldId) {
+    const errorEl = document.getElementById(fieldId + '-error');
+    if (errorEl) {
+      errorEl.remove();
+    }
+  }
+
+  function validateRequiredField(fieldId, fieldName) {
+    const field = $(fieldId);
+    if (!field) return true;
+    
+    const value = field.value ? field.value.trim() : '';
+    if (!value || value === '') {
+      return showFieldError(fieldId, `请填写${fieldName}`);
+    }
+    
+    clearFieldError(fieldId);
+    return true;
+  }
+
   function init() {
     buildWheelLabels();
     runCast(new Date());
@@ -360,6 +409,18 @@
       return;
     }
     try {
+      // 验证必填字段
+      let isValid = true;
+      isValid = validateRequiredField('#qm-surname', '姓氏') && isValid;
+      isValid = validateRequiredField('#qm-year', '出生年份') && isValid;
+      isValid = validateRequiredField('#qm-month', '出生月份') && isValid;
+      isValid = validateRequiredField('#qm-day', '出生日期') && isValid;
+      isValid = validateRequiredField('#qm-hour', '出生时辰') && isValid;
+      
+      if (!isValid) {
+        return;
+      }
+      
       const result = QiMing.generateNames({
         surname: ($('#qm-surname').value || '').trim(),
         gender: $('#qm-gender').value,
@@ -757,6 +818,15 @@
 
   function onFengshuiSubmit() {
     try {
+      // 验证必填字段
+      let isValid = true;
+      isValid = validateRequiredField('#fs-lat', '纬度') && isValid;
+      isValid = validateRequiredField('#fs-lng', '经度') && isValid;
+      
+      if (!isValid) {
+        return;
+      }
+      
       if (!currentFate || !currentFate.qimen) {
         currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
       }
@@ -1095,6 +1165,17 @@
 
   function onBaziSubmit() {
     try {
+      // 验证必填字段
+      let isValid = true;
+      isValid = validateRequiredField('#birth-year', '出生年份') && isValid;
+      isValid = validateRequiredField('#birth-month', '出生月份') && isValid;
+      isValid = validateRequiredField('#birth-day', '出生日期') && isValid;
+      isValid = validateRequiredField('#birth-hour', '出生时辰') && isValid;
+      
+      if (!isValid) {
+        return;
+      }
+      
       const payload = {
         year: Number($('#birth-year').value),
         month: Number($('#birth-month').value),
