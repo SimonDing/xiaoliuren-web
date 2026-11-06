@@ -60,6 +60,11 @@
     $('#birth-hour').value = 10;
     $('#birth-minute').value = 0;
 
+    ['#birth-year', '#birth-month', '#birth-day', '#birth-hour', '#birth-minute'].forEach(id => {
+      const el = $(id);
+      if (el) el.addEventListener('input', () => clearFieldError(id));
+    });
+
     const now = new Date();
     if ($('#qm-year')) {
       $('#qm-year').value = now.getFullYear();
@@ -67,11 +72,21 @@
       $('#qm-day').value = now.getDate();
       $('#qm-hour').value = 10;
       $('#qm-minute').value = 0;
+
+      ['#qm-surname', '#qm-year', '#qm-month', '#qm-day', '#qm-hour', '#qm-minute'].forEach(id => {
+        const el = $(id);
+        if (el) el.addEventListener('input', () => clearFieldError(id));
+      });
     }
 
     loadFengshuiForm();
     loadAiForm();
     initLuopan();
+
+    ['#fs-lat', '#fs-lng'].forEach(id => {
+      const el = $(id);
+      if (el) el.addEventListener('input', () => clearFieldError(id));
+    });
     initBifa();
     initPalm();
     initQiMing();
@@ -359,6 +374,19 @@
       alert('起名引擎未加载');
       return;
     }
+
+    const fields = [
+      { id: '#qm-surname', label: '姓氏', required: true },
+      { id: '#qm-year', label: '出生年', required: true },
+      { id: '#qm-month', label: '月', required: true },
+      { id: '#qm-day', label: '日', required: true },
+      { id: '#qm-hour', label: '时', required: true }
+    ];
+
+    if (!validateFields(fields)) {
+      return;
+    }
+
     try {
       const result = QiMing.generateNames({
         surname: ($('#qm-surname').value || '').trim(),
@@ -535,6 +563,44 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  function clearFieldError(fieldId) {
+    const field = $(fieldId);
+    if (!field) return;
+    field.classList.remove('error');
+    const existingError = field.parentElement.querySelector('.form-error');
+    if (existingError) {
+      existingError.remove();
+    }
+  }
+
+  function showFieldError(fieldId, message) {
+    const field = $(fieldId);
+    if (!field) return;
+    clearFieldError(fieldId);
+    field.classList.add('error');
+    const errorEl = document.createElement('span');
+    errorEl.className = 'form-error';
+    errorEl.textContent = message;
+    field.parentElement.appendChild(errorEl);
+  }
+
+  function validateFields(fields) {
+    let isValid = true;
+    fields.forEach(({ id, label, required }) => {
+      clearFieldError(id);
+      if (required) {
+        const field = $(id);
+        if (!field) return;
+        const value = field.value.trim();
+        if (!value) {
+          showFieldError(id, `${label}不能为空`);
+          isValid = false;
+        }
+      }
+    });
+    return isValid;
   }
 
   function renderLuopanTips(tips) {
@@ -756,6 +822,15 @@
   }
 
   function onFengshuiSubmit() {
+    const fields = [
+      { id: '#fs-lat', label: '纬度', required: true },
+      { id: '#fs-lng', label: '经度', required: true }
+    ];
+
+    if (!validateFields(fields)) {
+      return;
+    }
+
     try {
       if (!currentFate || !currentFate.qimen) {
         currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
@@ -1094,6 +1169,17 @@
   }
 
   function onBaziSubmit() {
+    const fields = [
+      { id: '#birth-year', label: '年', required: true },
+      { id: '#birth-month', label: '月', required: true },
+      { id: '#birth-day', label: '日', required: true },
+      { id: '#birth-hour', label: '时', required: true }
+    ];
+
+    if (!validateFields(fields)) {
+      return;
+    }
+
     try {
       const payload = {
         year: Number($('#birth-year').value),
