@@ -1751,3 +1751,18 @@ button.ghost:hover {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.35; }
   50% { transform: translate3d(2%, -1%, 0) scale(1.05); opacity: 0.55; }
 }
+
+/* 表单验证样式 */
+.form-error {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  display: block;
+  line-height: 1.4;
+}
+
+input.error,
+select.error {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 1px rgba(212, 81, 61, 0.2);
+}
