@@ -906,6 +906,12 @@ body.native-app select {
   border-color: var(--gold);
 }
 
+.bifa-input:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 2px;
+  border-color: var(--gold);
+}
+
 .bifa-topics {
   display: flex;
   flex-wrap: wrap;
@@ -926,6 +932,11 @@ body.native-app select {
   color: var(--ink-deep);
   background: linear-gradient(135deg, var(--gold), #a8843a);
   border-color: transparent;
+}
+
+.bifa-topic:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 2px;
 }
 
 .bifa-spirit-bar {
@@ -1144,6 +1155,11 @@ body.native-app select {
   box-shadow: 0 0 22px rgba(212, 175, 55, 0.35);
 }
 
+.yg-kb-tab:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 2px;
+}
+
 .yg-kb-body {
   max-height: 22rem;
   overflow: auto;
@@ -1268,6 +1284,11 @@ input:focus, select:focus {
   border-color: var(--gold);
 }
 
+input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 2px;
+}
+
 .btn-row {
   display: flex;
   flex-wrap: wrap;
@@ -1296,6 +1317,11 @@ button:hover {
   box-shadow: 0 0 36px rgba(212, 175, 55, 0.32);
 }
 
+button:focus-visible {
+  outline: 3px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
 button.ghost {
   border-color: rgba(160, 165, 181, 0.35);
   color: var(--paper-dim);
@@ -1308,6 +1334,11 @@ button.ghost:hover {
   color: var(--gold-bright);
   background: rgba(43, 110, 168, 0.35);
   box-shadow: 0 0 22px rgba(212, 175, 55, 0.18);
+}
+
+button.ghost:focus-visible {
+  outline: 2px solid var(--azure);
+  outline-offset: 2px;
 }
 
 .bazi-table {
