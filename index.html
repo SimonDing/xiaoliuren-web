@@ -49,14 +49,14 @@
       <div class="score-bar"><i id="score-fill"></i></div>
       <p id="tip" style="color:var(--paper-dim);line-height:1.75;font-size:0.92rem;margin:0 0 1rem"></p>
       <div class="btn-row">
-        <button type="button" id="btn-refresh">重新起课</button>
-        <button type="button" class="ghost" id="btn-goto-bifa">六神测字</button>
-        <button type="button" class="ghost" id="btn-goto-palm">手相辅助</button>
-        <button type="button" class="ghost" onclick="document.getElementById('takashima-panel').scrollIntoView({behavior:'smooth'})">高岛合参</button>
-        <button type="button" class="ghost" onclick="document.getElementById('fate-panel').scrollIntoView({behavior:'smooth'})">改运方位</button>
-        <button type="button" class="ghost" onclick="document.getElementById('fengshui-panel').scrollIntoView({behavior:'smooth'})">杨公风水</button>
-        <button type="button" class="ghost" id="btn-goto-qiming">小孩起名</button>
-        <button type="button" class="ghost" onclick="document.getElementById('bazi-panel').scrollIntoView({behavior:'smooth'})">八字细盘</button>
+        <button type="button" id="btn-refresh" aria-label="按当前时间重新起小六壬课">重新起课</button>
+        <button type="button" class="ghost" id="btn-goto-bifa" aria-label="跳转到六神笔法测字章节">六神测字</button>
+        <button type="button" class="ghost" id="btn-goto-palm" aria-label="跳转到手相辅助章节">手相辅助</button>
+        <button type="button" class="ghost" onclick="document.getElementById('takashima-panel').scrollIntoView({behavior:'smooth'})" aria-label="跳转到高岛断易合参章节">高岛合参</button>
+        <button type="button" class="ghost" onclick="document.getElementById('fate-panel').scrollIntoView({behavior:'smooth'})" aria-label="跳转到改运方位指引章节">改运方位</button>
+        <button type="button" class="ghost" onclick="document.getElementById('fengshui-panel').scrollIntoView({behavior:'smooth'})" aria-label="跳转到杨公风水章节">杨公风水</button>
+        <button type="button" class="ghost" id="btn-goto-qiming" aria-label="跳转到小孩起名章节">小孩起名</button>
+        <button type="button" class="ghost" onclick="document.getElementById('bazi-panel').scrollIntoView({behavior:'smooth'})" aria-label="跳转到八字细盘章节">八字细盘</button>
       </div>
     </section>
 
@@ -68,8 +68,8 @@
       <div class="bifa-ask" id="palm-ask">
         <p class="bifa-ask-q">需要用手相来辅助确认当前预测吗？</p>
         <div class="btn-row">
-          <button type="button" id="btn-palm-yes">需要手相辅助</button>
-          <button type="button" class="ghost" id="btn-palm-no">暂不需要</button>
+          <button type="button" id="btn-palm-yes" aria-label="展开手相辅助表单">需要手相辅助</button>
+          <button type="button" class="ghost" id="btn-palm-no" aria-label="跳过手相辅助">暂不需要</button>
         </div>
       </div>
       <div class="bifa-form hidden" id="palm-form">
@@ -80,7 +80,7 @@
         </div>
 
         <p class="bifa-label" style="margin-top:0.9rem">手型（五行掌）</p>
-        <div class="bifa-topics" id="palm-shape" role="radiogroup">
+        <div class="bifa-topics" id="palm-shape" role="radiogroup" aria-label="手型（五行掌）">
           <button type="button" class="bifa-topic active" data-val="wood">木型长掌</button>
           <button type="button" class="bifa-topic" data-val="fire">火型精神</button>
           <button type="button" class="bifa-topic" data-val="earth">土型厚方</button>
@@ -89,7 +89,7 @@
         </div>
 
         <p class="bifa-label" style="margin-top:0.9rem">生命线</p>
-        <div class="bifa-topics" id="palm-life" role="radiogroup">
+        <div class="bifa-topics" id="palm-life" role="radiogroup" aria-label="生命线">
           <button type="button" class="bifa-topic active" data-val="deepLong">深长有力</button>
           <button type="button" class="bifa-topic" data-val="shortShallow">短浅偏弱</button>
           <button type="button" class="bifa-topic" data-val="broken">中断</button>
@@ -98,7 +98,7 @@
         </div>
 
         <p class="bifa-label" style="margin-top:0.9rem">智慧线</p>
-        <div class="bifa-topics" id="palm-head" role="radiogroup">
+        <div class="bifa-topics" id="palm-head" role="radiogroup" aria-label="智慧线">
           <button type="button" class="bifa-topic active" data-val="straight">平直清晰</button>
           <button type="button" class="bifa-topic" data-val="curved">下弯入月丘</button>
           <button type="button" class="bifa-topic" data-val="short">偏短</button>
@@ -107,7 +107,7 @@
         </div>
 
         <p class="bifa-label" style="margin-top:0.9rem">感情线</p>
-        <div class="bifa-topics" id="palm-heart" role="radiogroup">
+        <div class="bifa-topics" id="palm-heart" role="radiogroup" aria-label="感情线">
           <button type="button" class="bifa-topic active" data-val="toMiddle">入中指缝（中正）</button>
           <button type="button" class="bifa-topic" data-val="toIndex">上达食指</button>
           <button type="button" class="bifa-topic" data-val="chained">链状波动</button>
@@ -116,7 +116,7 @@
         </div>
 
         <p class="bifa-label" style="margin-top:0.9rem">事业线（命运线）</p>
-        <div class="bifa-topics" id="palm-fate" role="radiogroup">
+        <div class="bifa-topics" id="palm-fate" role="radiogroup" aria-label="事业线（命运线）">
           <button type="button" class="bifa-topic active" data-val="clear">清晰贯通</button>
           <button type="button" class="bifa-topic" data-val="broken">断续</button>
           <button type="button" class="bifa-topic" data-val="none">不明显</button>
@@ -124,7 +124,7 @@
         </div>
 
         <p class="bifa-label" style="margin-top:0.9rem">婚姻线</p>
-        <div class="bifa-topics" id="palm-marriage" role="radiogroup">
+        <div class="bifa-topics" id="palm-marriage" role="radiogroup" aria-label="婚姻线">
           <button type="button" class="bifa-topic active" data-val="oneClear">一条清晰</button>
           <button type="button" class="bifa-topic" data-val="multiple">多条</button>
           <button type="button" class="bifa-topic" data-val="forked">分叉/下垂</button>
@@ -132,7 +132,7 @@
         </div>
 
         <p class="bifa-label" style="margin-top:0.9rem">特殊纹（可选）</p>
-        <div class="bifa-topics" id="palm-special" role="radiogroup">
+        <div class="bifa-topics" id="palm-special" role="radiogroup" aria-label="特殊纹（可选）">
           <button type="button" class="bifa-topic active" data-val="none">无特别强纹</button>
           <button type="button" class="bifa-topic" data-val="mPattern">M字纹</button>
           <button type="button" class="bifa-topic" data-val="brokenPalm">断掌</button>
@@ -140,8 +140,8 @@
         </div>
 
         <div class="btn-row" style="margin-top:1rem">
-          <button type="button" id="btn-palm-run">逐项手相断</button>
-          <button type="button" class="ghost" id="btn-palm-reset">收起</button>
+          <button type="button" id="btn-palm-run" aria-label="根据手相选项生成分析结果">逐项手相断</button>
+          <button type="button" class="ghost" id="btn-palm-reset" aria-label="收起手相辅助表单">收起</button>
         </div>
       </div>
       <p class="bifa-skip-note hidden" id="palm-skip-note">已跳过手相。若之后对预测没把握，随时点「手相辅助」。</p>
@@ -164,13 +164,13 @@
       <div class="bifa-ask" id="bifa-ask">
         <p class="bifa-ask-q">是否需要进行测字，以细化当前预测？</p>
         <div class="btn-row">
-          <button type="button" id="btn-bifa-yes">需要测字</button>
-          <button type="button" class="ghost" id="btn-bifa-no">暂不测字</button>
+          <button type="button" id="btn-bifa-yes" aria-label="展开测字表单">需要测字</button>
+          <button type="button" class="ghost" id="btn-bifa-no" aria-label="跳过六神测字">暂不测字</button>
         </div>
       </div>
       <div class="bifa-form hidden" id="bifa-form">
         <label class="bifa-label" for="bifa-chars">所测汉字（可多个）</label>
-        <input type="text" id="bifa-chars" class="bifa-input" maxlength="32" placeholder="心中默念所问，写下汉字，如：明、财、爱…" autocomplete="off" />
+        <input type="text" id="bifa-chars" class="bifa-input" maxlength="32" placeholder="心中默念所问，写下汉字，如：明、财、爱…" autocomplete="off" aria-label="输入所测汉字，可输入多个" />
         <p class="bifa-label" style="margin-top:0.9rem">测问方面</p>
         <div class="bifa-topics" id="bifa-topics" role="radiogroup" aria-label="测问方面">
           <button type="button" class="bifa-topic active" data-topic="推断">推断</button>
@@ -182,8 +182,8 @@
           <button type="button" class="bifa-topic" data-topic="诉讼">诉讼</button>
         </div>
         <div class="btn-row" style="margin-top:1rem">
-          <button type="button" id="btn-bifa-run">合参断字</button>
-          <button type="button" class="ghost" id="btn-bifa-reset">收起</button>
+          <button type="button" id="btn-bifa-run" aria-label="根据输入汉字和测问方面生成测字结果">合参断字</button>
+          <button type="button" class="ghost" id="btn-bifa-reset" aria-label="收起测字表单">收起</button>
         </div>
       </div>
       <div class="bifa-result hidden" id="bifa-result">
@@ -355,7 +355,7 @@
       </div>
       <div class="palm-cta">
         <p class="palm-cta-q">对上面预测不太确信？可用手相交叉验证。</p>
-        <button type="button" class="ghost" id="btn-aspects-palm">打开手相辅助</button>
+        <button type="button" class="ghost" id="btn-aspects-palm" aria-label="跳转到手相辅助章节进行交叉验证">打开手相辅助</button>
       </div>
     </section>
 
@@ -421,9 +421,9 @@
           </article>
         </div>
         <div class="btn-row" style="justify-content:center">
-          <button type="button" id="btn-luopan">开启罗盘</button>
-          <button type="button" class="ghost" id="btn-luopan-cal">校准与用法</button>
-          <button type="button" class="ghost" id="btn-use-facing">用地盘朝向填床头</button>
+          <button type="button" id="btn-luopan" aria-label="开启或关闭电子风水罗盘">开启罗盘</button>
+          <button type="button" class="ghost" id="btn-luopan-cal" aria-label="查看罗盘校准方法和使用说明">校准与用法</button>
+          <button type="button" class="ghost" id="btn-use-facing" aria-label="将当前罗盘地盘朝向填入床头朝向">用地盘朝向填床头</button>
         </div>
         <div class="refine-box" style="margin-top:1rem">
           <h3>摆放提示 <small>专业 + 白话对照</small></h3>
@@ -438,14 +438,14 @@
       </div>
 
       <div class="form-grid" style="margin-top:1.2rem">
-        <label>纬度（北纬为正）
-          <input id="fs-lat" type="number" step="0.0001" placeholder="78.33" value="78.33" />
+        <label for="fs-lat">纬度（北纬为正）
+          <input id="fs-lat" type="number" step="0.0001" placeholder="78.33" value="78.33" aria-label="纬度，北纬为正值，南纬为负值" />
         </label>
-        <label>经度（东经为正）
-          <input id="fs-lng" type="number" step="0.0001" placeholder="146.72" value="146.72" />
+        <label for="fs-lng">经度（东经为正）
+          <input id="fs-lng" type="number" step="0.0001" placeholder="146.72" value="146.72" aria-label="经度，东经为正值，西经为负值" />
         </label>
-        <label>房间坐向（靠山墙一侧）
-          <select id="fs-sit">
+        <label for="fs-sit">房间坐向（靠山墙一侧）
+          <select id="fs-sit" aria-label="房间坐向，选择房间靠山墙一侧的方位">
             <option value="N">坐北朝南</option>
             <option value="S">坐南朝北</option>
             <option value="E">坐东朝西</option>
@@ -456,8 +456,8 @@
             <option value="NW">坐西北朝东南</option>
           </select>
         </label>
-        <label>床在房间的方位
-          <select id="fs-bed-zone">
+        <label for="fs-bed-zone">床在房间的方位
+          <select id="fs-bed-zone" aria-label="床在房间中的具体方位">
             <option value="N">靠北侧</option>
             <option value="NE">靠东北</option>
             <option value="E">靠东侧</option>
@@ -468,8 +468,8 @@
             <option value="NW">靠西北</option>
           </select>
         </label>
-        <label>床头朝向
-          <select id="fs-bed-head">
+        <label for="fs-bed-head">床头朝向
+          <select id="fs-bed-head" aria-label="床头朝向的方位">
             <option value="N">朝正北</option>
             <option value="NE">朝东北</option>
             <option value="E">朝正东</option>
@@ -482,9 +482,9 @@
         </label>
       </div>
       <div class="btn-row">
-        <button type="button" id="btn-geo">定位填入经纬度</button>
-        <button type="button" id="btn-fengshui">生成风水建议</button>
-        <button type="button" class="ghost" id="btn-fs-clear">清除结果</button>
+        <button type="button" id="btn-geo" aria-label="使用设备定位自动填入当前经纬度">定位填入经纬度</button>
+        <button type="button" id="btn-fengshui" aria-label="根据经纬度和房间坐向生成杨公风水建议">生成风水建议</button>
+        <button type="button" class="ghost" id="btn-fs-clear" aria-label="清除风水分析结果">清除结果</button>
       </div>
 
       <div class="ai-box">
@@ -493,19 +493,19 @@
           Key 仅保存在本机浏览器/App 本地。请求只会发往你填写的 API 地址；未填写则不影响离线罗盘与本地建议。
         </p>
         <div class="form-grid">
-          <label style="grid-column:1/-1">API Base URL
-            <input id="ai-base" type="url" placeholder="https://api.openai.com/v1" autocomplete="off" />
+          <label for="ai-base" style="grid-column:1/-1">API Base URL
+            <input id="ai-base" type="url" placeholder="https://api.openai.com/v1" autocomplete="off" aria-label="AI 接口地址，OpenAI 兼容格式" />
           </label>
-          <label style="grid-column:1/-1">API Key
-            <input id="ai-key" type="password" placeholder="sk-..." autocomplete="off" />
+          <label for="ai-key" style="grid-column:1/-1">API Key
+            <input id="ai-key" type="password" placeholder="sk-..." autocomplete="off" aria-label="AI 接口密钥，仅保存在本地浏览器" />
           </label>
-          <label>模型
-            <input id="ai-model" type="text" placeholder="gpt-4o-mini" autocomplete="off" />
+          <label for="ai-model">模型
+            <input id="ai-model" type="text" placeholder="gpt-4o-mini" autocomplete="off" aria-label="AI 模型名称" />
           </label>
         </div>
         <div class="btn-row">
-          <button type="button" id="btn-ai-save" class="ghost">保存 Key 设置</button>
-          <button type="button" id="btn-ai-analyze">AI 杨公细化</button>
+          <button type="button" id="btn-ai-save" class="ghost" aria-label="保存 AI 接口配置到本地浏览器">保存 Key 设置</button>
+          <button type="button" id="btn-ai-analyze" aria-label="使用 AI 对风水布局进行细化分析">AI 杨公细化</button>
         </div>
         <div id="ai-status" class="ai-status"></div>
         <div id="ai-result" class="ai-result hidden"></div>
@@ -539,26 +539,26 @@
         按中国传统命理：先排宝宝生辰八字，看日主强弱与喜用五行，再从字义、音律、五格数理里挑名。可合参当前时课五行。名字重缘分与称呼习惯，下列为文化参考，不必迷信。
       </p>
       <div class="form-grid" style="margin-top:0.6rem">
-        <label>姓氏<input id="qm-surname" type="text" maxlength="2" placeholder="如：王" autocomplete="off" /></label>
-        <label>性别
-          <select id="qm-gender">
+        <label for="qm-surname">姓氏<input id="qm-surname" type="text" maxlength="2" placeholder="如：王" autocomplete="off" aria-label="宝宝姓氏" /></label>
+        <label for="qm-gender">性别
+          <select id="qm-gender" aria-label="宝宝性别">
             <option value="男">男</option>
             <option value="女">女</option>
           </select>
         </label>
-        <label>出生年<input id="qm-year" type="number" min="1900" max="2100" placeholder="2024" /></label>
-        <label>月<input id="qm-month" type="number" min="1" max="12" placeholder="8" /></label>
-        <label>日<input id="qm-day" type="number" min="1" max="31" placeholder="15" /></label>
-        <label>时（0-23）<input id="qm-hour" type="number" min="0" max="23" placeholder="10" /></label>
-        <label>分<input id="qm-minute" type="number" min="0" max="59" placeholder="0" /></label>
-        <label>名长
-          <select id="qm-len">
+        <label for="qm-year">出生年<input id="qm-year" type="number" min="1900" max="2100" placeholder="2024" aria-label="宝宝出生年份" /></label>
+        <label for="qm-month">月<input id="qm-month" type="number" min="1" max="12" placeholder="8" aria-label="宝宝出生月份" /></label>
+        <label for="qm-day">日<input id="qm-day" type="number" min="1" max="31" placeholder="15" aria-label="宝宝出生日期" /></label>
+        <label for="qm-hour">时（0-23）<input id="qm-hour" type="number" min="0" max="23" placeholder="10" aria-label="宝宝出生小时，24小时制" /></label>
+        <label for="qm-minute">分<input id="qm-minute" type="number" min="0" max="59" placeholder="0" aria-label="宝宝出生分钟" /></label>
+        <label for="qm-len">名长
+          <select id="qm-len" aria-label="姓名字数，单字名或双字名">
             <option value="2">双字名</option>
             <option value="1">单字名</option>
           </select>
         </label>
-        <label>风格
-          <select id="qm-style">
+        <label for="qm-style">风格
+          <select id="qm-style" aria-label="起名风格偏好">
             <option value="文雅">文雅书卷</option>
             <option value="刚健">刚健有力</option>
             <option value="柔美">柔美秀丽</option>
@@ -568,8 +568,8 @@
         </label>
       </div>
       <div class="btn-row">
-        <button type="button" id="btn-qiming-run">按命理起名</button>
-        <button type="button" class="ghost" id="btn-qiming-from-bazi">同步八字生辰</button>
+        <button type="button" id="btn-qiming-run" aria-label="根据姓氏、性别、生辰和风格生成起名建议">按命理起名</button>
+        <button type="button" class="ghost" id="btn-qiming-from-bazi" aria-label="从八字细盘章节同步生辰信息到起名表单">同步八字生辰</button>
       </div>
       <div id="qiming-result" class="hidden" style="margin-top:1.2rem">
         <div class="refine-box">
@@ -586,21 +586,21 @@
       <h2>八字细盘 <small>可选 · 与小六壬合参</small></h2>
       <p style="color:var(--paper-dim);font-size:0.9rem;line-height:1.7;margin-top:0">输入阳历生辰，排出四柱，并结合今日课象五行与命局喜用，给出更贴身的行动建议。</p>
       <div class="form-grid" style="margin-top:1rem">
-        <label>年<input id="birth-year" type="number" min="1900" max="2100" placeholder="1990" /></label>
-        <label>月<input id="birth-month" type="number" min="1" max="12" placeholder="5" /></label>
-        <label>日<input id="birth-day" type="number" min="1" max="31" placeholder="15" /></label>
-        <label>时（0-23）<input id="birth-hour" type="number" min="0" max="23" placeholder="10" /></label>
-        <label>分<input id="birth-minute" type="number" min="0" max="59" placeholder="0" /></label>
-        <label>性别
-          <select id="birth-gender">
+        <label for="birth-year">年<input id="birth-year" type="number" min="1900" max="2100" placeholder="1990" aria-label="出生年份" /></label>
+        <label for="birth-month">月<input id="birth-month" type="number" min="1" max="12" placeholder="5" aria-label="出生月份" /></label>
+        <label for="birth-day">日<input id="birth-day" type="number" min="1" max="31" placeholder="15" aria-label="出生日期" /></label>
+        <label for="birth-hour">时（0-23）<input id="birth-hour" type="number" min="0" max="23" placeholder="10" aria-label="出生小时，24小时制" /></label>
+        <label for="birth-minute">分<input id="birth-minute" type="number" min="0" max="59" placeholder="0" aria-label="出生分钟" /></label>
+        <label for="birth-gender">性别
+          <select id="birth-gender" aria-label="性别">
             <option value="男">男</option>
             <option value="女">女</option>
           </select>
         </label>
       </div>
       <div class="btn-row">
-        <button type="button" id="btn-bazi">排盘合参</button>
-        <button type="button" class="ghost" id="btn-clear-bazi">清除八字</button>
+        <button type="button" id="btn-bazi" aria-label="根据生辰信息排八字盘并与小六壬合参">排盘合参</button>
+        <button type="button" class="ghost" id="btn-clear-bazi" aria-label="清除八字排盘结果">清除八字</button>
       </div>
 
       <div id="bazi-result" class="hidden" style="margin-top:1.4rem">
