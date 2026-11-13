@@ -1,6 +1,28 @@
 (function () {
   const $ = (sel) => document.querySelector(sel);
 
+  /**
+   * 防重复点击辅助函数
+   * @param {HTMLButtonElement} button - 按钮元素
+   * @param {Function} fn - 要执行的异步函数
+   */
+  async function withButtonLoading(button, fn) {
+    if (button.disabled) return;
+    
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = '提交中...';
+    
+    try {
+      await fn();
+    } catch (error) {
+      throw error;
+    } finally {
+      button.disabled = false;
+      button.textContent = originalText;
+    }
+  }
+
   let currentCast = null;
   let currentBazi = null;
   let currentFate = null;
@@ -178,23 +200,28 @@
     $('#bifa-ask').classList.remove('hidden');
   }
 
-  function runBifa() {
-    if (!window.LiuShenBiFa) {
-      alert('测字引擎未加载');
-      return;
-    }
-    const text = ($('#bifa-chars').value || '').trim();
-    if (!text) {
-      alert('请先写下所测汉字（心诚所问）');
-      $('#bifa-chars').focus();
-      return;
-    }
-    try {
-      const result = LiuShenBiFa.divine(text, bifaTopic, currentCast);
-      renderBifa(result);
-    } catch (err) {
-      alert(err.message || String(err));
-    }
+  async function runBifa() {
+    const button = $('#btn-bifa-run');
+    
+    await withButtonLoading(button, async () => {
+      if (!window.LiuShenBiFa) {
+        alert('测字引擎未加载');
+        return;
+      }
+      const text = ($('#bifa-chars').value || '').trim();
+      if (!text) {
+        alert('请先写下所测汉字（心诚所问）');
+        $('#bifa-chars').focus();
+        return;
+      }
+      try {
+        const result = LiuShenBiFa.divine(text, bifaTopic, currentCast);
+        renderBifa(result);
+      } catch (err) {
+        alert(err.message || String(err));
+        throw err;
+      }
+    });
   }
 
   function renderBifa(r) {
@@ -295,29 +322,34 @@
     $('#palm-ask').classList.remove('hidden');
   }
 
-  function runPalm() {
-    if (!window.ShouXiang) {
-      alert('手相引擎未加载');
-      return;
-    }
-    try {
-      const input = {
-        hand: palmState.hand,
-        shape: palmState.shape,
-        life: palmState.life,
-        head: palmState.head,
-        heart: palmState.heart,
-        fate: palmState.fate,
-        marriage: palmState.marriage,
-        special: palmState.special
-      };
-      const result = ShouXiang.analyze(input, currentCast);
-      currentPalm = result;
-      renderPalm(result);
-      renderPalmIntoAspects(result);
-    } catch (err) {
-      alert(err.message || String(err));
-    }
+  async function runPalm() {
+    const button = $('#btn-palm-run');
+    
+    await withButtonLoading(button, async () => {
+      if (!window.ShouXiang) {
+        alert('手相引擎未加载');
+        return;
+      }
+      try {
+        const input = {
+          hand: palmState.hand,
+          shape: palmState.shape,
+          life: palmState.life,
+          head: palmState.head,
+          heart: palmState.heart,
+          fate: palmState.fate,
+          marriage: palmState.marriage,
+          special: palmState.special
+        };
+        const result = ShouXiang.analyze(input, currentCast);
+        currentPalm = result;
+        renderPalm(result);
+        renderPalmIntoAspects(result);
+      } catch (err) {
+        alert(err.message || String(err));
+        throw err;
+      }
+    });
   }
 
   function initQiMing() {
@@ -354,29 +386,34 @@
     $('#qiming-panel').scrollIntoView({ behavior: 'smooth' });
   }
 
-  function runQiMing() {
-    if (!window.QiMing) {
-      alert('起名引擎未加载');
-      return;
-    }
-    try {
-      const result = QiMing.generateNames({
-        surname: ($('#qm-surname').value || '').trim(),
-        gender: $('#qm-gender').value,
-        year: Number($('#qm-year').value),
-        month: Number($('#qm-month').value),
-        day: Number($('#qm-day').value),
-        hour: Number($('#qm-hour').value),
-        minute: Number($('#qm-minute').value || 0),
-        len: Number($('#qm-len').value),
-        style: $('#qm-style').value,
-        count: 10,
-        palace: currentCast && currentCast.palace
-      });
-      renderQiMing(result);
-    } catch (err) {
-      alert(err.message || String(err));
-    }
+  async function runQiMing() {
+    const button = $('#btn-qiming-run');
+    
+    await withButtonLoading(button, async () => {
+      if (!window.QiMing) {
+        alert('起名引擎未加载');
+        return;
+      }
+      try {
+        const result = QiMing.generateNames({
+          surname: ($('#qm-surname').value || '').trim(),
+          gender: $('#qm-gender').value,
+          year: Number($('#qm-year').value),
+          month: Number($('#qm-month').value),
+          day: Number($('#qm-day').value),
+          hour: Number($('#qm-hour').value),
+          minute: Number($('#qm-minute').value || 0),
+          len: Number($('#qm-len').value),
+          style: $('#qm-style').value,
+          count: 10,
+          palace: currentCast && currentCast.palace
+        });
+        renderQiMing(result);
+      } catch (err) {
+        alert(err.message || String(err));
+        throw err;
+      }
+    });
   }
 
   function renderQiMing(r) {
@@ -624,62 +661,67 @@
   }
 
   async function runAiAnalyze() {
+    const button = $('#btn-ai-analyze');
     const status = $('#ai-status');
     const box = $('#ai-result');
-    try {
-      saveAiConfig();
-      if (!currentFate || !currentFate.qimen) {
-        currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
-      }
-      // 确保有本地建议摘要
-      if (!lastFengshuiResult) {
-        try {
-          lastFengshuiResult = YangGong.advise({
-            lat: $('#fs-lat').value,
-            lng: $('#fs-lng').value,
-            sitDir: $('#fs-sit').value,
-            bedZone: $('#fs-bed-zone').value,
-            bedHead: $('#fs-bed-head').value,
-            yongShen: currentBazi ? currentBazi.yongShen : null,
-            qimen: currentFate.qimen,
-            meihua: currentFate.meihua,
-            liuRen: currentCast,
-            compass: lastCompass
-          });
-        } catch (e) {
-          /* 允许仅凭罗盘+坐标分析 */
+    
+    await withButtonLoading(button, async () => {
+      try {
+        saveAiConfig();
+        if (!currentFate || !currentFate.qimen) {
+          currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
         }
-      }
+        // 确保有本地建议摘要
+        if (!lastFengshuiResult) {
+          try {
+            lastFengshuiResult = YangGong.advise({
+              lat: $('#fs-lat').value,
+              lng: $('#fs-lng').value,
+              sitDir: $('#fs-sit').value,
+              bedZone: $('#fs-bed-zone').value,
+              bedHead: $('#fs-bed-head').value,
+              yongShen: currentBazi ? currentBazi.yongShen : null,
+              qimen: currentFate.qimen,
+              meihua: currentFate.meihua,
+              liuRen: currentCast,
+              compass: lastCompass
+            });
+          } catch (e) {
+            /* 允许仅凭罗盘+坐标分析 */
+          }
+        }
 
-      status.textContent = '正在请求 AI 分析…';
-      box.classList.add('hidden');
-      const sitLabel = $('#fs-sit').selectedOptions[0].textContent;
-      const content = await AiFengshui.analyze({
-        lat: $('#fs-lat').value,
-        lng: $('#fs-lng').value,
-        sit: sitLabel,
-        bedZone: $('#fs-bed-zone').selectedOptions[0].textContent,
-        bedHead: $('#fs-bed-head').selectedOptions[0].textContent,
-        yongShen: currentBazi ? currentBazi.yongShen : null,
-        qimen: currentFate.qimen,
-        compass: lastCompass,
-        localAdvice: [
-          lastFengshuiResult
-            ? `${lastFengshuiResult.headline}\n${lastFengshuiResult.actions.join('\n')}`
-            : ($('#lp-place').innerText || $('#lp-place').textContent || ''),
-          window.YangGongData
-            ? YangGongData.summarizeForAi(lastCompass, lastFengshuiResult)
-            : ''
-        ].filter(Boolean).join('\n\n')
-      });
-      box.textContent = content;
-      box.classList.remove('hidden');
-      status.textContent = '分析完成（仅供参考）';
-      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    } catch (err) {
-      status.textContent = '';
-      alert(err.message || String(err));
-    }
+        status.textContent = '正在请求 AI 分析…';
+        box.classList.add('hidden');
+        const sitLabel = $('#fs-sit').selectedOptions[0].textContent;
+        const content = await AiFengshui.analyze({
+          lat: $('#fs-lat').value,
+          lng: $('#fs-lng').value,
+          sit: sitLabel,
+          bedZone: $('#fs-bed-zone').selectedOptions[0].textContent,
+          bedHead: $('#fs-bed-head').selectedOptions[0].textContent,
+          yongShen: currentBazi ? currentBazi.yongShen : null,
+          qimen: currentFate.qimen,
+          compass: lastCompass,
+          localAdvice: [
+            lastFengshuiResult
+              ? `${lastFengshuiResult.headline}\n${lastFengshuiResult.actions.join('\n')}`
+              : ($('#lp-place').innerText || $('#lp-place').textContent || ''),
+            window.YangGongData
+              ? YangGongData.summarizeForAi(lastCompass, lastFengshuiResult)
+              : ''
+          ].filter(Boolean).join('\n\n')
+        });
+        box.textContent = content;
+        box.classList.remove('hidden');
+        status.textContent = '分析完成（仅供参考）';
+        box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (err) {
+        status.textContent = '';
+        alert(err.message || String(err));
+        throw err;
+      }
+    });
   }
 
   function loadFengshuiForm() {
@@ -755,31 +797,36 @@
     }
   }
 
-  function onFengshuiSubmit() {
-    try {
-      if (!currentFate || !currentFate.qimen) {
-        currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
+  async function onFengshuiSubmit() {
+    const button = $('#btn-fengshui');
+    
+    await withButtonLoading(button, async () => {
+      try {
+        if (!currentFate || !currentFate.qimen) {
+          currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
+        }
+        saveFengshuiForm();
+        const result = YangGong.advise({
+          lat: $('#fs-lat').value,
+          lng: $('#fs-lng').value,
+          sitDir: $('#fs-sit').value,
+          bedZone: $('#fs-bed-zone').value,
+          bedHead: $('#fs-bed-head').value,
+          yongShen: currentBazi ? currentBazi.yongShen : null,
+          qimen: currentFate.qimen,
+          meihua: currentFate.meihua,
+          liuRen: currentCast,
+          compass: lastCompass
+        });
+        lastFengshuiResult = result;
+        renderFengshui(result);
+        $('#fs-result').classList.remove('hidden');
+        $('#fs-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        alert(err.message || String(err));
+        throw err;
       }
-      saveFengshuiForm();
-      const result = YangGong.advise({
-        lat: $('#fs-lat').value,
-        lng: $('#fs-lng').value,
-        sitDir: $('#fs-sit').value,
-        bedZone: $('#fs-bed-zone').value,
-        bedHead: $('#fs-bed-head').value,
-        yongShen: currentBazi ? currentBazi.yongShen : null,
-        qimen: currentFate.qimen,
-        meihua: currentFate.meihua,
-        liuRen: currentCast,
-        compass: lastCompass
-      });
-      lastFengshuiResult = result;
-      renderFengshui(result);
-      $('#fs-result').classList.remove('hidden');
-      $('#fs-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } catch (err) {
-      alert(err.message || String(err));
-    }
+    });
   }
 
   function clearFengshui() {
@@ -1093,28 +1140,33 @@
     $('#qm-advice').textContent = qm.changeAdvice.strategy;
   }
 
-  function onBaziSubmit() {
-    try {
-      const payload = {
-        year: Number($('#birth-year').value),
-        month: Number($('#birth-month').value),
-        day: Number($('#birth-day').value),
-        hour: Number($('#birth-hour').value),
-        minute: Number($('#birth-minute').value || 0),
-        gender: $('#birth-gender').value
-      };
-      currentBazi = Bazi.castBazi(payload);
-      renderBazi(currentBazi);
-      const refined = XiaoLiuRen.refineWithBazi(currentCast, currentBazi);
-      renderRefine(refined);
-      currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
-      renderFate(currentFate);
-      $('#bazi-result').classList.remove('hidden');
-      $('#refine-panel').classList.remove('hidden');
-      $('#fate-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } catch (err) {
-      alert(err.message || String(err));
-    }
+  async function onBaziSubmit() {
+    const button = $('#btn-bazi');
+    
+    await withButtonLoading(button, async () => {
+      try {
+        const payload = {
+          year: Number($('#birth-year').value),
+          month: Number($('#birth-month').value),
+          day: Number($('#birth-day').value),
+          hour: Number($('#birth-hour').value),
+          minute: Number($('#birth-minute').value || 0),
+          gender: $('#birth-gender').value
+        };
+        currentBazi = Bazi.castBazi(payload);
+        renderBazi(currentBazi);
+        const refined = XiaoLiuRen.refineWithBazi(currentCast, currentBazi);
+        renderRefine(refined);
+        currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
+        renderFate(currentFate);
+        $('#bazi-result').classList.remove('hidden');
+        $('#refine-panel').classList.remove('hidden');
+        $('#fate-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        alert(err.message || String(err));
+        throw err;
+      }
+    });
   }
 
   function clearBazi() {
