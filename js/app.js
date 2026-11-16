@@ -41,6 +41,7 @@
     setInterval(tickClock, 1000);
 
     $('#btn-refresh').addEventListener('click', () => runCast(new Date()));
+    $('#btn-copy-result').addEventListener('click', copyResultToClipboard);
     $('#btn-bazi').addEventListener('click', onBaziSubmit);
     $('#btn-clear-bazi').addEventListener('click', clearBazi);
     $('#btn-geo').addEventListener('click', onGeoLocate);
@@ -972,6 +973,109 @@
       li.textContent = t;
       truthUl.appendChild(li);
     });
+  }
+
+  function copyResultToClipboard() {
+    if (!currentCast) {
+      showCopyHint('暂无结果可复制');
+      return;
+    }
+
+    const cast = currentCast;
+    const p = cast.palace;
+    const aspects = cast.aspects;
+    const score = cast.score;
+
+    // 构建纯文本格式
+    let text = '═══════════════════════\n';
+    text += '术数应用 · 小六壬排盘结果\n';
+    text += '═══════════════════════\n\n';
+    
+    text += '【时刻信息】\n';
+    text += `公历：${cast.solar}\n`;
+    text += `农历：${cast.lunar.year}年${cast.lunar.monthCn}${cast.lunar.dayCn}${cast.lunar.isLeap ? '（闰）' : ''}\n`;
+    text += `时辰：${cast.shichen.label}（${cast.shichen.range}）\n\n`;
+    
+    text += '【课象总览】\n';
+    text += `起课路径：${cast.path.monthPalace.name} → ${cast.path.dayPalace.name} → ${p.name}\n`;
+    text += `最终宫位：${p.name}\n`;
+    text += `吉凶：${p.nature}\n`;
+    text += `五行方位：${p.wuxing} / ${p.direction} / ${p.color}\n`;
+    text += `时运指数：${score}/100\n\n`;
+    
+    text += '【卦辞】\n';
+    text += `${p.poem}\n\n`;
+    
+    text += '【断语提示】\n';
+    text += `${cast.tip || p.short}\n\n`;
+    
+    text += '【全方面断语】\n';
+    text += `总体：${aspects.overall}\n`;
+    text += `事业：${aspects.career}\n`;
+    text += `财运：${aspects.wealth}\n`;
+    text += `感情：${aspects.love}\n`;
+    text += `健康：${aspects.health}\n`;
+    text += `出行：${aspects.travel}\n`;
+    text += `人际：${aspects.social}\n`;
+    text += `学业：${aspects.study}\n\n`;
+    
+    text += '【宜忌】\n';
+    text += `宜：${aspects.suit}\n`;
+    text += `忌：${aspects.avoid}\n\n`;
+    
+    if (aspects.lost) {
+      text += '【寻失物】\n';
+      text += `${aspects.lost}\n\n`;
+    }
+    
+    if (aspects.truth) {
+      text += '【测谎话】\n';
+      text += `${aspects.truth}\n\n`;
+    }
+    
+    text += '───────────────────────\n';
+    text += '本结果仅供参考，不构成决策建议\n';
+    text += '───────────────────────';
+
+    // 尝试复制到剪贴板
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => showCopyHint('已复制'))
+        .catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      const success = document.execCommand('copy');
+      showCopyHint(success ? '已复制' : '复制失败');
+    } catch (err) {
+      showCopyHint('复制失败');
+    }
+    document.body.removeChild(textarea);
+  }
+
+  function showCopyHint(message) {
+    const hint = $('#copy-hint');
+    if (!hint) return;
+    hint.textContent = message.includes('✓') ? message : `✓ ${message}`;
+    hint.classList.remove('hidden');
+    hint.style.opacity = '1';
+    
+    setTimeout(() => {
+      hint.style.opacity = '0';
+      setTimeout(() => {
+        hint.classList.add('hidden');
+      }, 300);
+    }, 2000);
   }
 
   function renderTakashima(tk, combo) {
