@@ -359,14 +359,73 @@
       alert('起名引擎未加载');
       return;
     }
+    
+    const surname = ($('#qm-surname').value || '').trim();
+    const year = $('#qm-year').value;
+    const month = $('#qm-month').value;
+    const day = $('#qm-day').value;
+    const hour = $('#qm-hour').value;
+    
+    if (!surname) {
+      alert('请输入姓氏');
+      $('#qm-surname').focus();
+      return;
+    }
+    if (!year) {
+      alert('请输入出生年份');
+      $('#qm-year').focus();
+      return;
+    }
+    if (!month) {
+      alert('请输入出生月份');
+      $('#qm-month').focus();
+      return;
+    }
+    if (!day) {
+      alert('请输入出生日期');
+      $('#qm-day').focus();
+      return;
+    }
+    if (!hour && hour !== 0) {
+      alert('请输入出生时辰（0-23）');
+      $('#qm-hour').focus();
+      return;
+    }
+    
+    const yearNum = Number(year);
+    const monthNum = Number(month);
+    const dayNum = Number(day);
+    const hourNum = Number(hour);
+    
+    if (isNaN(yearNum) || yearNum < 1900 || yearNum > 2100) {
+      alert('请输入有效的年份（1900-2100）');
+      $('#qm-year').focus();
+      return;
+    }
+    if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+      alert('请输入有效的月份（1-12）');
+      $('#qm-month').focus();
+      return;
+    }
+    if (isNaN(dayNum) || dayNum < 1 || dayNum > 31) {
+      alert('请输入有效的日期（1-31）');
+      $('#qm-day').focus();
+      return;
+    }
+    if (isNaN(hourNum) || hourNum < 0 || hourNum > 23) {
+      alert('请输入有效的时辰（0-23）');
+      $('#qm-hour').focus();
+      return;
+    }
+    
     try {
       const result = QiMing.generateNames({
-        surname: ($('#qm-surname').value || '').trim(),
+        surname: surname,
         gender: $('#qm-gender').value,
-        year: Number($('#qm-year').value),
-        month: Number($('#qm-month').value),
-        day: Number($('#qm-day').value),
-        hour: Number($('#qm-hour').value),
+        year: yearNum,
+        month: monthNum,
+        day: dayNum,
+        hour: hourNum,
         minute: Number($('#qm-minute').value || 0),
         len: Number($('#qm-len').value),
         style: $('#qm-style').value,
@@ -756,14 +815,42 @@
   }
 
   function onFengshuiSubmit() {
+    const lat = $('#fs-lat').value;
+    const lng = $('#fs-lng').value;
+    
+    if (!lat) {
+      alert('请输入纬度（北纬为正）');
+      $('#fs-lat').focus();
+      return;
+    }
+    if (!lng) {
+      alert('请输入经度（东经为正）');
+      $('#fs-lng').focus();
+      return;
+    }
+    
+    const latNum = Number(lat);
+    const lngNum = Number(lng);
+    
+    if (isNaN(latNum) || latNum < -90 || latNum > 90) {
+      alert('请输入有效的纬度（-90 到 90）');
+      $('#fs-lat').focus();
+      return;
+    }
+    if (isNaN(lngNum) || lngNum < -180 || lngNum > 180) {
+      alert('请输入有效的经度（-180 到 180）');
+      $('#fs-lng').focus();
+      return;
+    }
+    
     try {
       if (!currentFate || !currentFate.qimen) {
         currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
       }
       saveFengshuiForm();
       const result = YangGong.advise({
-        lat: $('#fs-lat').value,
-        lng: $('#fs-lng').value,
+        lat: lat,
+        lng: lng,
         sitDir: $('#fs-sit').value,
         bedZone: $('#fs-bed-zone').value,
         bedHead: $('#fs-bed-head').value,
@@ -1094,12 +1181,64 @@
   }
 
   function onBaziSubmit() {
+    const year = $('#birth-year').value;
+    const month = $('#birth-month').value;
+    const day = $('#birth-day').value;
+    const hour = $('#birth-hour').value;
+    
+    if (!year) {
+      alert('请输入出生年份');
+      $('#birth-year').focus();
+      return;
+    }
+    if (!month) {
+      alert('请输入出生月份');
+      $('#birth-month').focus();
+      return;
+    }
+    if (!day) {
+      alert('请输入出生日期');
+      $('#birth-day').focus();
+      return;
+    }
+    if (!hour && hour !== 0) {
+      alert('请输入出生时辰（0-23）');
+      $('#birth-hour').focus();
+      return;
+    }
+    
+    const yearNum = Number(year);
+    const monthNum = Number(month);
+    const dayNum = Number(day);
+    const hourNum = Number(hour);
+    
+    if (isNaN(yearNum) || yearNum < 1900 || yearNum > 2100) {
+      alert('请输入有效的年份（1900-2100）');
+      $('#birth-year').focus();
+      return;
+    }
+    if (isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+      alert('请输入有效的月份（1-12）');
+      $('#birth-month').focus();
+      return;
+    }
+    if (isNaN(dayNum) || dayNum < 1 || dayNum > 31) {
+      alert('请输入有效的日期（1-31）');
+      $('#birth-day').focus();
+      return;
+    }
+    if (isNaN(hourNum) || hourNum < 0 || hourNum > 23) {
+      alert('请输入有效的时辰（0-23）');
+      $('#birth-hour').focus();
+      return;
+    }
+    
     try {
       const payload = {
-        year: Number($('#birth-year').value),
-        month: Number($('#birth-month').value),
-        day: Number($('#birth-day').value),
-        hour: Number($('#birth-hour').value),
+        year: yearNum,
+        month: monthNum,
+        day: dayNum,
+        hour: hourNum,
         minute: Number($('#birth-minute').value || 0),
         gender: $('#birth-gender').value
       };
