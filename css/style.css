@@ -1751,3 +1751,27 @@ button.ghost:hover {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.35; }
   50% { transform: translate3d(2%, -1%, 0) scale(1.05); opacity: 0.55; }
 }
+
+.copy-toast {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(43, 110, 168, 0.95);
+  color: var(--gold-bright);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  box-shadow: 0 8px 24px rgba(12, 40, 70, 0.5);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.copy-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

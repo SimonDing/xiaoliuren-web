@@ -54,6 +54,13 @@
     $('#fs-lat').addEventListener('change', syncLuopanGeo);
     $('#fs-lng').addEventListener('change', syncLuopanGeo);
 
+    $('#btn-copy-bifa')?.addEventListener('click', () => copyResult('bifa-result'));
+    $('#btn-copy-palm')?.addEventListener('click', () => copyResult('palm-result'));
+    $('#btn-copy-qiming')?.addEventListener('click', () => copyResult('qiming-result'));
+    $('#btn-copy-bazi')?.addEventListener('click', () => copyResult('bazi-result'));
+    $('#btn-copy-fengshui')?.addEventListener('click', () => copyResult('fs-result'));
+    $('#btn-copy-ai')?.addEventListener('click', () => copyResult('ai-result'));
+
     $('#birth-year').value = 1990;
     $('#birth-month').value = 5;
     $('#birth-day').value = 15;
@@ -1152,6 +1159,86 @@
     $('#rf-love').textContent = r.love;
     $('#rf-health').textContent = r.health;
     $('#rf-focus').textContent = `方位：${r.focus.directions}。颜色：${r.focus.colors}。事业参考：${r.focus.careers}。`;
+  }
+
+  function copyResult(resultId) {
+    const container = document.getElementById(resultId);
+    if (!container) {
+      showCopyToast('未找到结果内容');
+      return;
+    }
+
+    const text = extractTextContent(container);
+    
+    if (!text || text.trim().length === 0) {
+      showCopyToast('结果内容为空');
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          showCopyToast('已复制到剪贴板');
+        })
+        .catch((err) => {
+          console.error('复制失败:', err);
+          fallbackCopy(text);
+        });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function extractTextContent(element) {
+    const clone = element.cloneNode(true);
+    
+    clone.querySelectorAll('button').forEach(btn => btn.remove());
+    clone.querySelectorAll('script').forEach(script => script.remove());
+    clone.querySelectorAll('style').forEach(style => style.remove());
+    
+    const text = clone.innerText || clone.textContent;
+    return text.trim().replace(/\n{3,}/g, '\n\n');
+  }
+
+  function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.top = '-9999px';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        showCopyToast('已复制到剪贴板');
+      } else {
+        showCopyToast('复制失败，请手动复制');
+      }
+    } catch (err) {
+      console.error('复制失败:', err);
+      showCopyToast('复制失败，请手动复制');
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  }
+
+  function showCopyToast(message) {
+    let toast = document.querySelector('.copy-toast');
+    
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'copy-toast';
+      document.body.appendChild(toast);
+    }
+    
+    toast.textContent = message;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2000);
   }
 
   document.addEventListener('DOMContentLoaded', init);
