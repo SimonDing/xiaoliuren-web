@@ -359,14 +359,32 @@
       alert('起名引擎未加载');
       return;
     }
+    const surname = ($('#qm-surname').value || '').trim();
+    if (!surname) {
+      alert('请填写姓氏');
+      $('#qm-surname').focus();
+      return;
+    }
+    const year = $('#qm-year').value;
+    const month = $('#qm-month').value;
+    const day = $('#qm-day').value;
+    const hour = $('#qm-hour').value;
+    if (!year || !month || !day || !hour) {
+      alert('请填写完整的出生年月日时');
+      if (!year) $('#qm-year').focus();
+      else if (!month) $('#qm-month').focus();
+      else if (!day) $('#qm-day').focus();
+      else if (!hour) $('#qm-hour').focus();
+      return;
+    }
     try {
       const result = QiMing.generateNames({
-        surname: ($('#qm-surname').value || '').trim(),
+        surname: surname,
         gender: $('#qm-gender').value,
-        year: Number($('#qm-year').value),
-        month: Number($('#qm-month').value),
-        day: Number($('#qm-day').value),
-        hour: Number($('#qm-hour').value),
+        year: Number(year),
+        month: Number(month),
+        day: Number(day),
+        hour: Number(hour),
         minute: Number($('#qm-minute').value || 0),
         len: Number($('#qm-len').value),
         style: $('#qm-style').value,
@@ -756,14 +774,22 @@
   }
 
   function onFengshuiSubmit() {
+    const lat = $('#fs-lat').value;
+    const lng = $('#fs-lng').value;
+    if (!lat || !lng) {
+      alert('请填写经纬度坐标');
+      if (!lat) $('#fs-lat').focus();
+      else if (!lng) $('#fs-lng').focus();
+      return;
+    }
     try {
       if (!currentFate || !currentFate.qimen) {
         currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
       }
       saveFengshuiForm();
       const result = YangGong.advise({
-        lat: $('#fs-lat').value,
-        lng: $('#fs-lng').value,
+        lat: lat,
+        lng: lng,
         sitDir: $('#fs-sit').value,
         bedZone: $('#fs-bed-zone').value,
         bedHead: $('#fs-bed-head').value,
@@ -1094,12 +1120,24 @@
   }
 
   function onBaziSubmit() {
+    const year = $('#birth-year').value;
+    const month = $('#birth-month').value;
+    const day = $('#birth-day').value;
+    const hour = $('#birth-hour').value;
+    if (!year || !month || !day || !hour) {
+      alert('请填写完整的出生年月日时');
+      if (!year) $('#birth-year').focus();
+      else if (!month) $('#birth-month').focus();
+      else if (!day) $('#birth-day').focus();
+      else if (!hour) $('#birth-hour').focus();
+      return;
+    }
     try {
       const payload = {
-        year: Number($('#birth-year').value),
-        month: Number($('#birth-month').value),
-        day: Number($('#birth-day').value),
-        hour: Number($('#birth-hour').value),
+        year: Number(year),
+        month: Number(month),
+        day: Number(day),
+        hour: Number(hour),
         minute: Number($('#birth-minute').value || 0),
         gender: $('#birth-gender').value
       };
