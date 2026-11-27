@@ -34,6 +34,37 @@
     正南: 'S', 西南: 'SW', 正西: 'W', 西北: 'NW'
   };
 
+  // 按钮状态管理辅助函数
+  function setButtonLoading(btn, loading) {
+    if (loading) {
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.dataset.originalText = btn.textContent;
+    } else {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      if (btn.dataset.originalText) {
+        btn.textContent = btn.dataset.originalText;
+      }
+    }
+  }
+
+  function showFormError(errorId, message) {
+    const errorEl = $(errorId);
+    if (errorEl) {
+      errorEl.textContent = message;
+      errorEl.classList.add('visible');
+    }
+  }
+
+  function hideFormError(errorId) {
+    const errorEl = $(errorId);
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.classList.remove('visible');
+    }
+  }
+
   function init() {
     buildWheelLabels();
     runCast(new Date());
@@ -179,21 +210,29 @@
   }
 
   function runBifa() {
+    const btn = $('#btn-bifa-run');
+    hideFormError('#bifa-error');
+    
     if (!window.LiuShenBiFa) {
-      alert('测字引擎未加载');
+      showFormError('#bifa-error', '测字引擎未加载，请刷新页面重试');
       return;
     }
     const text = ($('#bifa-chars').value || '').trim();
     if (!text) {
-      alert('请先写下所测汉字（心诚所问）');
+      showFormError('#bifa-error', '请先写下所测汉字（心诚所问）');
       $('#bifa-chars').focus();
       return;
     }
+    
+    setButtonLoading(btn, true);
+    
     try {
       const result = LiuShenBiFa.divine(text, bifaTopic, currentCast);
       renderBifa(result);
     } catch (err) {
-      alert(err.message || String(err));
+      showFormError('#bifa-error', err.message || '测字失败，请检查输入后重试');
+    } finally {
+      setButtonLoading(btn, false);
     }
   }
 
@@ -296,10 +335,16 @@
   }
 
   function runPalm() {
+    const btn = $('#btn-palm-run');
+    hideFormError('#palm-error');
+    
     if (!window.ShouXiang) {
-      alert('手相引擎未加载');
+      showFormError('#palm-error', '手相引擎未加载，请刷新页面重试');
       return;
     }
+    
+    setButtonLoading(btn, true);
+    
     try {
       const input = {
         hand: palmState.hand,
@@ -316,7 +361,9 @@
       renderPalm(result);
       renderPalmIntoAspects(result);
     } catch (err) {
-      alert(err.message || String(err));
+      showFormError('#palm-error', err.message || '手相分析失败，请重试');
+    } finally {
+      setButtonLoading(btn, false);
     }
   }
 
@@ -355,10 +402,16 @@
   }
 
   function runQiMing() {
+    const btn = $('#btn-qiming-run');
+    hideFormError('#qiming-error');
+    
     if (!window.QiMing) {
-      alert('起名引擎未加载');
+      showFormError('#qiming-error', '起名引擎未加载，请刷新页面重试');
       return;
     }
+    
+    setButtonLoading(btn, true);
+    
     try {
       const result = QiMing.generateNames({
         surname: ($('#qm-surname').value || '').trim(),
@@ -375,7 +428,9 @@
       });
       renderQiMing(result);
     } catch (err) {
-      alert(err.message || String(err));
+      showFormError('#qiming-error', err.message || '起名失败，请检查生辰信息后重试');
+    } finally {
+      setButtonLoading(btn, false);
     }
   }
 
@@ -624,8 +679,13 @@
   }
 
   async function runAiAnalyze() {
+    const btn = $('#btn-ai-analyze');
     const status = $('#ai-status');
     const box = $('#ai-result');
+    hideFormError('#ai-error');
+    
+    setButtonLoading(btn, true);
+    
     try {
       saveAiConfig();
       if (!currentFate || !currentFate.qimen) {
@@ -678,7 +738,9 @@
       box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
       status.textContent = '';
-      alert(err.message || String(err));
+      showFormError('#ai-error', err.message || 'AI 分析失败，请检查配置和网络后重试');
+    } finally {
+      setButtonLoading(btn, false);
     }
   }
 
@@ -756,6 +818,11 @@
   }
 
   function onFengshuiSubmit() {
+    const btn = $('#btn-fengshui');
+    hideFormError('#fengshui-error');
+    
+    setButtonLoading(btn, true);
+    
     try {
       if (!currentFate || !currentFate.qimen) {
         currentFate = FateChange.synthesize(lastDate, currentCast, currentBazi, currentTakashima);
@@ -778,7 +845,9 @@
       $('#fs-result').classList.remove('hidden');
       $('#fs-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
-      alert(err.message || String(err));
+      showFormError('#fengshui-error', err.message || '风水建议生成失败，请检查输入信息后重试');
+    } finally {
+      setButtonLoading(btn, false);
     }
   }
 
@@ -1094,6 +1163,11 @@
   }
 
   function onBaziSubmit() {
+    const btn = $('#btn-bazi');
+    hideFormError('#bazi-error');
+    
+    setButtonLoading(btn, true);
+    
     try {
       const payload = {
         year: Number($('#birth-year').value),
@@ -1113,7 +1187,9 @@
       $('#refine-panel').classList.remove('hidden');
       $('#fate-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
-      alert(err.message || String(err));
+      showFormError('#bazi-error', err.message || '八字排盘失败，请检查生辰信息是否完整准确');
+    } finally {
+      setButtonLoading(btn, false);
     }
   }
 
