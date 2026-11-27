@@ -143,6 +143,7 @@
           <button type="button" id="btn-palm-run">逐项手相断</button>
           <button type="button" class="ghost" id="btn-palm-reset">收起</button>
         </div>
+        <div class="form-error" id="palm-error"></div>
       </div>
       <p class="bifa-skip-note hidden" id="palm-skip-note">已跳过手相。若之后对预测没把握，随时点「手相辅助」。</p>
       <div class="bifa-result hidden" id="palm-result">
@@ -185,6 +186,7 @@
           <button type="button" id="btn-bifa-run">合参断字</button>
           <button type="button" class="ghost" id="btn-bifa-reset">收起</button>
         </div>
+        <div class="form-error" id="bifa-error"></div>
       </div>
       <div class="bifa-result hidden" id="bifa-result">
         <div class="refine-box">
@@ -486,6 +488,7 @@
         <button type="button" id="btn-fengshui">生成风水建议</button>
         <button type="button" class="ghost" id="btn-fs-clear">清除结果</button>
       </div>
+      <div class="form-error" id="fengshui-error"></div>
 
       <div class="ai-box">
         <h3 style="font-family:var(--font-display);font-weight:400;letter-spacing:0.15em;color:var(--gold);margin:0 0 0.7rem">AI 细化分析 <small style="color:var(--paper-dim)">自备 Key · OpenAI 兼容</small></h3>
@@ -507,6 +510,7 @@
           <button type="button" id="btn-ai-save" class="ghost">保存 Key 设置</button>
           <button type="button" id="btn-ai-analyze">AI 杨公细化</button>
         </div>
+        <div class="form-error" id="ai-error"></div>
         <div id="ai-status" class="ai-status"></div>
         <div id="ai-result" class="ai-result hidden"></div>
       </div>
@@ -571,6 +575,7 @@
         <button type="button" id="btn-qiming-run">按命理起名</button>
         <button type="button" class="ghost" id="btn-qiming-from-bazi">同步八字生辰</button>
       </div>
+      <div class="form-error" id="qiming-error"></div>
       <div id="qiming-result" class="hidden" style="margin-top:1.2rem">
         <div class="refine-box">
           <h3 id="qm-headline-pro">起名总断</h3>
@@ -602,6 +607,7 @@
         <button type="button" id="btn-bazi">排盘合参</button>
         <button type="button" class="ghost" id="btn-clear-bazi">清除八字</button>
       </div>
+      <div class="form-error" id="bazi-error"></div>
 
       <div id="bazi-result" class="hidden" style="margin-top:1.4rem">
         <table class="bazi-table">
